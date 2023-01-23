@@ -1,2 +1,2 @@
 # DSA-Series
-DSA Question-Solutions
+DSA Questions-Solutions
