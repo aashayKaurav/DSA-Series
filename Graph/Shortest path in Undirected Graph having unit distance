@@ -1,0 +1,39 @@
+//
+You are given an Undirected Graph having unit weight, 
+Find the shortest path from src(0) to all the vertex and if it is unreachable to reach any vertex, then return -1 for that vertex.
+//
+
+vector<int> shortestPath(vector<vector<int>>& edges, int N,int M, int src){
+        vector<int> dist(N);
+        vector<int> adj[N];
+        for(int i=0; i<M; i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        for(int i=0; i<N; i++){
+            dist[i] = INT_MAX;
+        }
+        queue<pair<int, int>> q;
+        q.push({src, 0});
+        dist[src] = 0;
+        while(!q.empty()){
+            pair<int, int> p = q.front();
+            q.pop();
+            int node = p.first;
+            int d = p.second;
+            for(auto it : adj[node]){
+                if(d + 1 < dist[it]){
+                    dist[it] = d + 1;
+                    q.push({it, d+1});
+                }
+            }
+        }
+        for(int i=0; i<N; i++){
+            if(dist[i] == INT_MAX){
+                dist[i] = -1;
+            }
+        }
+        return dist;
+    }
