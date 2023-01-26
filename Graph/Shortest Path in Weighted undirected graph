@@ -1,0 +1,64 @@
+//
+You are given a weighted undirected graph having n+1 vertices numbered from 0 to n and m edges describing there are edges 
+between a to b with some weight, find the shortest path between the vertex 1 and the vertex n and if path does not exist 
+then return a list consisting of only -1.
+
+Example:
+Input:
+n = 5, m= 6
+edges = [[1,2,2], [2,5,5], [2,3,4], [1,4,1],[4,3,3],[3,5,1]]
+Output:
+1 4 3 5
+Explaination:
+Shortest path from 1 to n is by the path 1 4 3 5
+
+//
+
+vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        // Modification of Dijkstra Algo to obtain the shortest path
+        vector<int> parent(n+1), dist(n+1, 1e9);
+        // Initializing parent of a node to itself. Later updating**
+        for(int i=0; i<n+1; i++){
+            parent[i] = i;
+        }
+        vector<int> ans;
+        dist[1] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({0, 1});
+        vector<pair<int, int>> adj[n+1];
+        for(int i=0; i<m; i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        
+        while(!pq.empty()){
+            int node = pq.top().second;
+            int d = pq.top().first;
+            pq.pop();
+            
+            for(auto it : adj[node]){
+                int adjNode = it.first;
+                int edgeWeight = it.second;
+                if(d + edgeWeight < dist[adjNode]){
+                    parent[adjNode] = node;
+                    dist[adjNode] = d + edgeWeight;
+                    pq.push({dist[adjNode], adjNode});
+                }
+            }
+        }
+        if(dist[n] == 1e9){
+            return {-1};
+        }
+        // Now from last node backtrac and keep adding nodes in ans inorder to obtain path.
+        int i = n;
+        while(parent[i] != i){
+            ans.push_back(i);
+            i = parent[i];
+        }
+        ans.push_back(1);
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
