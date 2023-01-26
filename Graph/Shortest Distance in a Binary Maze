@@ -1,0 +1,69 @@
+//
+Given a n * m matrix grid where each element can either be 0 or 1. You need to find the shortest distance between a given source cell to a destination cell. 
+The path can only be created out of a cell if its value is 1. 
+
+If the path is not possible between source cell and destination cell, then return -1.
+
+Note : You can move into an adjacent cell if that adjacent cell is filled with element 1. Two cells are adjacent if they share a side. 
+       In other words, you can move in one of the four directions, Up, Down, Left and Right.
+
+Example 1:
+
+Input:
+grid[][] = {{1, 1, 1, 1},
+            {1, 1, 0, 1},
+            {1, 1, 1, 1},
+            {1, 1, 0, 0},
+            {1, 0, 0, 1}}
+source = {0, 1}
+destination = {2, 2}
+Output:
+3
+Explanation:
+1 1 1 1
+1 1 0 1
+1 1 1 1
+1 1 0 0
+1 0 0 1
+The highlighted part in the matrix denotes the 
+shortest path from source to destination cell.
+
+//
+
+int shortestPath(vector<vector<int>> &grid, pair<int, int> source, pair<int, int> destination) {
+        // Dijkstra Algo application based.
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> dist(n, vector<int>(m, INT_MAX));
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+        pq.push({0, {source.first, source.second}});
+        dist[source.first][source.second] = 0;
+        
+        while(!pq.empty()){
+            pair<int, pair<int, int>> t = pq.top();
+            pq.pop();
+            int d = t.first;
+            int r = t.second.first;
+            int c = t.second.second;
+            if(r+1 < n && grid[r+1][c] == 1 && dist[r+1][c] > d+1){
+                dist[r+1][c] = d + 1;
+                pq.push({d+1, {r+1, c}});
+            }
+            if(r-1 >= 0 && grid[r-1][c] == 1 && dist[r-1][c] > d+1){
+                dist[r-1][c] = d + 1;
+                pq.push({d+1, {r-1, c}});
+            }
+            if(c+1 < m && grid[r][c+1] == 1 && dist[r][c+1] > d+1){
+                dist[r][c+1] = d + 1;
+                pq.push({d+1, {r, c+1}});
+            }
+            if(c-1 >= 0 && grid[r][c-1] == 1 && dist[r][c-1] > d+1){
+                dist[r][c-1] = d + 1;
+                pq.push({d+1, {r, c-1}});
+            }
+        }
+        if(dist[destination.first][destination.second] == INT_MAX){
+            return -1;
+        }
+        return dist[destination.first][destination.second];
+    }
