@@ -1,0 +1,40 @@
+//
+Given an unsorted array of integers, find the number of continuous subarrays having sum exactly equal to a given number k.
+
+Example 1:
+
+Input:
+N = 5
+Arr = {10 , 2, -2, -20, 10}
+k = -10
+Output: 3
+Explaination: 
+Subarrays: arr[0...3], arr[1...4], arr[3..4]
+have sum exactly equal to -10.
+
+//
+
+int findSubArraySum(int Arr[], int N, int k)
+    {
+        int count = 0;
+        int currSum = 0;
+        unordered_map<int, int> mp;
+        mp[0] = 1;
+        for(int i=0; i<N; i++){
+            currSum += Arr[i];
+            // Here we are checking whether currSum - k exists inour map?. Since currSum-k = x implies currSum - x = k. Therefore we increment 
+            // our count value, because we found a subarray from x to currSum whose sum == k :)
+            if(mp.find(currSum-k) != mp.end()){
+                count += mp[currSum-k];
+            }
+            // If prefixSum occured before then, simply increment the count value.
+            if(mp.find(currSum) != mp.end()){
+                mp[currSum] += 1;
+            }
+            // If the prefixSum occuring first time then, simply add into map with count as 1.
+            else{
+                mp[currSum] = 1;
+            }
+        }
+        return count;
+    }
