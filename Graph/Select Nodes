@@ -1,0 +1,50 @@
+//
+Given N nodes of a tree and a list of edges. Find the minimum number of nodes to be selected to light up all the edges of the tree.
+An edge lights up when at least one node at the end of the edge is selected.
+
+
+Example 1:
+
+Input:
+N = 6
+edges[] = {(1,2), (1,3), (2,4), (3,5), (3,6)}
+Output: 2
+Explanation: Selecting nodes 2 and 3 lights
+up all the edges.
+//
+    ***Intution : Basically we don't need leaf nodes and we only traverse the tree using dfs/bfs (since if we have visited a node then we won't visit it again) 
+    s.t. either the root is selected or it's child is selected.
+    
+    int count = 0;
+  
+    bool dfs(vector<int> adj[], vector<int> &visited, int node){
+        visited[node] = 1;
+        bool selected = false;
+        for(auto it : adj[node]){
+            if(visited[it] == 0){
+                bool isChildSelected = dfs(adj, visited, it);
+                if(isChildSelected == false){
+                    selected = true;
+                }
+            }
+        }
+        if(selected){
+            count += 1;
+        }
+        return selected;
+    }
+  
+    int countVertex(int N, vector<vector<int>>edges){
+        vector<int> adj[N+1];
+        // Creating the graph
+        for(int i=0; i<edges.size(); i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        
+        vector<int> visited(N+1, 0);
+        dfs(adj, visited, 1);
+        return count;
+    }
