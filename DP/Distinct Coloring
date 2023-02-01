@@ -1,0 +1,78 @@
+//
+There is a row of N houses, each house can be painted with one of the three colors: red, blue or green. 
+The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color. 
+Find the minimum cost to paint all houses.
+
+The cost of painting each house in red, blue or green colour is given in the array r[], g[] and b[] respectively.
+
+Example 1:
+
+Input:
+N = 3
+r[] = {1, 1, 1}
+g[] = {2, 2, 2}
+b[] = {3, 3, 3}
+Output: 4
+Explanation: We can color the houses 
+in RGR manner to incur minimum cost.
+We could have obtained a cost of 3 if 
+we coloured all houses red, but we 
+cannot color adjacent houses with 
+the same color.
+//
+
+    ***Intuition : Try to take each color and after calling the function recursively try to get ans by specifing the given constraint.
+long long int solveTab(int n, int r[], int g[], int b[]){
+        vector<vector<long long int>> dp(n, vector<long long int>(3, 0));
+        
+        dp[0][0] = r[0];
+        dp[0][1] = g[0];
+        dp[0][2] = b[0];
+        
+        for(int i=1; i<n; i++){
+            dp[i][0] = r[i] + min(dp[i-1][1], dp[i-1][2]);
+            dp[i][1] = g[i] + min(dp[i-1][0], dp[i-1][2]);
+            dp[i][2] = b[i] + min(dp[i-1][0], dp[i-1][1]);
+        }
+        
+        return min(dp[n-1][0], min(dp[n-1][1], dp[n-1][2]));
+    }
+    
+    long long int solveMem(int i, int n, int r[], int g[], 
+            int b[], int c, vector<vector<long long int>> &dp){
+        
+        if(i >= n){
+            return 0;
+        }
+        if(dp[i][c] != -1){
+            return dp[i][c];
+        }
+        long long int ans = INT_MAX;
+        
+        long long int takeR = r[i] + solveMem(i+1, n, r, g, b, 0, dp);
+        long long int takeG = g[i] + solveMem(i+1, n, r, g, b, 1, dp);
+        long long int takeB = b[i] + solveMem(i+1, n, r, g, b, 2, dp);
+        
+        if(c == 3){
+             ans = min(takeR, min(takeG, takeB));
+        }
+        
+        if(c == 0){
+            ans = min(takeG, takeB);
+        }
+        else if(c == 1){
+            ans = min(takeR, takeB);
+        }
+        else if(c == 2){
+            ans = min(takeR, takeG);
+        }
+        
+        return dp[i][c] = ans;
+    }
+
+    long long int distinctColoring(int N, int r[], int g[], int b[]){
+        // vector<vector<long long int>> dp(N, vector<long long int>(4, -1));
+        // return solveMem(0, N, r, g, b, 3, dp);
+        
+        return solveTab(N, r, g, b);
+    }
