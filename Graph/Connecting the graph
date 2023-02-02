@@ -1,0 +1,93 @@
+//
+You are given a graph with n vertices and m edges.
+
+You can remove one edge from anywhere and add that edge between any two vertices in one operation.
+
+Find the minimum number of operation that will be required to make the graph connected.
+
+If it is not possible to make the graph connected, return -1.
+
+Example 1: 
+
+Input:
+n=4
+m=3
+Edge=[ [0, 1] , [0, 2] , [1, 2] ]
+
+Output:
+1
+
+Explanation:
+Remove edge between vertices 1 and 2 and add between vertices 1 and 3.
+//
+        ***INTUITION : Since we need (noOfComponents - 1) edges inorder to connect components with minimum operations. 
+        Now we have to also count the number of extra edges present in the graph, so to do that basic idea is if(findUParent(u) == findUParent(v)) then
+        definately there is an extra edge so just increment the count. Finally if (noOfComponents-1 <= extraEdges) then return ans else return -1;
+        
+class DisjointSet {
+    public:
+    vector<int> rank;
+    vector<int> parent;
+    vector<int> size;
+    
+    DisjointSet(int V){
+        rank.resize(V+1, 0);
+        size.resize(V+1, 1);
+        parent.resize(V+1);
+        for(int i=0; i<V; i++){
+            parent[i] = i;
+        }
+    }
+    
+    int findUParent(int u){
+        if(u == parent[u]){
+            return u;
+        }
+        return parent[u] = findUParent(parent[u]);
+    }
+    
+    void unionBySize(int u, int v){
+        int up_u = findUParent(u);
+        int up_v = findUParent(v);
+        
+        if(up_u == up_v){
+            return;
+        }
+        if(size[up_u] < size[up_v]){
+            parent[up_u] = up_v;
+        }
+        else if(size[up_v] < size[up_u]){
+            parent[up_v] = up_u;
+        }
+        else{
+            parent[up_v] = up_u;
+            size[up_u]++;
+        }
+    }
+    
+};
+
+int Solve(int n, vector<vector<int>>& edge) {
+        int noOfComponents = 0;
+        int extraEdges = 0;
+        DisjointSet ds(n);
+        for(int i=0; i<edge.size(); i++){
+            int u = edge[i][0];
+            int v = edge[i][1];
+            if(ds.findUParent(u) == ds.findUParent(v)){
+                extraEdges++;
+            }
+            else{
+                ds.unionBySize(u, v);
+            }
+        }
+        for(int i=0; i<n; i++){
+            if(ds.findUParent(i) == i){
+                noOfComponents++;
+            }
+        }
+        if(noOfComponents-1 <= extraEdges){
+            return noOfComponents-1;
+        }
+        return -1;
+    }
