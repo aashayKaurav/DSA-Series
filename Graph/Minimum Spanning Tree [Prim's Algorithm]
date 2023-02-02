@@ -1,0 +1,53 @@
+//
+Given a weighted, undirected and connected graph of V vertices and E edges. The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
+ 
+Example 1:
+
+Input:
+3 3
+0 1 5
+1 2 3
+0 2 1
+
+Output:
+4
+Explanation:
+
+The Spanning Tree resulting in a weight
+of 4 is shown above.
+//
+          ****INTUTION : We will be taking a vertex add keep adding all those adjacent edges 
+          which have minimum weight and inorder to acheive this we are using min heap data structure.
+          Mark a node as visited only after poping from the min heap to make sure all of its adjacent edges with minimum weight have been added.
+int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        
+        priority_queue<pair<int, int>, vector<pair<int, int>>, 
+        greater<pair<int, int>>> pq;
+        // {wt, node} since we only need mst weight otherwise if MST graph is asked inorder to return then we also take parent i.e. {wt, {node, parent}}.
+        pq.push({0, 0});
+        vector<int> vis(V, 0);
+        int mst = 0;
+        
+        while(!pq.empty()){
+            auto t = pq.top();
+            pq.pop();
+            int node = t.second;
+            int wt = t.first;
+            if(vis[node] == 1){
+                continue;
+            }
+            // Add it to MST
+            vis[node] = 1;
+            mst += wt;
+            // Here we would add MST.push_back({node, parent}); inorder to construct MST graph !!
+            for(auto it : adj[node]){
+                int edjWt = it[1];
+                int adjNode = it[0];
+                if(vis[adjNode] == 0){
+                    pq.push({edjWt, adjNode});
+                }
+            }
+        }
+        return mst;
+    }
