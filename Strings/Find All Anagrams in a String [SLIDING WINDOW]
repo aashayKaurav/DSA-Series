@@ -1,0 +1,59 @@
+//
+Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+Example 1:
+
+Input: s = "cbaebabacd", p = "abc"
+Output: [0,6]
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+//
+        *** INTUTION : The basic idea is to store  pattern p with the chars and their freq in a map, after that simplely apply SW technique if we satisfy the 
+        constraint then push the initial index 'i' into ans vector otherwise don't. ;)
+vector<int> findAnagrams(string s, string p) {
+        vector<int> ans;
+        unordered_map<char, int> m;
+        int i=0, j=0, k=p.size();
+        for(int i=0; i<k; i++){
+            if(m.find(p[i]) == m.end())
+                m[p[i]] = 1;
+            else
+                m[p[i]]++;
+        }
+        int totalChars = m.size();
+
+        while(j < s.size()){
+            if(m.find(s[j]) != m.end()){
+                m[s[j]]--;
+                if(m[s[j]] == 0){
+                    totalChars--;
+                }
+            }
+            // if window size is less than pattern size increment.
+            if(j-i+1 < k){
+                j++;
+            }
+            // window size same as patter size!
+            else if(j-i+1 == k){
+                // this condition shows that we have got all the chars of pattern so include i in the ans.
+                if(totalChars == 0){
+                    ans.push_back(i);
+                }
+                // If this char was found earlier in patter then now we again have to increment its count inorder to shift the window and maintain the 
+                // freq of the map.
+                if(m.find(s[i]) != m.end()){
+                    m[s[i]]++;
+                    if(m[s[i]] == 1){
+                        totalChars++;
+                    }
+                }  
+                
+                i++;
+                j++;
+            }
+        }
+        return ans;
+    }
