@@ -1,0 +1,48 @@
+//
+Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+
+In other words, return true if one of s1's permutations is the substring of s2.
+
+Example 1:
+
+Input: s1 = "ab", s2 = "eidbaooo"
+Output: true
+Explanation: s2 contains one permutation of s1 ("ba").
+//
+    ***INTUTION : The optimized approach is to use Sliding Window Technique. Take a map and store s1 string freq, initiaze a count as total number of chars in map.
+    and i, j, as 0 to begin with and k as s1.size(). Now simply check whether the character within the window belongs to map or not if yes then decrement the count,
+    and also keep checking if the window size is equal to s1.size then if count == 0 then return true else return false.
+    
+    bool checkInclusion(string s1, string s2) {
+        unordered_map<char, int> m;
+        for(int i=0; i<s1.size(); i++){
+            m[s1[i]]++;
+        }
+        int i = 0, j = 0, k = s1.size();
+        int count = m.size();
+
+        while(j < s2.size()){
+            if(m.find(s2[j]) != m.end()){
+                m[s2[j]]--;
+                if(m[s2[j]] == 0)
+                    count--;
+            }
+            if(j-i+1 < k){
+                j++;
+            }
+            else if(j-i+1 == k){
+                if(count == 0){
+                    return true;
+                }
+                if(m.find(s2[i]) != m.end()){
+                    m[s2[i]]++;
+                    if(m[s2[i]] == 1){
+                        count++;
+                    }
+                }
+                i++;
+                j++;
+            }
+        }
+        return false;
+    }
