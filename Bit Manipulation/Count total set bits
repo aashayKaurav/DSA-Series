@@ -17,7 +17,7 @@ Therefore, the total set bits is 5.
     // First we calculate all set bits which are in range of 2^x => (2^x / 2) multipled by number of digits (x);
     // Then we are left with n - 2^x + 1 numbers and all these numbers will have MSB set so include in ans.
     // Lastly subtract 2^x from n and call recusive function to get set bits of remaining numbers.
-
+    // T.C. = O(log n)
     int greatestPowOf2(int n){
             int x = 0;
             while((1<<x) <= n){
