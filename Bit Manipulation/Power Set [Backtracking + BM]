@@ -1,0 +1,64 @@
+//
+Given a string S, Find all the possible subsequences of the String in lexicographically-sorted order.
+
+Example 1:
+
+Input : str = "abc"
+Output: a ab abc ac b bc c
+Explanation : There are 7 subsequences that 
+can be formed from abc.
+//
+    *** APPROACH : Backtracking
+    void solve(int i, string s, multiset<string> &ans, 
+	    string temp){
+	        if(i>= s.size()){
+	            if(temp != ""){
+	                ans.insert(temp);
+	            }
+	            return;
+	        }
+	        temp.push_back(s[i]);
+	        // Included
+	        solve(i+1, s, ans, temp);
+	        temp.pop_back();
+	        // Not included
+	        solve(i+1, s, ans, temp);
+	        
+	    }
+    
+    vector<string> AllPossibleStrings(string s){
+		    if(s.size() == 0){
+		        return {};
+		    }
+		    
+		    string temp = "";
+		    multiset<string> ans;
+		    solve(0, s, ans, temp);
+		    vector<string> res(ans.begin(), ans.end());
+		    return res;
+		}
+---------------------------------------------------------------------------
+      **APPRACH : Bit Manipulation
+      vector<string> AllPossibleStrings(string s){
+		  		  
+		  int n = s.size();
+		    
+		  vector<string> ans;
+		  
+		  int setSize = pow(2, n);
+		  // [abc] = {000, 001, 010, 011, 100 .... 111} In every iteration select the set bits only and include in ans. 
+		  for(int i=0; i<setSize; i++){
+		      string temp = "";
+		      for(int j=0; j<n; j++){
+		          if(i & (1 << j)){
+		              temp += s[j];
+		          }
+		      }
+		      if(temp != "")
+		        ans.push_back(temp);
+		  }
+		  sort(ans.begin(), ans.end());
+		  return ans;
+		}
+
+
