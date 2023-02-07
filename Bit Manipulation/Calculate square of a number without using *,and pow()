@@ -1,0 +1,44 @@
+//
+Given an integer n, calculate the square of a number without using *, / and pow(). 
+
+Examples : 
+
+Input: n = 5
+Output: 25
+
+Input: 7
+Output: 49
+//
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int square(int n){
+    if(n == 0){
+        return 0;
+    }
+    // If n is -->
+    // EVEN : n = 2*x  =>  n^2 = 4*x^2  => n^2 = 4*(n/2)^2 
+    // ODD : n = 2*x + 1  => n^2 = 4*x^2 + 4*x + 1 
+    
+    int x = n >> 1;   //Divide n by 2 using shift operator.
+    
+    if((n&1) == 0){
+        return (square(x) << 2);    //Multiplying by 4 using shift operator. 
+    }
+    else{
+        return (square(x) << 2) + ((x << 2) + 1); 
+    }
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    cout << "Square of number : " << square(n);
+
+    return 0;
+}
+
+
