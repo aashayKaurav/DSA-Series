@@ -12,12 +12,12 @@ Explaination: presenation of 44 and 3 are
 are two set bits. If those are set in 44 
 it will become 101111 = 47.
 //
-
+        ***INTUTION : First we need to find that position(mask) where the y can give a set bit. After that simple apply the bitwise OR operation to copy to x. :)
 int setSetBit(int x, int y, int l, int r){
         // From range l to r check whether bit is set in y if so then
         // copy to x.
         for(int i=l; i<=r; i++){
-            //A number with only set bit at i'th position called mask.
+            //A number with only set bit at i'th position called mask. 
             int mask = 1 << (i-1);
             
             if(y & mask){
