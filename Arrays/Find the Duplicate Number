@@ -13,6 +13,7 @@ Output: 2
 
     **APPROACH : Using linked list cyclic property, taking slow and fast iterators and traversing them.
     Once both of them are equal then taking fast to start and then linearly traversing both. The point where they both meet will be the duplicate number.
+    T.C : O(N)
     
     int findDuplicate(vector<int>& nums) {
         int n = nums.size();
