@@ -1,0 +1,32 @@
+//
+Given an integer N, find its factorial.
+
+Example 1:
+
+Input: N = 5
+Output: 120
+Explanation : 5! = 1*2*3*4*5 = 120
+//
+
+vector<int> factorial(int N){
+    
+        vector<int> ans;
+        ans.push_back(1);
+        for(int i=2; i<=N; i++){
+            int carry = 0;
+            // For the length of the array keep multipying with the new number and afterwards push the carry at last.
+            for(int j=0; j<ans.size(); j++){
+                int val = ans[j]*i + carry; 
+                ans[j] = val%10;
+                carry = val/10;
+            }
+            // We will be storing the result of multiplication in reverse.
+            while(carry != 0){
+                ans.push_back(carry%10);
+                carry /= 10;
+            }
+        }
+        // And at last reverse the the array to obtain the final result.
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
