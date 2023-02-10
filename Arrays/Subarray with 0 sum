@@ -1,0 +1,35 @@
+//
+Given an array of positive and negative numbers. Find if there is a subarray (of size at-least one) with 0 sum.
+
+Example 1:
+
+Input:
+5
+4 2 -3 1 6
+
+Output: 
+Yes
+//
+
+    **Approach : Use preSum and store the unique values into set. if preSum == 0 or preSum value already exists in the set then that means from that point
+    till here we have subarray sum zero.
+    T.C : O(N)
+    S.C : O(N)
+    
+    bool subArrayExists(int arr[], int n)
+    {
+        unordered_set<int> st;
+        int preSum = 0;
+        for(int i=0; i<n; i++){
+            preSum += arr[i];
+            if(st.find(preSum) != st.end()){
+                return true;
+            }
+            if(preSum == 0){
+                return true;
+            }
+            st.insert(preSum);
+        }
+        return false;
+    }
+    
