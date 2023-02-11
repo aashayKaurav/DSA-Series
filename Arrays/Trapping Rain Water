@@ -1,0 +1,50 @@
+//
+Given an array arr[] of N non-negative integers representing the height of blocks. If width of each block is 1,
+compute how much water can be trapped between the blocks during the rainy season. 
+ 
+
+Example 1:
+
+Input:
+N = 6
+arr[] = {3,0,0,2,0,4}
+Output:
+10
+Explanation: 
+
+Example 2:
+
+Input:
+N = 4
+arr[] = {7,4,0,9}
+Output:
+10
+Explanation:
+Water trapped by above 
+block of height 4 is 3 units and above 
+block of height 0 is 7 units. So, the 
+total unit of water trapped is 10 units.
+//
+
+    **Approach : Precalculate the maximum left height and right height for a cell. Then we can have min(left[i], right[i])-arr[i] as the maximum water that 
+    can be contained in the cell.
+    
+    long long trappingWater(int arr[], int n){
+        vector<int> leftHigher(n, 0);
+        vector<int> rightHigher(n, 0);
+        
+        leftHigher[0] = arr[0];
+        for(int i=1; i<n; i++){
+            leftHigher[i] = max(leftHigher[i-1], arr[i]);
+        }
+        rightHigher[n-1] = arr[n-1];
+        for(int i=n-2; i>=0; i--){
+            rightHigher[i] = max(rightHigher[i+1], arr[i]);
+        }
+        long long ans = 0;
+        for(int i=0; i<n; i++){
+            ans += (min(leftHigher[i], rightHigher[i])-arr[i]);
+        }
+        return ans;
+    }
+    T.C : O(N) and S.C : O(N)
