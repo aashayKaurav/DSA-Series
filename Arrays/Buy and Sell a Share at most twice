@@ -1,0 +1,68 @@
+//
+In daily share trading, a buyer buys shares in the morning and sells them on the same day. 
+If the trader is allowed to make at most 2 transactions in a day, the second transaction can only start after the first one is complete (Buy->sell->Buy->sell). 
+The stock prices throughout the day are represented in the form of an array of prices. 
+
+Given an array price of size N, find out the maximum profit that a share trader could have made.
+
+Example 1:
+
+Input:
+6
+10 22 5 75 65 80
+Output:
+87
+Explanation:
+Trader earns 87 as sum of 12, 75 
+Buy at 10, sell at 22, 
+Buy at 5 and sell at 80
+//
+
+    **APPROACH : Use DP array. In first traversal right to left keep a sellPrice variable to store the max stock of the array and keep updating the 
+    dp array by profit got so far. Then in the second iteration traverse from left to right and this time maintain a costPrice variable to store the least stock 
+    so far then by comparing at each step update the dp array.
+    int maxProfit(vector<int> &price){
+    
+    int n = price.size();
+    vector<int> dp(n, 0);
+    int sellPrice = price[n-1];
+     
+    for(int i=n-2; i>=0; i--){
+        if(sellPrice < price[i]){
+            sellPrice = price[i];
+        }
+        dp[i] = max(dp[i+1], sellPrice-price[i]);
+    }
+    int costPrice = price[0];
+    for(int i=1; i<n; i++){
+        if(costPrice > price[i]){
+            costPrice = price[i];
+        }
+        dp[i] = max(dp[i-1], dp[i] + (price[i]-costPrice));
+    }
+    return dp[n-1];
+}
+T.C : O(N) and S.C : O(N)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+** Another Approach : Initialize four variables for taking care of the first buy, first sell, second buy, second sell.
+Set first buy and second buy as INT_MIN and first and second sell as 0. This is to ensure to get profit from transactions. 
+Iterate through the array and return the second sell as it will store maximum profit.
+
+int maxProfit(vector<int> &price){
+    
+    int n = price.size();
+    
+    int firstBuy = INT_MIN;
+    int firstSell = 0;
+    int secondBuy = INT_MIN;
+    int secondSell = 0;
+    
+    for(int i=0; i<n; i++){
+        firstBuy = max(firstBuy, -price[i]);
+        firstSell = max(firstSell, price[i]+firstBuy);
+        secondBuy = max(secondBuy, firstSell-price[i]);
+        secondSell = max(secondSell, price[i]+secondBuy);
+    }
+    return secondSell;
+}
+T.C : O(N) and S.C : (1)
