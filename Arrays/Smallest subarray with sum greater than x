@@ -1,0 +1,39 @@
+//
+Given an array of integers (A[])  and a number x, find the smallest subarray with sum greater than the given value. 
+If such a subarray do not exist return 0 in that case.
+
+Note: The answer always exists. It is guaranteed that x doesn't exceed the summation of a[i] (from 1 to N).
+
+Example 1:
+
+Input:
+A[] = {1, 4, 45, 6, 0, 19}
+x  =  51
+Output: 3
+Explanation:
+Minimum length subarray is 
+{4, 45, 6}
+//
+    **Approach : Sliding Window Technique.
+    Use SWT where keep adding elements from j untill sum <= x and if sum > x then if len is smaller then update it and remove element from i side. 
+    Keep checking untill we reach end. Return ans.
+int smallestSubWithSum(int arr[], int n, int x)
+    {
+        int i = 0, j = 0;
+        int len = INT_MAX;
+        int sum = 0;
+        while(j < n){
+            
+            while(sum <= x && j < n){
+                sum += arr[j];
+                j++;
+            }
+            while(sum > x && i < j){
+                if(len > j-i)
+                    len = j-i;
+                sum -= arr[i];
+                i++;
+            }
+        }
+        return len;
+    }
