@@ -1,0 +1,42 @@
+//
+Given an array arr of size n and an integer X. Find if there's a triplet in the array which sums up to the given integer X.
+
+
+Example 1:
+
+Input:
+n = 6, X = 13
+arr[] = [1 4 45 6 10 8]
+Output:
+1
+Explanation:
+The triplet {1, 4, 8} in 
+the array sums up to 13.
+//
+
+    **Approach : Two pointer approach.
+    First sort the array then iterate the array and for each element apply two pointer approach to the rest of the array. The target for the rest of 
+    the array becomes target = X - A[i], if we find a pair which sums up to target then we return true else return false.
+    
+    bool find3Numbers(int A[], int n, int X)
+    {
+        sort(A, A+n);
+        for(int i=0; i<n; i++){
+            int low = i+1;
+            int target = X-A[i];
+            int high = n-1;
+            while(low < high){
+                if(A[low] + A[high] < target){
+                    low++;
+                }
+                else if(A[low] + A[high] > target){
+                    high--;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    T>C : O(N^2) and S.C : O(1)
