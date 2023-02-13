@@ -1,0 +1,88 @@
+//
+Given a matrix of size r*c. Traverse the matrix in spiral form.
+
+Example 1:
+
+Input:
+r = 4, c = 4
+matrix[][] = {{1, 2, 3, 4},
+           {5, 6, 7, 8},
+           {9, 10, 11, 12},
+           {13, 14, 15,16}}
+Output: 
+1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10
+//
+
+    Approach : Take 4 pointers startRow = 0, startCol = 0, endRow = r-1, endCol = c-1 and count variable to count the number of elements treversed so far.
+    And Accordiingly keep pushing the elements and update the pointers.
+    
+    vector<int> spirallyTraverse(vector<vector<int> > matrix, int r, int c) 
+    {
+        int startRow = 0;
+        int startCol = 0;
+        int endRow = r-1;
+        int endCol = c-1;
+        int count = 0;
+        vector<int> ans;
+        
+        while(count < r*c){
+            
+            // start row
+            for(int i=startCol; count < r*c && i<=endCol; i++){
+                ans.push_back(matrix[startRow][i]);
+                count++;
+            }
+            startRow++;
+            
+            // end Col
+            for(int i=startRow; count < r*c && i<=endRow; i++){
+                ans.push_back(matrix[i][endCol]);
+                count++;
+            }
+            endCol--;
+            
+            // end row
+            for(int i=endCol; count < r*c && i>=startCol; i--){
+                ans.push_back(matrix[endRow][i]);
+                count++;
+            }
+            endRow--;
+            
+            // start col
+            for(int i=endRow; count < r*c && i>=startRow; i--){
+                ans.push_back(matrix[i][startCol]);
+                count++;
+            }
+            startCol++;
+        }
+        return ans;
+    }
+-------------------------------------------------------------------------------------------------------------------------------------------
+vector<int> spirallyTraverse(vector<vector<int> > matrix, int r, int c) 
+    {
+        vector<vector<bool>> seen(r, vector<bool>(c, false));
+        vector<int> ans;
+        int dr[] = { 0, 1, 0, -1 };
+        int dc[] = { 1, 0, -1, 0 };
+        int x = 0, y = 0, di = 0;
+        for(int i=0; i<r*c; i++){
+            ans.push_back(matrix[x][y]);
+            
+            seen[x][y] = true;
+            int newX = x + dr[di];
+            int newY = y + dc[di];
+            
+            if(0 <= newX && newX < r && 0 <= newY && newY < c 
+                && seen[newX][newY] == false){
+                x = newX;
+                y = newY;
+            }
+            else{
+                di = (di+1)%4;
+                x += dr[di];
+                y += dc[di];
+            }
+        }
+        return ans;
+    }
+    T.C : O(N) and S.C : O(N)
