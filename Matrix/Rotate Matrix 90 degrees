@@ -27,3 +27,11 @@ Output: [[7,4,1],[8,5,2],[9,6,3]]
         }
     }
     T.C : O(N^2) and S.C : O(1)
+
+Rotate matrix by 180 degree : 
+      There are four steps --
+      1- Find transpose of a matrix. 
+      2- Reverse columns of the transpose. 
+      3- Find transpose of a matrix. 
+      4- Reverse columns of the transpose
+      
