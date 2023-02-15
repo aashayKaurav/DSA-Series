@@ -1,0 +1,69 @@
+//
+Given an array arr[ ] of size N having elements, the task is to find the next greater element for each element of the array in order of their appearance in the array.
+Next greater element of an element in the array is the nearest element on the right which is greater than the current element.
+If there does not exist next greater of current element, then next greater element for current element is -1. 
+For example, next greater of the last element is always -1.
+
+Example 1:
+
+Input: 
+N = 4, arr[] = [1 3 2 4]
+Output:
+3 4 4 -1
+Explanation:
+In the array, the next larger element 
+to 1 is 3 , 3 is 4 , 2 is 4 and for 4 ? 
+since it doesn't exist, it is -1.
+//
+
+    **Naive Solution :
+    vector<long long> nextLargerElement(vector<long long> arr, int n){
+        // Naive solution
+        vector<long long> ans;
+        for(int i=0; i<n-1; i++){
+            bool flag = true;
+            for(int j=i+1; j<n; j++){
+                if(arr[j] > arr[i]){
+                    ans.push_back(arr[j]);
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                ans.push_back(-1);
+            }
+        }
+        ans.push_back(-1);
+        return ans;
+    }
+    T.C : O(N^2) and S.C : O(N)
+-----------------------------------------------------------------------------------------------------------------------------------------------
+    ** Using Stack data structure.
+    Intution : Keep a stack having elements in increasing order and traverse the array from right to left and check wheather the top element of the stack 
+    is greater than the current element if so then keep in ans and push the current element in the stack. Otherwise keep poping the elements in the stack
+    untill you find the right greater element!! :)
+    
+    vector<long long> nextLargerElement(vector<long long> arr, int n){
+        
+        vector<long long> ans(n);
+        stack<long long> st;
+        
+        for(int i=n-1; i>=0; i--){
+            while(!st.empty() && st.top() <= arr[i]){
+                st.pop();
+            }
+            if(st.empty() == false){
+                ans[i] = st.top();
+            }
+            else{
+                ans[i] = -1;
+            }
+            st.push(arr[i]);
+        }
+        return ans;
+    }
+    T.C : O(N) and S.C : O(N)
+    The inner while loop is not running every time and each element is exactly push only once.
+------------------------------------------------------------------------------------------------------------------------------------------------
+    ** For Circular array varient -- Start for loop fron i = 2n-1 till 0 and keep the index i%n and every thing remains same.
+    
