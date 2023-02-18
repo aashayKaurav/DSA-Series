@@ -1,0 +1,84 @@
+//
+Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1, 2, N} is missing and one number 'B' occurs twice in array. 
+Find these two numbers.
+
+Example 1:
+
+Input:
+N = 2
+Arr[] = {2, 2}
+Output: 2 1
+Explanation: Repeating number is 2 and 
+smallest positive missing number is 1.
+//
+
+    **Approach : Take XOR of each element with the range of elements 1 to n. Then we are left with duplicate XOR missing.
+    Then take the lsb set bit and seperate every elent based on whether last bit is set ot not. Finally take counter and count which element has been repeated
+    then return ans.
+    
+    int *findTwoElement(int *arr, int n) {
+    int xor1;
+    int *ans;
+    /* Will have only single set bit of xor1 */
+    int set_bit_no;
+
+    int x = 0; // set with lsb 1
+    int y = 0; // set with lsb 0
+    
+
+    xor1 = arr[0];
+
+    /* Get the xor of all array elements */
+    for (int i = 1; i < n; i++)
+        xor1 = xor1 ^ arr[i];
+
+    /* XOR the previous result with numbers from 1 to n */
+    for (int i = 1; i <= n; i++)
+        xor1 = xor1 ^ i;
+
+    /* Get the rightmost set bit in set_bit_no */
+    set_bit_no = xor1 & ~(xor1 - 1);
+
+    /* Now divide elements into two sets by comparing a rightmost set bit
+       of xor1 with the bit at the same position in each element.
+       Also, get XORs of two sets. The two XORs are the output elements.
+       The following two for loops serve the purpose */
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] & set_bit_no)
+            /* arr[i] belongs to first set */
+            x = x ^ arr[i];
+
+        else
+            /* arr[i] belongs to second set */
+            y = y ^ arr[i];
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (i & set_bit_no)
+            /* i belongs to first set */
+            x = x ^ i;
+
+        else
+            /* i belongs to second set */
+            y = y ^ i;
+    }
+
+    // NB! numbers can be swapped, maybe do a check ?
+    int x_count = 0;
+    for (int i=0; i<n; i++) {
+        if (arr[i]==x)
+            x_count++;
+    }
+    
+    if (x_count==0){
+        ans[0] = y;
+        ans[1] = x;
+        return ans;
+    }
+    ans[0] = x;
+    ans[1] = y;
+    
+    return ans;
+    }
+    T.C : O(N) and S.C : O(1)
