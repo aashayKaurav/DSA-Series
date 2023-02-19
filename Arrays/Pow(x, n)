@@ -1,0 +1,40 @@
+//
+Implement pow(x, n), which calculates x raised to the power n (i.e., xn). 
+
+Example 1:
+
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+
+Example 3:
+
+Input: x = 2.00000, n = -2
+Output: 0.25000
+Explanation: 2-2 = 1/22 = 1/4 = 0.25
+//
+
+    **Intution : x^n ==> if n is even then (x*x)^n/2 else if n is odd then (ans * x)^(n-1). At last check whether n < 0 or not if so then return 1/ans else return 
+    1/ans
+    
+    double myPow(double x, int n) {
+        double ans = 1.0;
+        long long k = n;
+        if(k < 0){
+            k = -1 * k;
+        }
+        while(k){
+            if(k%2){
+                ans = ans * x;
+                k = k - 1;
+            }
+            else{
+                x = x * x;
+                k = (k >> 1);
+            }
+        }
+        if(n<0){
+            return (double)1/(double)(ans);
+        }
+        return ans;
+    }
+    T.C : O(log n) and S.C : O(1)
