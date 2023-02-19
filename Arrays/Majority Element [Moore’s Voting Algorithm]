@@ -1,0 +1,43 @@
+//
+Given an array nums of size n, return the majority element.
+
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: 3
+//
+
+    **Approach : Initialize 2 variables:
+                    Count – for tracking the count of element
+                    Element – for which element we are counting
+                 Traverse through nums array.
+                    a). If Count is 0 then initialize the current traversing integer of array as Element.
+                    b). If the traversing integer of array and Element are same increase Count by 1
+                    c). If they are different decrease Count by 1
+                 The integer present in Element is the result we are expecting
+     **Intution : There will be one element N/2 + x ocurred and rest of the elements N/2 - x present. So just take the count and and element and 
+     keep checking how many times the element has occured. Atlast most occured element will be present in element. 
+     
+     int majorityElement(vector<int>& nums) {
+        int n = nums.size();
+        int count = 0;
+        int element = 0;
+        for(int i=0; i<n; i++){
+            if(count == 0){
+                count++;
+                element = nums[i];
+            }
+            else{
+                if(element == nums[i]){
+                    count++;
+                }
+                else{
+                    count--;
+                }
+            }
+        }
+        return element;
+    }
+    T.C : O(N) and S.C : O(1)
