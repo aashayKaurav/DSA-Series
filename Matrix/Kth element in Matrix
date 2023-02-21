@@ -1,0 +1,62 @@
+//
+Given a N x N matrix, where every row and column is sorted in non-decreasing order. Find the kth smallest element in the matrix.
+
+Example 1:
+Input:
+N = 4
+mat[][] =     {{16, 28, 60, 64},
+              {22, 41, 63, 91},
+              {27, 50, 87, 93},
+              {36, 78, 87, 94 }}
+K = 3
+Output: 27
+Explanation: 27 is the 3rd smallest element.
+//
+
+    **Approach : Using heap data structure. Keep adding the elements into max heap and once there are elements more than k then just keep poping out 
+    the elements out of the heap. At last the top element of the heap is our kth smallest element.
+    
+    int kthSmallest(int mat[MAX][MAX], int n, int k)
+{
+    priority_queue<int> pq;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            pq.push(mat[i][j]);
+            if(pq.size() > k ){
+                pq.pop();
+            }
+            
+        }
+    }
+    return pq.top();
+}
+    T.C : O(n^2 logk) and S.C : O(k)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------    
+    **Optimal approach : Using binary search technique. Take low = mat[0][0] and high = mat[n-1][n-1] and keep approaching towards the kth element.
+    At every step count how many elements are less than the mid for each row (can be done using upper_bound) and check how close we are to find kth element
+    and accn change the low/high pointers.
+    
+    int kthSmallest(int mat[MAX][MAX], int n, int k)
+{
+    int low = mat[0][0];
+    int high = mat[n-1][n-1];
+    
+    while(low < high){
+        
+        int mid = low + (high - low)/2;
+        int count = 0;
+        for(int i=0; i<n; i++){
+            count += upper_bound(mat[i], mat[i] + n, mid) - mat[i];
+        }
+        
+        if(count < k){
+            low = mid+1;
+        }
+        else{
+            high = mid;
+        }
+    }
+    // Finally low will contain the kth smallest element.
+    return low;
+}
+    T.C : O(N logN) and S.C : O(1)
