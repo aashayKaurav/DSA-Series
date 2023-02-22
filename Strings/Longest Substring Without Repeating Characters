@@ -1,0 +1,70 @@
+//
+Given a string s, find the length of the longest 
+substring without repeating characters.
+
+Example 1:
+
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+//
+    
+     ** Brute Force : Try out for all substrings
+     int lengthOfLongestSubstring(string s) {
+        
+        // brute force
+        int maxLen = INT_MIN;
+        int n = s.size();
+        if(n == 0 || n == 1){
+            return n;
+        }
+        
+        for(int i=0; i<n; i++){
+            unordered_set<int> set;
+            for(int j=i; j<n; j++){
+                if(set.find(s[j]) != set.end()){
+                    maxLen = max(maxLen, j-i);
+                    break;
+                }
+                set.insert(s[j]);
+            }
+            if(set.size() == n-i){
+                maxLen = max(maxLen, n-i);
+            }
+        }
+        return maxLen;
+    }
+    T.C : O(N^2) 
+    S.C : O(N)
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+    **Better Approach : Take l and r pointer initially pointing to 0th index also take a set ds to store the characters. Keep adding the elements in the set
+    increment r untill we find a repeated char. Otherwise keep removing the char from l side untill all char are unique. Update the ans accordingly. 
+    
+    int lengthOfLongestSubstring(string s) {
+        
+        int maxLen = INT_MIN;
+        int n = s.size(), l = 0, r = 0;
+        if(n == 0 || n == 1){
+            return n;
+        }
+        set<char> set;
+        while(r < n){
+            
+            while(set.find(s[r]) != set.end()){
+                set.erase(s[l]);
+                l++;
+            }
+            set.insert(s[r]);
+            maxLen = max(maxLen, r-l+1);
+            r++;
+        }
+        return maxLen;   
+    }
+    T.C : O(2N)
+    S.C : O(N)
+-------------------------------------------------------------------------------------------------------------------------------------------------------
