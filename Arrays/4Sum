@@ -1,0 +1,61 @@
+//
+Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+
+0 <= a, b, c, d < n
+a, b, c, and d are distinct.
+nums[a] + nums[b] + nums[c] + nums[d] == target
+You may return the answer in any order.
+
+Example 1:
+
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+//
+
+    **INTUTION : An optimal solution is to first sort the array then fix two pointers and apply Binary Search in remaining part of the array if the required
+    sum is equal to target sum then we got one possible ans and store it into ans. Also run a loop further to check whether there are duplicated or not.
+    
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> ans;
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+
+        for(int i=0; i<n-1; i++){
+
+            for(int j=i+1; j<n; j++){
+                // new target after fixing i and j and to avoid overflow we are using long int.
+                long int targetNew = (long int)target - nums[i] - nums[j];
+                int left = j+1;
+                int right = n-1;
+                while(left < right){
+
+                    if(nums[left] + nums[right] > targetNew){
+                        right--;
+                    }
+                    else if(nums[left] + nums[right] < targetNew){
+                        left++;
+                    }
+                    else{
+                        vector<int> quad(4);
+                        quad[0] = nums[i];
+                        quad[1] = nums[j];
+                        quad[2] = nums[left];
+                        quad[3] = nums[right];
+                        
+                        ans.push_back(quad);
+                        // processing the duplicates from left
+                        while(left < right && quad[2] == nums[left]) left++;
+                        // processing the duplicates from right
+                        while(left < right && quad[3] == nums[right]) right--;                      
+                    }
+                }
+                // processing the duplicates from j
+                while(j+1 < n && nums[j] == nums[j+1]) j++;
+            }
+            // processing the duplicates from i
+            while(i+1 < n && nums[i] == nums[i+1]) i++;
+        }
+        return ans;
+    }
+    T.C : O(N^3) because we are running two outer loops and one inner(while) loop
+    S.C : O(1)
