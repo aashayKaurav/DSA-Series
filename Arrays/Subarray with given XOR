@@ -1,0 +1,44 @@
+//
+Given an array of integers A and an integer B.
+
+Find the total number of subarrays having bitwise XOR of all elements equals to B.
+
+Example Input
+Input 1:
+
+ A = [4, 2, 2, 6, 4]
+ B = 6
+Input 2:
+
+ A = [5, 6, 7, 8, 9]
+ B = 5
+//
+    **Brute force : try out every subarray T.C : O(N^2)
+    **Optimal approach : Using KADANE'S Technique 
+    
+    Intuition: The main idea is to observe the prefix xor of the array. Prefix Xor is just another array,
+    where each index contains XOR of all elements of the original array starting from index 0 up to that index.
+    
+    => Y ^ B = xor
+    => Y = xor ^ B
+    Therefore # of Y's == # of subarrays whose xor is equal to B.
+    
+    int solve(int* A, int n1, int B) {
+    int xor = 0;
+    int cnt = 0;
+    unordered_map<int, int> mp;
+    for(int i=0; i<n1; i++){
+        xor ^= A[i];
+        if(xor == B){
+            cnt++;
+        }
+        if(mp.find(xor ^ B) != mp.end()){
+            cnt += mp[xor ^ B];
+        }
+        mp[xor] += 1;
+    }
+    return cnt;
+}
+    T.C : O(N) 
+    S.C : O(N)
+    
