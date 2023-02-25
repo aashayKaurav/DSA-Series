@@ -1,0 +1,57 @@
+//
+Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+
+Input: head = [1,2,2,1]
+Output: true
+Example 2:
+
+Input: head = [1,2]
+Output: false
+//
+  
+    ** Brute : We can use additional ds like stack to stroe all vals in one go and then keep poping all elements from it, keep checking that elements
+    are same or not.
+    
+    **Approach : We can use slow and fast pointers to get the mid node of the linked list and then reverse the second half and start
+    traversing the two halfs to check whether palindrome or not. :)
+    
+    ListNode* reverseList(ListNode *head){
+        if(head == NULL || head->next == NULL){
+            return head;
+        }
+        ListNode* rev = reverseList(head->next);
+
+        head->next->next = head;
+        head->next = NULL;
+
+        return rev;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if(head == NULL || head->next == NULL){
+            return true;
+        }
+        ListNode *slow = head;
+        ListNode *fast = head;
+        ListNode *temp = head;
+            
+        while(fast->next!=NULL&&fast->next->next!=NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        slow->next = reverseList(slow->next);
+        slow = slow->next;
+
+        while(slow){
+            if(temp->val != slow->val){
+                return false;
+            }
+            temp = temp->next;
+            slow = slow->next;
+        }
+
+        return true;
+    }
+    T.C : O(N)
+    S.C : O(1)
