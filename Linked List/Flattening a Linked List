@@ -1,0 +1,77 @@
+//
+Given a Linked List of size N, where every node represents a sub-linked-list and contains two pointers:
+(i) a next pointer to the next node,
+(ii) a bottom pointer to a linked list where this node is head.
+Each of the sub-linked-list is in sorted order.
+Flatten the Link List such that all the nodes appear in a single level while maintaining the sorted order. 
+
+Note: The flattened list will be printed using the bottom pointer instead of the next pointer.
+For more clarity have a look at the printList() function in the driver code.
+
+Example 1:
+
+Input:
+5 -> 10 -> 19 -> 28
+|     |     |     | 
+7     20    22   35
+|           |     | 
+8          50    40
+|                 | 
+30               45
+Output:  5-> 7-> 8- > 10 -> 19-> 20->
+22-> 28-> 30-> 35-> 40-> 45-> 50.
+Explanation:
+The resultant linked lists has every 
+node in a single level.
+(Note: | represents the bottom pointer.)
+//
+
+    **Approach : We can use the merging two sorted linked list concept. Call the recursive function and from last two linked list start merging both. Then keep
+    doing untill all the linked lists are merged.
+    
+    Node* mergeLinkedList(Node *l1, Node *l2){
+    
+    Node *temp = new Node(-1);
+    Node *res = temp;
+    
+    while(l1 && l2){
+        if(l1->data <= l2->data){
+            temp->bottom = l1;
+            temp = temp->bottom;
+            l1 = l1->bottom;
+        }
+        else{
+            temp->bottom = l2;
+            temp = temp->bottom;
+            l2 = l2->bottom;
+        }
+    }
+    while(l1){
+        temp->bottom = l1;
+        temp = temp->bottom;
+        l1 = l1->bottom;
+    }
+    while(l2){
+        temp->bottom = l2;
+        temp = temp->bottom;
+        l2 = l2->bottom;
+    }
+    return res->bottom;
+}
+
+/*  Function which returns the  root of 
+    the flattened linked list. */
+Node *flatten(Node *root)
+{
+    if(root == NULL || root->next == NULL){
+        return root;
+    }
+    Node *temp = root;
+    temp->next = flatten(temp->next);
+    
+    temp = mergeLinkedList(temp, temp->next);
+    
+    return temp;
+}
+T.C : O(N)
+S.C : O(1)
