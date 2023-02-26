@@ -1,0 +1,69 @@
+//
+Given a linked list of N nodes such that it may contain a loop.
+
+A loop here means that the last node of the link list is connected to the node at position X(1-based index). If the link list does not have any loop, X=0.
+
+Remove the loop from the linked list, if it is present, i.e. unlink the last node which is forming the loop.
+
+Example 1:
+
+Input:
+N = 3
+value[] = {1,3,4}
+X = 2
+Output: 1
+Explanation: The link list looks like
+1 -> 3 -> 4
+     ^    |
+     |____|    
+A loop is present. If you remove it 
+successfully, the answer will be 1. 
+//
+
+    **Approach : First we will detect whether the loop exists or not then if loop exists we will find the first node of the loop. Afterwards we will traverse
+    from that point till last node and simply remove the loop by pointing to NULL at last node.
+    
+    Node *detectLoop(Node *head){
+        Node *slow = head;
+        Node *fast = head;
+        
+        while(fast->next && fast->next->next){
+            slow = slow->next;
+            fast = fast->next->next;
+            if(slow == fast){
+                return slow;
+            }
+        }
+        return NULL;
+    }
+    Node *findFirstNode(Node *head){
+        Node *loop = detectLoop(head);
+        if(loop == NULL){
+            return NULL;
+        }
+        Node *start = head;
+        while(start != loop){
+            start = start->next;
+            loop = loop->next;
+        }
+        return start;
+    }
+    
+    //Function to remove a loop in the linked list.
+    void removeLoop(Node* head)
+    {
+        // code here
+        // just remove the loop without losing any nodes
+        Node *temp = findFirstNode(head);
+        if(temp == NULL){
+            return;
+        }
+        Node *slow = temp;
+        while(slow->next != temp){
+            slow = slow->next;
+        }
+        slow->next = NULL;
+        return;
+    }
+    T.C : O(N)
+    S.C : O(1)
