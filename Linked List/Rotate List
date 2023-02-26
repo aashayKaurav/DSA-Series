@@ -1,0 +1,35 @@
+//
+Given the head of a linked list, rotate the list to the right by k places.
+
+Example 1:
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [4,5,1,2,3]
+//
+
+    **Appoach : Just traverse and count total number of nodes. At last node update and link to head node. Now traverse len-k nodes from left and update
+    this node as last node and next node as head. Return the head :)
+    
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == NULL || head->next == NULL || k==0){
+            return head;
+        }
+        int len = 1;
+        ListNode *temp = head;
+        while(temp->next != NULL){
+            len++;
+            temp = temp->next;
+        }
+        temp->next = head;
+        k = k%len;
+        int end = len-k;
+        while(end--){
+            temp = temp->next;
+        }
+        head = temp->next;
+        temp->next = NULL;
+
+        return head;
+    }
+    T.C : O(N)
+    S.C : O(1)
