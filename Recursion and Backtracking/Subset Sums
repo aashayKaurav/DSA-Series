@@ -1,0 +1,42 @@
+//
+Given a list arr of N integers, print sums of all subsets in it.
+
+Example 1:
+
+Input:
+N = 2
+arr[] = {2, 3}
+Output:
+0 2 3 5
+Explanation:
+When no elements is taken then Sum = 0.
+When only 2 is taken then Sum = 2.
+When only 3 is taken then Sum = 3.
+When element 2 and 3 are taken then 
+Sum = 2+3 = 5.
+//
+
+    **Approach : For every element we have two possibilities either to take it or not to take it.
+    void solve(vector<int> &arr, int i, int n, vector<int> &ans, int sum){
+        if(i == n){
+            ans.push_back(sum);
+            return;
+        }
+        
+        //take
+        solve(arr, i+1, n, ans, sum+arr[i]);
+        
+        // not take
+        solve(arr, i+1, n, ans, sum);
+        
+    }
+
+    vector<int> subsetSums(vector<int> arr, int N)
+    {
+        vector<int> ans;
+        int sum = 0;
+        solve(arr, 0, N, ans, sum);
+        return ans;
+    }
+    T.C : O(2^N)
+    S.C : O(N)
