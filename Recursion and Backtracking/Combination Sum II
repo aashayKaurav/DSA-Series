@@ -1,0 +1,54 @@
+//
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note: The solution set must not contain duplicate combinations.
+
+Example 1:
+
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output: 
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+//
+
+    Approach : We can use set ds to store unique combinations and apply (include and not include) technique to find all possible combinations.
+
+    Optimal Approach : In order to avoid duplicates and as any element can be used only once therefore we will avoid the duplicate element and try to add only unique elements
+    that can sum to target.
+    
+    void solve(int i, int n, vector<int>& candidates, int target, vector<int> &temp, vector<vector<int>> &ans){
+        
+        if(target == 0){
+            ans.push_back(temp);
+            return;
+        }
+        for(int j=i; j<n; j++){
+            // if duplicate element then ignore
+            if(j > i && candidates[j] == candidates[j-1])
+                continue;
+            if(candidates[j] > target){
+                break;
+            }
+            if(candidates[j] <= target){
+                temp.push_back(candidates[j]);
+                solve(j+1, n, candidates, target-candidates[j], temp, ans);
+                temp.pop_back();
+            }            
+        }
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<int> temp;
+        vector<vector<int>> ans;
+        solve(0, candidates.size(), candidates, target, temp, ans);
+        return ans;
+    }
+    T.C : O(2^N * K) where k = avg length of combination to add every time we find target.
+    S.C : O(K * x) where x = #of combinations.
