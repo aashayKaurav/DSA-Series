@@ -1,0 +1,64 @@
+//
+Given an integer array nums that may contain duplicates, return all possible 
+subsets(the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+Example 1:
+
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+Example 2:
+
+Input: nums = [0]
+Output: [[],[0]]
+//
+
+    **Brute Force Approach : Using the set ds to store the subsets. For each value we have two options -- take or not take.
+    
+    void solve(vector<int> &nums, set<vector<int>> &st, int i, int n, vector<int> temp){
+        if(i == n){
+            sort(temp.begin(), temp.end());
+            st.insert(temp);
+            return;
+        }
+
+        temp.push_back(nums[i]);
+        solve(nums, st, i+1, n, temp);
+        temp.pop_back();
+        solve(nums, st, i+1, n, temp);
+
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        int n = nums.size();
+        set<vector<int>> st;
+        vector<int> temp;
+        solve(nums, st, 0, n, temp);
+        vector<vector<int>> ans(st.begin(), st.end());
+        return ans;
+    }
+    T.C : O(2^N * k * log(x))
+    S.C : O(2^n)
+------------------------------------------------------------------------------------------------------------------------------------------------
+    ** Optimal Approach (BackTracking): First sort the nums array in order to have duplicates together. Instead of using extra ds we can do without it. 
+    Keep a check that the element is repeated or not if repeated then continue else store into ds and recusively call for next index. 
+    Keep poping the elements while back tracking. All possibilities will be covered and no duplicates will be stored.
+    
+    void solve(int ind, vector<int> &nums, vector<int> &temp, vector<vector< int >> &ans) {
+         ans.push_back(temp);
+         for (int i = ind; i < nums.size(); i++) {
+            if (i != ind && nums[i] == nums[i - 1]) continue;
+            temp.push_back(nums[i]);
+            solve(i + 1, nums, temp, ans);
+            temp.pop_back();
+         }
+      }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        sort(nums.begin(), nums.end());
+        solve(0, nums, temp, ans);
+        return ans;
+    }
