@@ -1,0 +1,67 @@
+//
+Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+
+Example 1:
+
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+
+Example 2:
+
+Input: nums = [0,1]
+Output: [[0,1],[1,0]]
+//
+
+    **Approach 1 : Take a ds and freq map to mark which element has been taken. Start from i = 0 to n-1 and keep adding elements and mark it.
+    By using backtracking keep poping the elements and unmark the elements. Keep doing this to cover all possibilites.
+    
+    void solve(vector<int> &nums, vector<int> &temp, vector<int> &freq, vector<vector<int>> &ans){
+        if(temp.size() == nums.size()){
+            ans.push_back(temp);
+            return;
+        }
+        for(int i=0; i<nums.size(); i++){
+            if(freq[i] == 0){
+                temp.push_back(nums[i]);
+                freq[i] = 1;
+                solve(nums, temp, freq, ans);
+                freq[i] = 0;
+                temp.pop_back();
+            }
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        vector<int> freq(nums.size(), 0);
+        solve(nums, temp, freq, ans); 
+        return ans;
+    }
+    T.C : O(N! * N)
+    S.C : O(N)
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+    *Approach 2 : Without using the extra ds we can simply swap for each element and using backtracking we swap them back and try to swap with next
+    element. In this way we can generate all the possiblities.
+    
+    void solve(int ind, vector<int> &nums, vector<vector<int>> &ans){
+        if(ind == nums.size()){
+            ans.push_back(nums);
+            return;
+        }
+
+        for(int i=ind; i<nums.size(); i++){
+            swap(nums[i], nums[ind]);
+            solve(ind+1, nums, ans);
+            swap(nums[i], nums[ind]);
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        
+        solve(0, nums, ans);
+        return ans;
+    }
+    T.C : O(N! * N)
+    S.C : (1)
