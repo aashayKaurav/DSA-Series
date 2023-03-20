@@ -76,3 +76,6 @@ Output: [["Q"]]
 
         return ans;
     }
+   
+   T.C : O(N! * N)
+   S.C : O(N^2)
