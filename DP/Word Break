@@ -1,0 +1,83 @@
+//
+Given a string A and a dictionary of n words B, find out if A can be segmented into a space-separated sequence of dictionary words.
+
+Note: From the dictionary B each word can be taken any number of times and in any order.
+Example 1:
+
+Input:
+n = 12
+B = { "i", "like", "sam",
+"sung", "samsung", "mobile",
+"ice","cream", "icecream",
+"man", "go", "mango" }
+A = "ilike"
+Output:
+1
+Explanation:
+The string can be segmented as "i like".
+//
+
+    ** Recursive Approach : We wont check for every single substring, instead we will check for substring when we get a prefix substring present in the dict.
+    bool check(string s, vector<string> &B){
+        for(int i=0; i<B.size(); i++){
+            if(B[i].compare(s) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    int wordBreak(string A, vector<string> &B) {
+        
+        int n = A.size();
+        if(n == 0){
+            return 1;
+        }
+        for(int i=1; i<=n; i++){
+            if(check(A.substr(0, i), B) && wordBreak(A.substr(i), B)){
+                return 1;
+            }
+        }
+        return 0;
+    }
+    T.C : O(2 ^ N) beacuse there can be N partitions in the worst case.
+    S.C : O(1)
+----------------------------------------------------------------------------------------------------------------------------------
+    
+    ** Top down Approach :
+    bool check(string s, vector<string> &dict){
+        for(int i=0; i<dict.size(); i++){
+            if(dict[i].compare(s) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool solve(string s, vector<string>& wordDict, vector<int> &dp){
+
+        int n = s.size();
+        if(n == 0){
+            return true;
+        }
+        if(dp[n] != -1){
+            return dp[n];
+        }
+        dp[n] = 0;
+        for(int i=1; i<=n; i++){
+            string str = s.substr(0, i);
+            if(check(str, wordDict) && solve(s.substr(i), wordDict, dp)){
+                return dp[n] = 1;
+            }
+        }
+        return dp[n];
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        vector<int> dp(s.size()+1, -1);
+        return solve(s, wordDict, dp);
+    }
+    T.C : O(N^2)
+    S.C : O(N)
+---------------------------------------------------------------------------------------------------------------------------------
+    
