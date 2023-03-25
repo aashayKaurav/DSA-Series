@@ -1,0 +1,44 @@
+//
+Given a set of n integers, divide the set in two subsets of n/2 sizes each such that the absolute difference of the sum of two subsets is as minimum as possible. 
+If n is even, then sizes of two subsets must be strictly n/2 and if n is odd, then size of one subset must be (n-1)/2 and size of other subset must be (n+1)/2.
+
+Ex : 1 2 3 4
+o/p = 0
+//
+
+    **Approach : Using simple recursion where we will try to make a subset of elements of size n/2 considering the difference between the two sets as min as possible.
+    void solve(vector<int> &arr, int i, int sum, int cnt, int &minDiff, int totalSum) {
+    
+    if(cnt == 0){
+        int diff = abs(totalSum - 2*sum);
+        if(diff < minDiff){
+            minDiff = diff; 
+        }
+        return;
+    }
+    if(i >= arr.size()){
+        return;
+    }
+
+    solve(arr, i+1, sum+arr[i], cnt-1, minDiff, totalSum);
+    solve(arr, i+1, sum, cnt, minDiff, totalSum);
+
+    return;
+}
+
+int tugOfWar(vector<int> &arr, int n)
+{
+    
+    int minDiff = INT_MAX;
+    int totalSum = 0;
+    for(int i=0; i<n; i++){
+        totalSum += arr[i];
+    }
+
+    solve(arr, 0, 0, n/2, minDiff, totalSum);
+}
+T.C : O(2^n)
+S.C : O(1)
+-----------------------------------------------------------------------------------------------------
+
+    ** Approach : We can apply DP
