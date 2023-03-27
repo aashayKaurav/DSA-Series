@@ -1,0 +1,50 @@
+//
+An image is represented by an m x n integer grid image where image[i][j] represents the pixel value of the image.
+
+You are also given three integers sr, sc, and color. You should perform a flood fill on the image starting from the pixel image[sr][sc].
+
+To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, 
+plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with color.
+
+Return the modified image after performing the flood fill.
+
+Example 1:
+
+Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), 
+all pixels connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
+//
+
+    **Approach : Basically we want to traverse in 4 directions (l, r, b, t) and color the cell with the one given in question if not colored already.
+    So, we can go with anyone of them i.e. DFS or BFS.
+    
+    void dfs(vector<vector<int>> &image, int n, int m, int sr, int sc, int color, int original) {
+        if(sr < 0 || sr >= n || sc < 0 || sc >= m || color == original){
+            return;
+        }
+        image[sr][sc] = color;
+        if(sr+1 < n && image[sr+1][sc] == original){
+            dfs(image, n, m, sr+1, sc, color, original);
+        }
+        if(sr-1 >= 0 && image[sr-1][sc] == original){
+            dfs(image, n, m, sr-1, sc, color, original);
+        }
+        if(sc+1 < m && image[sr][sc+1] == original){
+            dfs(image, n, m, sr, sc+1, color, original);
+        }
+        if(sc-1 >= 0 && image[sr][sc-1] == original){
+            dfs(image, n, m, sr, sc-1, color, original);
+        }
+    }
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        
+        int n = image.size();
+        int m = image[0].size();
+        dfs(image, n, m, sr, sc, color, image[sr][sc]);
+        return image;
+    }
+    T.C : O(N^2) in worst case we need to traverse every single node.
+    S.C : O(1) we are modifying the same grid.
