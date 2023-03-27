@@ -1,0 +1,57 @@
+//
+Given a square chessboard, the initial position of Knight and position of a target. Find out the minimum steps a Knight will take to reach the target position.
+
+Note:
+The initial and the target position coordinates of Knight have been given according to 1-base indexing.
+
+Example 1:
+
+Input:
+N=6
+knightPos[ ] = {4, 5}
+targetPos[ ] = {1, 1}
+Output:
+3
+Explanation:
+
+Knight takes 3 step to reach from 
+(4, 5) to (1, 1):
+(4, 5) -> (5, 3) -> (3, 2) -> (1, 1).
+//
+
+    **Approach : We need to traverse all 8 possible positions where a knight can go and for each step we need to increase the count. This is similar to minimum
+    distance in a undirected unweighted graph. So we can apply BFS algo.
+    
+    int minStepToReachTarget(vector<int>&KnightPos,vector<int>&TargetPos,int N)
+	{
+	    int dr[] = {+1, +1, -1, -1, -2, -2, +2, +2};
+	    int dc[] = {+2, -2, +2, -2, +1, -1, -1, +1};
+	    
+	    queue<pair<int, pair<int, int>>> q;
+	    q.push({0, {KnightPos[0], KnightPos[1]}});
+	    vector<vector<int>> vis(N+1, vector<int>(N+1, 0));
+	    vis[KnightPos[0]][KnightPos[1]] = 1;
+	    
+	    while(!q.empty()){
+	        auto it = q.front();
+	        q.pop();
+	        int steps = it.first;
+	        int row = it.second.first;
+	        int col = it.second.second;
+	        if(row==TargetPos[0] && col==TargetPos[1]){
+	            return steps;
+	        }
+	        for(int i=0; i<8; i++){
+	            int nextRow = row + dr[i];
+	            int nextCol = col + dc[i];
+	            if(nextRow>=0 && nextRow<=N && nextCol>=0 && nextCol<=N && 
+	            vis[nextRow][nextCol] == 0){
+	                q.push({steps+1, {nextRow, nextCol}});
+	                vis[nextRow][nextCol] = 1;
+	            }
+	        }
+	    }
+	    return -1;
+	}
+  T.C : O(N^2) in worst case all cells will be visited.
+  S.C : O(N^2) in worst case all nodes need to be stored in the queue.
