@@ -1,0 +1,55 @@
+//
+Given a keypad as shown in the diagram, and an N digit number which is represented by array a[ ], 
+the task is to list all words which are possible by pressing these numbers.
+
+Example 1:
+
+Input: N = 3, a[] = {2, 3, 4}
+Output:
+adg adh adi aeg aeh aei afg afh afi 
+bdg bdh bdi beg beh bei bfg bfh bfi 
+cdg cdh cdi ceg ceh cei cfg cfh cfi 
+Explanation: When we press 2,3,4 then 
+adg, adh, adi, ... cfi are the list of 
+possible words.
+//
+
+    **Approach : Each digit in the array can have 3 or 4 letters. So try to make a recursive function which covers all characters from all digits of the array.
+    
+    void solve(int a[], vector<char> keypad[], string str, int index, int n, 
+    vector<string> &ans) {
+        if(index == n) {
+            ans.push_back(str);
+            return;
+        }   
+        int digit = a[index];
+        int len = keypad[digit].size();
+        
+        for(int i=0; i<len; i++) {
+            solve(a, keypad, str+keypad[digit][i], index+1, n, ans);
+        }
+    }
+    
+    //Function to find list of all words possible by pressing given numbers.
+    vector<string> possibleWords(int a[], int N)
+    {
+        vector<char> keypad[] = {
+            {},
+            {},
+        {'a', 'b', 'c'},
+        {'d', 'e', 'f'},
+        {'g', 'h', 'i'},
+        {'j', 'k', 'l'},
+        {'m', 'n', 'o'},
+        {'p', 'q', 'r', 's'},
+        {'t', 'u', 'v'},
+        {'w', 'x', 'y', 'z'}
+        };
+        
+        vector<string> ans;
+        solve(a, keypad, "", 0, N, ans);
+        
+        return ans;
+    }
+    T.C : O (4^N) since each digit can have 4 possibilities and there are N such digits.
+    S.C : O(N) for storing keypad and ans.
