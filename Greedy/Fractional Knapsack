@@ -53,3 +53,5 @@ class Solution
     }
         
 };
+T.C : O(NlogN)
+S.C : O(N)
