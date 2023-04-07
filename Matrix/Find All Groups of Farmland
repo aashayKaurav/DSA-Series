@@ -1,0 +1,73 @@
+//
+You are given a 0-indexed m x n binary matrix land where a 0 represents a hectare of forested land and a 1 represents a hectare of farmland.
+
+To keep the land organized, there are designated rectangular areas of hectares that consist entirely of farmland. These rectangular areas are called groups. 
+No two groups are adjacent, meaning farmland in one group is not four-directionally adjacent to another farmland in a different group.
+
+land can be represented by a coordinate system where the top left corner of land is (0, 0) and the bottom right corner of land is (m-1, n-1). 
+Find the coordinates of the top left and bottom right corner of each group of farmland. A group of farmland with a top left corner at (r1, c1) and a 
+bottom right corner at (r2, c2) is represented by the 4-length array [r1, c1, r2, c2].
+
+Return a 2D array containing the 4-length arrays described above for each group of farmland in land. If there are no groups of farmland, return an empty array. 
+You may return the answer in any order.
+
+Example 1:
+
+Input: land = [[1,0,0],[0,1,1],[0,1,1]]
+Output: [[0,0,0,0],[1,1,2,2]]
+Explanation:
+The first group has a top left corner at land[0][0] and a bottom right corner at land[0][0].
+The second group has a top left corner at land[1][1] and a bottom right corner at land[2][2].
+//
+
+    ** Approach : Since we need the bottom right index so that's why we can apply BFS instead of DFS because using BFS we can pick the last entry in the queue,
+    and that will be the bottom right cell. Then we will be keep applying BFS to all unvisited cell whose land value is 1.
+    
+    void bfs(vector<vector<int>> &land, vector<vector<int>> &vis, 
+    vector<vector<int>> &ans, int sr, int sc) {
+        queue<pair<int, int>> q;
+        q.push({sr, sc});
+        vis[sr][sc] = 1;
+        int i, j;
+        while(!q.empty()) {
+            i = q.front().first;
+            j = q.front().second;
+            q.pop();
+
+            if(i+1 < land.size() && land[i+1][j] == 1 && vis[i+1][j] == 0) {
+                q.push({i+1, j});
+                vis[i+1][j] = 1;
+            }
+            if(j+1 < land[0].size() && land[i][j+1] == 1 && vis[i][j+1] == 0) {
+                q.push({i, j+1});
+                vis[i][j+1] = 1;
+            }
+            if(i-1 >= 0 && land[i-1][j] == 1 && vis[i-1][j] == 0) {
+                q.push({i-1, j});
+                vis[i-1][j] = 1;
+            }
+            if(j-1 >= 0 && land[i][j-1] == 1 && vis[i][j-1] == 0) {
+                q.push({i, j-1});
+                vis[i][j-1] = 1;
+            }
+        }
+        ans.push_back({sr, sc, i, j});
+    }
+
+    vector<vector<int>> findFarmland(vector<vector<int>>& land) {
+        int m = land.size(), n = land[0].size();
+        if(m == 1 && n == 1 && land[0][0] == 0)
+            return {};
+        vector<vector<int>> ans;
+        vector<vector<int>> vis(m, vector<int>(n, 0));
+        for(int i=0; i<m; i++) {
+            for(int j=0; j<n; j++) {
+                if(vis[i][j] == 0 && land[i][j] == 1) {
+                    bfs(land, vis, ans, i, j);
+                }
+            }
+        }
+        return ans;
+    }
+    T.C : O(M*N)
+    S.C : O(M*N)
