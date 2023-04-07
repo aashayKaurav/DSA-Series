@@ -1,0 +1,51 @@
+//
+You are given a string s of lower case english alphabets. You can choose any two characters in the string and replace all the occurences of the first character 
+with the second character and replace all the occurences of the second character with the first character. 
+Your aim is to find the lexicographically smallest string that can be obtained by doing this operation at most once.
+
+Example 1:
+
+Input:
+A = "ccad"
+Output: "aacd"
+Explanation:
+In ccad, we choose a and c and after 
+doing the replacement operation once we get, 
+aacd and this is the lexicographically
+smallest string possible. 
+//
+
+    ** Approach : Atmost 1 time we can choose a pair and replace all its characters such that it gives smaller lexographical string. We can use a set ds which
+    can store all one time occurence of the characters of the string, then start traversing the string from left to right. We take this char and remove from the 
+    set and check the smaller char from remaining elements of the set say j. If this char j is smaller than the i char then simply replace all chars, otherwise we
+    will check for other character.
+    
+    string chooseandswap(string a){
+        set<char> st;
+        int n = a.size();
+        for(int i=0; i<n; i++) {
+            st.insert(a[i]);
+        }
+        for(int i=0; i<n; i++) {
+            st.erase(a[i]);
+            // if set is empty then that means we cannot form a better ans so simply return the string.
+            if(st.empty())
+                break;
+            char ch = *st.begin();    // smaller char from remaining string
+            if(ch < a[i]){
+                char ch2 = a[i];
+                for(int j=0; j<n; j++) {
+                    if(a[j] == ch) {
+                        a[j] = ch2;
+                    }
+                    else if(a[j] == ch2) {
+                        a[j] = ch;
+                    }
+                }
+                break;
+            }
+        }
+        return a;
+    }
+    T.C : O(N) Since the inner loop is running only once 
+    S.C : O(26) => O(1)
