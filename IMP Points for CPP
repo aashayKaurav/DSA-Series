@@ -1,0 +1,5 @@
+1. reverse(str.begin(), str.end()) : reverses the same string, but inorder to get reversed string seperately we can use ...
+   ---> string rev = string(str.rbegin(), str.rend()) or 
+   ---> One pointer recursion approach i.e. call swap(arr[i], arr[n-i-1]) recursively. 
+   
+2. 
