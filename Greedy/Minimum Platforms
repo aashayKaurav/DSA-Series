@@ -1,0 +1,47 @@
+//
+Given arrival and departure times of all trains that reach a railway station. 
+Find the minimum number of platforms required for the railway station so that no train is kept waiting.
+Consider that all the trains arrive on the same day and leave on the same day. Arrival and departure time can never be the same for a train but we can have 
+arrival time of one train equal to departure time of the other. At any given instance of time, same platform can not be used for both departure of a train and 
+arrival of another train. In such cases, we need different platforms.
+
+Example 1:
+
+Input: n = 6 
+arr[] = {0900, 0940, 0950, 1100, 1500, 1800}
+dep[] = {0910, 1200, 1120, 1130, 1900, 2000}
+Output: 3
+Explanation: 
+Minimum 3 platforms are required to 
+safely arrive and depart all trains.
+//
+
+    ** Approach : We will sort the arrival and departure times of the trains. Since we don't care which platform get freed, the idea is to simply keep a track of
+    platforms as and when required and when not. So seperatly sorting the arrays won't make difference in correct ans.
+    Take two pointers i pointing to 1st arr train and j pointing to previous i.e 0th dep train then if arr[i] <= dep[j] then count++ and go to next arr train.
+    Otherwise decrement the platform i.e count-- and go to next dep train.
+    int findPlatform(int arr[], int dep[], int n)
+    {
+        if(n == 1)
+            return 1;
+            
+        sort(arr, arr+n);
+        sort(dep, dep+n);
+        
+        int i=1, j=0, minPlatforms = 1, count=1;
+        while(i<n && j<n) {
+            if(arr[i] <= dep[j]) {
+                count++;
+                i++;
+            }
+            else if(arr[i] > dep[j]) {
+                count--;
+                j++;
+            }
+            if(count > minPlatforms)
+                minPlatforms = count;
+        }
+        return minPlatforms;
+    }
+    T.C : O(N*LogN)
+    S.C : O(1)
