@@ -1,0 +1,51 @@
+//
+Given a value V and array coins[] of size M, the task is to make the change for V cents, given that you have an infinite supply of each of 
+coins{coins1, coins2, ..., coinsm} valued coins. Find the minimum number of coins to make the change. If not possible to make change then return -1.
+
+Example 1:
+
+Input: V = 30, M = 3, coins[] = {25, 10, 5}
+Output: 2
+Explanation: Use one 25 cent coin
+and one 5 cent coin
+//
+    
+    **NOTE : Greedy Strategy fails because there is no uniformity in the coins, Therefore we need to handle this by DP approach.
+
+    ** Approach : First sort the coins array, then from maximum coin keep checking whether to add this coin or not (Take or Not Take). Once we reach the last coint
+    simply check whether this coin is multiple of the leftover target or not if not return large number otherwise return V/coins[i]. Since for a target value,
+    we can get different possibilities therefore we should save the ans of already knon target value, hence applying DP.
+    
+    int solve(int i, int coins[], int M, int V, vector<vector<int>> &dp) {
+	    if(i < 0) {
+	        return 1e9;
+	    }
+	    if(i == 0) {
+	        if(V%coins[i] == 0) {
+	            return V/coins[i];
+	        }
+	        else {
+	            return 1e9;
+	        }
+	    }
+	    if(dp[i][V] != -1)
+	        return dp[i][V];
+	        
+	    int inc = INT_MAX;
+	    if(coins[i] <= V)
+	        inc = 1 + solve(i, coins, M, V-coins[i], dp);
+	    int exc = solve(i-1, coins, M, V, dp);
+	    return dp[i][V] =  min(inc, exc);
+	}
+	
+	int minCoins(int coins[], int M, int V) 
+	{
+	    sort(coins, coins+M);
+	    vector<vector<int>> dp(M+1, vector<int>(V+1, -1));
+	    int ans = solve(M-1, coins, M, V, dp);
+	    if(ans == 1e9)
+	        return -1;
+	    return ans;
+	}
+  T.C : O(M*V)
+  S.C : O(M*V)
