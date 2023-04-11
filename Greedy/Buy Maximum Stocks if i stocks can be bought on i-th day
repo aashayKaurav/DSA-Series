@@ -1,0 +1,40 @@
+//
+In a stock market, there is a product with its infinite stocks. The stock prices are given for N days, where price[i] denotes the price of the stock on the ith day.
+There is a rule that a customer can buy at most i stock on the ith day.
+If the customer has an amount of k amount of money initially. The task is to find out the maximum number of stocks a customer can buy. 
+
+Example 1:
+
+Input:
+price[] = { 10, 7, 19 }
+k = 45
+Output: 4
+Explanation: A customer purchases 1 stock on day 1, 
+2 stocks on day 2 and 1 stock on day 3 for 
+10, 7 * 2 = 14 and 19 respectively. Hence, 
+total amount is 10 + 14 + 19 = 43 and number 
+of stocks purchased is 4.
+//
+
+    ** Approach : Since we need to have least cost price of stock and then the limit of the stock that can be bought, so inorder to have that we need to 
+    sort the price array but in doing so we will lose the indexes of the prices so first we will store them as vector of pairs. After that we will take the 
+    purchase of the current day as min(limit, totalAmount/C) where C is the price of the stock and add into ans. And hence reduce that amont from our total amount.
+    
+    int buyMaximumProducts(int n, int k, int price[]){
+        int totalPurchase = 0;
+        vector<pair<int, int>> vec;
+        for(int i=0; i<n; i++) {
+            vec.push_back({price[i], i+1});
+        }
+        sort(vec.begin(), vec.end());
+        for(int i=0; i<n; i++) {
+            int limit = vec[i].second;
+            int stockPrice = vec[i].first;
+            int purchase = min(limit, k/stockPrice);
+            totalPurchase += purchase;
+            k -= purchase*stockPrice;
+        }
+        return totalPurchase;
+    }
+    T.C : O(N*LogN)
+    S.C : O(N)
