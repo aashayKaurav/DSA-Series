@@ -1,0 +1,75 @@
+//
+N horizontal line segments are arranged on the X-axis of a 2D plane. The start and end point of each line segment is given in a Nx2 matrix lines[ ][ ]. 
+Your task is to find the maximum number of intersections possible of any vertical line with the given N line segments.
+
+Example 1:
+
+Input:
+N = 4
+lines[][] = {{1,3}, {2,3}, {1,2}, {4,4}}
+Output:
+3
+Explanation:
+A vertical line at X = 2 passes through 
+{1,3}, {2,3}, {1,2}, ie three of the 
+given horizontal lines.
+Example 2:
+
+Input: 
+N = 3
+lines[][] = {{1, 3}, {5, 6}, {3,4}}
+Output:
+2
+Explanation: 
+A vertical line at X = 3 passes through 
+two of the given horizontal lines which 
+is the maximum possible.
+//
+
+    ** Approach : Sorting And Two pointers:🚀
+    The idea is: what is the maximum number of lines that I've at a particular point ??
+    That maximum count is going to be my answer.
+    Let's say we have a variable "intersection" which will give the count of lines that we have at a particular point.
+    Initially "intersection" = 0;
+    Now, We will process each starting and ending points separately.
+    So for the example give to us: 
+    startPoints= {1,2,3,4}    //written in sorted order
+    endPoints= {2,3,3,4}   //written in sorted order
+
+    [ Note:- we have sorted startpoints and endpoints separately.(why ordering doesn't matter? you will come to know later). ]
+    
+    Now, there are two conditions:
+
+    1. When we have a line starting before endingpoint [ start[i]<=end[j] ]. So number of intersection will increase: "intersections++" and "i++'
+
+    2. When we have a line ending before new line starting [end[j]<start[i] ]. Since one line is no more now. so "intersections--"  and "j++"
+    
+    From the second observation you can notice that when a line ends, we don't care about the starting point of that line. We just do "intersections--".  
+    So that why ordering doesn't matter here.
+    
+    int maxIntersections(vector<vector<int>> lines, int N) {
+        vector<int> startP;
+        vector<int> endP;
+        for(int i=0; i<N; i++) {
+            startP.push_back(lines[i][0]);
+            endP.push_back(lines[i][1]);
+        }
+        sort(startP.begin(), startP.end());
+        sort(endP.begin(), endP.end());
+        int i=0, j=0, count=0, ans=0;
+        while(i < N && j < N) {
+            if(startP[i] <= endP[j]) {
+                count++;
+                i++;
+            }
+            else if(startP[i] > endP[j]) {
+                count--;
+                j++;
+            }
+            if(count > ans)
+                ans = count;
+        }
+        return ans;
+    }
+    T.C : O(NLogN)
+    S.C : O(N)
