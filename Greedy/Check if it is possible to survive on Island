@@ -1,0 +1,47 @@
+//
+Ishika got stuck on an island. There is only one shop on this island and it is open on all days of the week except for Sunday. Consider following constraints:
+
+N – The maximum unit of food you can buy each day.
+S – Number of days you are required to survive.
+M – Unit of food required each day to survive.
+Currently, it’s Monday, and she needs to survive for the next S days.
+Find the minimum number of days on which you need to buy food from the shop so that she can survive the next S days, or determine that it isn’t possible to survive.
+
+Example 1:
+
+Input: S = 10, N = 16, M = 2
+Output: 2
+Explaination: One possible solution is to 
+buy a box on the first day (Monday), 
+it’s sufficient to eat from this box up to 
+8th day (Monday) inclusive. Now, on the 9th 
+day (Tuesday), you buy another box and use 
+the chocolates in it to survive the 9th and 
+10th day.
+//
+
+    ** Approach : Total Food required to survive is S*M. And from S days we have S/7 sundays to be removed. Now totalFood/N i.e the number of days we need to buy 
+    food but we need to take care of one case where S=10, N=1, M=1 here our buying days = 9 and ans = 10 which is wrong. So at last put this condition that
+    ans <= buyingDays.
+    
+    int minimumDays(int S, int N, int M){
+        if(M > N){
+            return -1;
+        }
+        int sundays = S/7;
+        int buyingDays = S-sundays;
+        int totalFood = S*M;
+        int ans = 0;
+        if(totalFood%N == 0){
+            ans = totalFood/N;
+        }
+        else {
+            ans = totalFood/N + 1;
+        }
+        if(ans <= buyingDays){
+            return ans;
+        }
+        return -1;
+    }
+    T.C : O(1)
+    S.C : O(1)
