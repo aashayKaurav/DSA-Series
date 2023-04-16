@@ -48,7 +48,10 @@
    3 7
    which is in increasing order based on the val2 field of myStruct.
 
-3. 
+3. Find element in vector 
+   auto it = find(v.begin(), v.end(), ele);
+   
+4. 
 
 
 
