@@ -2,4 +2,55 @@
    ---> string rev = string(str.rbegin(), str.rend()) or 
    ---> One pointer recursion approach i.e. call swap(arr[i], arr[n-i-1]) recursively. 
    
-2. 
+2. To make a minimum priority queue based on 2nd element of the structure we will use something like this ...
+   #include <iostream>
+   #include <queue>
+   #include <vector>
+
+   using namespace std;
+
+   struct myStruct {
+       int val1;
+       int val2;
+   };
+   // here a separate struct is defined to act as the function object for the comparison to make priority queue. 
+   struct compare {
+       bool operator()(const myStruct& a, const myStruct& b) {
+           return a.val2 > b.val2; // compare based on second element
+       }
+   };
+   // Alternatively we could define a separate function that calls the less-than operator for the myStruct objects, 
+   // and pass this function as the comparator function to the priority queue.
+   // bool compareMyStruct(const myStruct& a, const myStruct& b) {
+   //    return a.val2 < b.val2;
+   // }
+   // std::priority_queue<myStruct, std::vector<myStruct>, decltype(&compareMyStruct)> pq(&compareMyStruct);
+
+   int main() {
+       priority_queue<myStruct, vector<myStruct>, compare> pq;
+       pq.push({1, 5});
+       pq.push({2, 3});
+       pq.push({3, 7});
+
+       while (!pq.empty()) {
+           myStruct curr = pq.top();
+           pq.pop();
+           cout << curr.val1 << " " << curr.val2 << endl;
+       }
+       return 0;
+   }
+
+   In this example, the output would be:
+
+   Copy code
+   2 3
+   1 5
+   3 7
+   which is in increasing order based on the val2 field of myStruct.
+
+3. 
+
+
+
+
+
