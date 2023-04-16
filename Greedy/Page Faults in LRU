@@ -1,0 +1,53 @@
+//
+In operating systems that use paging for memory management, page replacement algorithm is needed to decide which page needs to be replaced when the new page comes in.
+Whenever a new page is referred and is not present in memory, the page fault occurs and Operating System replaces one of the existing pages with a newly needed page.
+
+Given a sequence of pages in an array pages[] of length N and memory capacity C, find the number of page faults using Least Recently Used (LRU) Algorithm. 
+
+Note:- Before solving this example revising the OS LRU cache mechanism is recommended.
+
+Example 1:
+
+Input: N = 9, C = 4
+pages = {5, 0, 1, 3, 2, 4, 1, 0, 5}
+Output: 8
+Explaination: memory allocated with 4 pages 5, 0, 1, 
+3: page fault = 4
+page number 2 is required, replaces LRU 5: 
+page fault = 4+1 = 5
+page number 4 is required, replaces LRU 0: 
+page fault = 5 + 1 = 6
+page number 1 is required which is already present: 
+page fault = 6 + 0 = 6
+page number 0 is required which replaces LRU 3: 
+page fault = 6 + 1 = 7
+page number 5 is required which replaces LRU 2: 
+page fault = 7 + 1  = 8.
+//
+
+    ** Approach : We can use vector which is dynamically typed array. If the page is not found in the array then increment the count and push_back the page at last,
+    else if we found then erase the element and push the element at last. The recent page will always be present at last.
+    int pageFaults(int N, int C, int pages[]){
+        vector<int> mem;
+        int pageFaults = 0;
+        for(int i=0; i<N; i++) {
+            auto it = find(mem.begin(), mem.end(), pages[i]);
+            if(it == mem.end()) {
+                // if memoery size is full remove the LRU element.
+                if(mem.size() == C) {
+                    mem.erase(mem.begin());
+                }
+                // push back
+                mem.push_back(pages[i]);
+                pageFaults++;
+            }
+            else{
+                mem.erase(it);
+                mem.push_back(pages[i]);
+            }
+        }
+        
+        return pageFaults;
+    }
+    T.C : O(N*C)
+    S.C : O(C)
