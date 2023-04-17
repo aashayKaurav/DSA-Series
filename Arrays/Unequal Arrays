@@ -1,0 +1,64 @@
+//
+You are given two arrays A and B each of length N. You can perform the following operation on array A zero or more times. 
+
+Select any two indices i and j, 1 <= i , j <= N and i != j
+Set A[i] = A[i] + 2 and A[j] = A[j]-2
+Find the minimum number of operations required to make A and B equal.
+
+Note :
+
+Two arrays are said to be equal if the frequency of each element is equal in both of them.
+Arrays may contain duplicate elements.
+Example 1:
+
+Input:
+N = 3
+A[] = {2, 5, 6}
+B[] = {1, 2, 10}
+Output: 2
+Explanation: 
+Select i = 3, j = 2, A[3] = 6 + 2 = 8 and A[2] = 5 - 2 = 3
+Select i = 3, j = 2, A[3] = 8 + 2 = 10 and A[2] = 3 - 2 = 1
+Now A = {2, 1, 10} and B = {1, 2, 10}
+//
+
+    ** Approach : Since on every single operation we are adding 2 and sub 2 so the total sum of A and B must be equal. Other thing to observe is that number of 
+    even and odd elements must be same in both arrays bcz adding or sub 2 on even will result in even and similary for odd. Then We wiil require to sort the arrays
+    bcz we need nearer number for any single number of A, afterwards simply take the abs diff seperately for odds and evens we will get total operations.
+    And finally divide ans by 4 to group them.
+    
+    long long solve(int N, vector<int> &A, vector<int> &B) {
+        sort(A.begin(), A.end());
+        sort(B.begin(), B.end());
+        vector<int> Aodds, Aevens, Bodds, Bevens;
+        
+        long long sum1=0, sum2=0;
+        for(int i=0; i<N; i++) {
+            sum1 += A[i];
+            sum2 += B[i];
+            if(A[i]&1){
+                Aodds.push_back(A[i]);
+            }
+            else {
+                Aevens.push_back(A[i]);
+            }
+            if(B[i]&1){
+                Bodds.push_back(B[i]);
+            }
+            else {
+                Bevens.push_back(B[i]);
+            }
+        }
+        if(sum1 != sum2 || Aodds.size() != Bodds.size())
+            return -1;
+        long long ans = 0;
+        for(int i=0; i<Aodds.size(); i++) {
+            ans += abs(Aodds[i] - Bodds[i]);
+        }
+        for(int i=0; i<Aevens.size(); i++) {
+            ans += abs(Aevens[i] - Bevens[i]);
+        }
+        return ans/4;
+    }
+    T.C : O(N*LogN)
+    S.C : O(N)
