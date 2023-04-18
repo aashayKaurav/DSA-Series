@@ -1,0 +1,61 @@
+//
+The task is to find the smallest number with given sum of digits as S and number of digits as D.
+
+Example 1:
+
+Input:
+S = 9 
+D = 2
+Output:
+18
+Explanation:
+18 is the smallest number
+possible with sum = 9
+and total digits = 2.
+
+Example 2:
+
+Input:
+S = 20
+D = 3
+Output:
+299
+Explanation:
+299 is the smallest number
+possible with sum = 20
+and total digits = 3.
+//
+
+    ** Approach : We should start filling greater digits to right side and smaller digits to left side to make the number smaller. So if S > 9 then put 9 on right
+    side and decrement S by 9. At a point where S <= 9 then we will insert all 0's untill 0th index and at the 0th index we will insert 1.
+    
+    string smallestNumber(int S, int D){
+        if(D*9 < S){
+            return "-1";
+        }
+        string ans = "";
+        for(int i=D-1; i>=0 ; i--) {
+            if(S > 9) {
+                ans = '9' + ans;
+                S -= 9;
+            }
+            else {
+                if(i == 0) {
+                    ans = to_string(S) + ans;
+                }
+                else {
+                    ans = to_string(S-1) + ans;
+                    i--;
+                    while(i>0) {
+                        i--;
+                        ans = "0" + ans;
+                    }
+                    ans = "1" + ans;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+    T.C : O(D)
+    S.C : O(1)
