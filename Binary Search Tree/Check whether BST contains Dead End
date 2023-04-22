@@ -1,0 +1,86 @@
+//
+Given a Binary search Tree that contains positive integer values greater then 0. The task is to complete the function isDeadEnd which returns true if the BST 
+contains a dead end else returns false. Here Dead End means, we are not able to insert any element after that node.
+
+Examples:
+
+Input :   
+               8
+             /   \ 
+           5      9
+         /  \     
+        2    7 
+       /
+      1     
+          
+Output : Yes
+Explanation : Node "1" is the dead End because after that 
+              we cant insert any element.       
+
+Input :     
+              8
+            /   \ 
+           7     10
+         /      /   \
+        2      9     13
+
+Output : Yes
+Explanation : We can't insert any element at 
+              node 9.
+//
+
+      ** Approach 1 : If we closely observe then we find that for any leaf node if (val-1) and (val+1) is present in the BST then that node will certainly be a 
+      dead end. So we will require two sets set1(to store all node values) and set2(to store all leaf node values). After that simply for each leaf node from set2,
+      we will check whenter the above cond satisfies or not.
+      
+      void inorder(Node* root, set<int> &s1, set<int> &s2) {
+          if(root == NULL) {
+              return;
+          }
+
+          inorder(root->left, s1, s2);
+          s1.insert(root->data);
+          if(root->left == NULL && root->right == NULL) {
+              s2.insert(root->data);
+          }
+          inorder(root->right, s1, s2);
+      }
+
+
+      bool isDeadEnd(Node *root)
+      {
+          set<int> s1, s2;
+          inorder(root, s1, s2);
+          s1.insert(0);
+          for(auto it=s2.begin(); it!=s2.end(); it++) {
+              int val = *it;
+              if(s1.find(val-1) != s1.end() && s1.find(val+1) != s1.end()) {
+                  return true;
+              }
+          }
+          return false;
+      }
+      T.C : O(N)
+      S.C : O(N)
+ ---------------------------------------------------------------------------------------
+ 
+      ** Approach 2 : The only thing we require for each element is the range in which the BST property satisfies, so we will maintain that and if for any element
+      the range is not there then that element is the Dead end.
+      
+      bool solve(Node *root, int  min, int  max){
+          if(root == NULL) 
+              return false;
+
+          if(min==max) 
+              return true;
+
+          return solve(root->left, min, root->data-1) || solve(root->right, root->data+1, max);
+      }
+
+      bool isDeadEnd(Node *root)
+      {
+          //Your code here
+          return solve(root, 1, INT_MAX);
+      }
+      T.C : O(N)
+      S.C : O(1)
