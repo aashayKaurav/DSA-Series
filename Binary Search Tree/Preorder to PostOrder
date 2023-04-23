@@ -47,3 +47,5 @@ Output: 35 32 30 120 100 90 80 40
         int index = 0;
         return solve(pre, size, INT_MIN, INT_MAX, index);
     }
+    T.C : O(N)
+    S.C : O(N)
