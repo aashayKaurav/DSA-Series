@@ -1,0 +1,49 @@
+//
+Given an array arr[] of N nodes representing preorder traversal of some BST. You have to build the exact PostOrder from it's given preorder traversal. 
+In Pre-Order traversal, the root node is visited before the left child and right child nodes.
+
+Example 1:
+
+Input:
+N = 5
+arr[]  = {40,30,35,80,100}
+Output: 35 30 100 80 40
+Explanation: PreOrder: 40 30 35 80 100
+Therefore, the BST will be:
+              40
+           /      \
+         30       80
+           \        \   
+           35      100
+Hence, the postOrder traversal will
+be: 35 30 100 80 40
+Example 2:
+
+Input:
+N = 8
+arr[]  = {40,30,32,35,80,90,100,120}
+Output: 35 32 30 120 100 90 80 40
+//
+
+    ** Approach : We will simply maintain the range of numbers for each node inorder to maintain the BST property, and recursively create the tree.
+    
+    Node* solve(int pre[], int n, int min, int max, int &index) {
+        if(index >= n){
+            return NULL;
+        }
+        if(pre[index] <= min || pre[index] >= max)
+            return NULL;
+            
+        Node* root = newNode(pre[index++]);
+        root->left = solve(pre, n, min, root->data, index);
+        root->right = solve(pre, n, root->data, max, index);
+        
+        return root;
+    }
+    
+    //Function that constructs BST from its preorder traversal.
+    Node* post_order(int pre[], int size)
+    {
+        int index = 0;
+        return solve(pre, size, INT_MIN, INT_MAX, index);
+    }
