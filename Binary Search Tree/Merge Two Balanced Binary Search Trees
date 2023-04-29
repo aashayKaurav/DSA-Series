@@ -1,0 +1,109 @@
+//
+You are given two balanced binary search trees e.g., AVL or Red-Black Tree. 
+Write a function that merges the two given balanced BSTs into a balanced binary search tree.
+//
+
+    ** Approach : To merge two BST we can first store the inorder traversals of each tree then merge the two sorted arrays together. And finnaly as usual we can 
+    build the BST from this sorted array.
+    
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    struct Node {
+        int data;
+        Node* left;
+        Node* right;
+    };
+
+    Node* newNode(int data) {
+        Node* temp = new Node();
+        temp->data = data;
+        temp->left = NULL;
+        temp->right = NULL;
+
+        return temp;
+    }
+
+    void traverseInorder(vector<int> &arr1, Node* root) {
+        if(root == NULL)
+            return;
+
+        traverseInorder(arr1, root->left);
+        arr1.push_back(root->data);
+        traverseInorder(arr1, root->right);
+    }
+
+    void merge(vector<int> &arr1, vector<int> &arr2, vector<int> &res) {
+        int i=0, j=0;
+        int n=arr1.size(), m=arr2.size();
+
+        while(i < n && j < m) {
+            if(arr1[i] <= arr2[j]){
+                res.push_back(arr1[i]);
+                i++;
+            }
+            else{
+                res.push_back(arr2[j]);
+                j++;
+            }
+        }
+        while(i < n) {
+            res.push_back(arr1[i++]);
+        }
+        while(j < m) {
+            res.push_back(arr2[j++]);
+        }
+    }
+
+    Node* buildBST(vector<int> &res, int l, int h) {
+        if(l > h) return NULL;
+
+
+        int mid = (h+l)>>1;
+        Node* root = newNode(res[mid]);
+        root->left = buildBST(res, l, mid-1);
+        root->right = buildBST(res, mid+1, h);
+
+        return root;
+    }
+
+    void printInorder(Node* node)
+    {
+        if (node == NULL)
+            return;
+
+        printInorder(node->left);
+
+        cout << node->data << " ";
+
+        printInorder(node->right);
+    }
+
+    int main()
+    {
+        Node* root1 = newNode(100);
+        root1->left = newNode(50);
+        root1->right = newNode(300);
+        root1->left->left = newNode(20);
+        root1->left->right = newNode(70);
+
+        Node* root2 = newNode(80);
+        root2->left = newNode(40);
+        root2->right = newNode(120);
+
+        vector<int> arr1;
+        vector<int> arr2;
+
+        traverseInorder(arr1, root1);
+        traverseInorder(arr2, root2);
+        vector<int> res;
+        merge(arr1, arr2, res);
+
+        Node* root = buildBST(res, 0, res.size()-1);
+
+        printInorder(root);
+        return 0;
+    }
+    T.C : O(M + N)
+    S.C : O(M + N)
