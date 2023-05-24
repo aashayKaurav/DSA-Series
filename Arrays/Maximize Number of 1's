@@ -1,0 +1,52 @@
+//
+Given a binary array arr of size N and an integer M. Find the maximum number of consecutive 1's produced by flipping at most M 0's.
+ 
+Example 1:
+Input:
+N = 3
+arr[] = {1, 0, 1}
+M = 1
+Output:
+3
+Explanation:
+Maximum subarray is of size 3
+which can be made subarray of all 1 after
+flipping one zero to 1.
+Example 2:
+
+Input:
+N = 11
+arr[] = {1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1}
+M = 2
+Output:
+8
+Explanation:
+Maximum subarray is of size 8
+which can be made subarray of all 1 after
+flipping two zeros to 1.
+//
+
+    APPROACH : Silding window --
+    Take two pointers i and j and initialize at begin, traverse j untill we can flip 0's to 1's. Keep track of ans, since we need maximum length of 1's.
+    If the 0's flip exceeds the m value then start traversing from i (SLIDE THE WINDOW) and reach untill we get 0 and after that decrease the flip value and increment i.
+    
+    int findZeroes(int arr[], int n, int m) {
+        int i=0, j=0;
+        int zeroes=0, ans=INT_MIN;
+        while(j < n) {
+            if(arr[j] == 0) {
+                zeroes++;
+            }
+            while(zeroes > m) {
+                if(arr[i] == 0) {
+                    zeroes--;
+                }
+                i++;
+            }
+            ans = max(ans, j-i+1);
+            j++;
+        }
+        return ans;
+    }
+    T.C : O(N)
+    S.C : O(1)
