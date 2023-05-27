@@ -20,17 +20,17 @@ Output: 3
      **Intution : There will be one element N/2 + x ocurred and rest of the elements N/2 - x present. So just take the count and and element and 
      keep checking how many times the element has occured. Atlast most occured element will be present in element. 
      
-     int majorityElement(vector<int>& nums) {
-        int n = nums.size();
+     int majorityElement(int a[], int size)
+    {
         int count = 0;
         int element = 0;
-        for(int i=0; i<n; i++){
-            if(count == 0){
-                count++;
-                element = nums[i];
+        for(int i=0; i<size; i++) {
+            if(count == 0) {
+                count = 1;
+                element = a[i];
             }
             else{
-                if(element == nums[i]){
+                if(element == a[i]) {
                     count++;
                 }
                 else{
@@ -38,6 +38,12 @@ Output: 3
                 }
             }
         }
-        return element;
+        // Checking if stored element is majority element.
+        int cnt = 0;
+        for(int i=0; i<size; i++) {
+            if(a[i] == element) cnt++;
+        }
+        if(cnt > (size>>1)) return element;
+        return -1;
     }
     T.C : O(N) and S.C : O(1)
