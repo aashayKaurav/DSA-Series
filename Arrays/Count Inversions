@@ -16,67 +16,58 @@ has three inversions (2, 1), (4, 1), (4, 3).
     **Intuition : Using Merge sort technique and while merging if ith element of left array > jth element of right array then mid-i+1 elements will we counted
     as inversions.
     
-    void merge(long long arr[], long long int l, long long int mid, long long int h, long long int &count){
-        long long int n1 = mid-l+1;
-        long long int n2 = h-mid;
+    long long merge(long long arr[], int low, int mid, int high) {
+        int left = low;
+        int right = mid + 1;
         
-        long long int arr1[n1], arr2[n2];
+        long long inversionCount = 0;
         
-        for(long long int i=0; i<n1; i++){
-            arr1[i] = arr[l+i];
-        }
+        vector<long long> temp;
         
-        for(long long int i=0; i<n2; i++){
-            arr2[i] = arr[mid+1+i];
-        }
-        
-        long long int i=0, j=0, k=l;
-        while(i<n1 && j<n2){
-            if(arr1[i] <= arr2[j]){
-                arr[k] = arr1[i];
-                i++;
-                k++;
+        while (left <= mid && right <= high) {
+            if (arr[left] <= arr[right] ) {
+                temp.push_back(arr[left]);
+                left++;
             }
-            else{
-                count += n1-i;
-                arr[k] = arr2[j];
-                j++;
-                k++;
+            else {
+                temp.push_back(arr[right]);
+                inversionCount += (mid - left + 1);
+                right++;
             }
         }
-        while(i<n1){
-            arr[k] = arr1[i];
-            i++;
-            k++;
+    
+        while (left <= mid) {
+            temp.push_back(arr[left]);
+            left++;
         }
-        while(j<n2){
-            arr[k] = arr2[j];
-            j++;
-            k++;
+    
+        while (right <= high) {
+            temp.push_back(arr[right]);
+            right++;   
         }
+    
+        // copy to the original array
+        for (int i=low; i<= high; i++) {
+            arr[i] = temp[i - low];
+        };
         
+        return inversionCount;
     }
     
-    void mergeSort(long long arr[], long long l, long long h, long long int &count){
+    long long mergeSort(long long arr[], int low, int high) {
+        if (low >= high) return 0;
         
+        long long int cnt = 0;
+        int mid = low + ( (high - low) >> 1 ) ;
         
-        if(l<h){
-            long long int mid = (l+h)/2;
-            mergeSort(arr, l, mid, count);
-            mergeSort(arr, mid+1, h, count);
-            
-            merge(arr, l, mid, h, count);
-        }
-        
-    }
+        cnt += mergeSort(arr, low, mid);
+        cnt += mergeSort(arr, mid + 1, high);
+        cnt += merge(arr, low, mid, high);
+        return cnt;
+    }    
     
     long long int inversionCount(long long arr[], long long N)
     {
-        // Your Code Here
-        
-        long long int count=0;
-        
-        mergeSort(arr, 0, N-1, count);
-        return count;
+        return mergeSort(arr, 0, N-1);
     }
     T.C : O(NlogN) and S.C : O(N)
