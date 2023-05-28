@@ -22,3 +22,24 @@ vector<vector<int>> generate(int numRows) {
         return vec;
     }
     T.C : O(N^2)
+--------------------------------------------------------------------------------------------------------------------------------------------
+      Approach : After observation of how each element of a row is generated, we can solve like this as well.
+      vector<int> generateRow(int r) {
+       int res = 1;
+       vector<int> vec;
+       vec.push_back(1);
+       for(int i=1; i<r; i++) {
+           res *= (r-i);
+           res /= i;
+           vec.push_back(res);
+       }
+       return vec;
+   }
+   vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> ans;
+        for(int i=1; i<=numRows; i++){
+            ans.push_back(generateRow(i));
+        }
+        return ans;
+    }
+    T.C : O(N^2)
