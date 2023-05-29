@@ -1,0 +1,54 @@
+//
+Given a sorted array arr containing n elements with possibly duplicate elements, the task is to find indexes of first 
+and last occurrences of an element x in the given array.
+
+Example 1:
+
+Input:
+n=9, x=5
+arr[] = { 1, 3, 5, 5, 5, 5, 67, 123, 125 }
+Output:  2 5
+Explanation: First occurrence of 5 is at index 2 and last
+             occurrence of 5 is at index 5. 
+ 
+Example 2:
+
+Input:
+n=9, x=7
+arr[] = { 1, 3, 5, 5, 5, 5, 7, 123, 125 }
+Output:  6 6
+//
+
+    Optimal Approach : We can use binary search algorithm.
+    int solve(int arr[], int start, int end, int x, int type) {
+        int ans = -1;
+        while(start <= end) {
+            int mid = start + ((end-start)>>1);
+            if(arr[mid] == x ){
+                ans = mid;
+                if(type == 1) {
+                    start = mid+1;
+                }
+                else {
+                    end = mid-1;
+                }
+            }
+            else if(arr[mid] < x) {
+                start = mid+1;
+            }
+            else {
+                end = mid-1;
+            }
+        }
+        return ans;
+    }
+    
+    vector<int> find(int arr[], int n , int x )
+    {
+        int first = solve(arr, 0, n-1, x, 0);
+        int last = solve(arr, 0, n-1, x, 1);
+
+        return {first, last};
+    }
+    T.C : O(LogN)
+    S.C : O(1)
