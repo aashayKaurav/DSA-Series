@@ -40,7 +40,7 @@ and area is 4 *2 = 8.
                 leftSmaller[i] = 0;
             }
             else{
-                leftSmaller[i] = st1.top()+1;
+                leftSmaller[i] = st1.top()+1;         // st1.top() is the index having left smaller histo. Therefore st1.top()+1 will be the left boundary for curr histo.
             }
             st1.push(i);
         }
@@ -53,7 +53,7 @@ and area is 4 *2 = 8.
                 rightSmaller[i] = m-1;
             }
             else{
-                rightSmaller[i] = st2.top()-1;
+                rightSmaller[i] = st2.top()-1;        // st2.top() is the index having right smaller histo. Therefore st2.top()-1 will be the right boundary for curr histo.
             }
             st2.push(i);
         }
