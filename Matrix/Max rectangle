@@ -1,0 +1,87 @@
+//
+Given a binary matrix M of size n X m. Find the maximum area of a rectangle formed only of 1s in the given matrix.
+
+Example 1:
+
+Input:
+n = 4, m = 4
+M[][] = {{0 1 1 0},
+         {1 1 1 1},
+         {1 1 1 1},
+         {1 1 0 0}}
+Output: 8
+Explanation: For the above test case the
+matrix will look like
+0 1 1 0
+1 1 1 1
+1 1 1 1
+1 1 0 0
+the max size rectangle is 
+1 1 1 1
+1 1 1 1
+and area is 4 *2 = 8.
+//
+
+    **Approach : Apply maximum area of histogram concept for each row.
+    
+    int maxAreaHistogram(vector<int> arr, int m){
+        vector<int> leftSmaller(m);
+        vector<int> rightSmaller(m);
+        stack<int> st1;
+        stack<int> st2;
+        int maxArea = 0;
+        
+        // initializing leftSmaller
+        for(int i=0; i<m; i++){
+            while(!st1.empty() && arr[st1.top()] >= arr[i]){
+                st1.pop();
+            }
+            if(st1.empty()){
+                leftSmaller[i] = 0;
+            }
+            else{
+                leftSmaller[i] = st1.top()+1;
+            }
+            st1.push(i);
+        }
+        // initializing rightSmaller
+        for(int i=m-1; i>=0; i--){
+            while(!st2.empty() && arr[st2.top()] >= arr[i]){
+                st2.pop();
+            }
+            if(st2.empty()){
+                rightSmaller[i] = m-1;
+            }
+            else{
+                rightSmaller[i] = st2.top()-1;
+            }
+            st2.push(i);
+        }
+        
+        for(int i=0; i<m; i++){
+            maxArea = max(maxArea, arr[i] * (rightSmaller[i] - leftSmaller[i] + 1));
+        }
+        return maxArea;
+    }
+  
+    int maxArea(int M[MAX][MAX], int n, int m) {
+        vector<int> heightHisto(m, 0);
+        int maxAr = 0;
+        
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                if(M[i][j] == 1){
+                    heightHisto[j]++;
+                }
+                else{
+                    heightHisto[j] = 0;
+                }
+            }
+            
+            maxAr = max(maxAr, maxAreaHistogram(heightHisto, m));
+            
+        }
+        return maxAr;
+    }
+    T.C : O(N*M)
+    S.C : O(M)
