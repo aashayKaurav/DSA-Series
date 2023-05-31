@@ -38,23 +38,22 @@ Output: 9
     ** Better Approach : Precompute the previous and next maximum for each index. Then take minimum of the two and subtract the height of the current bar.
     
     int trap(vector<int>& height) {
-        int n = height.size();
-        int water = 0;
-        for(int i=0; i<n; i++){
-            int leftMax = 0, rightMax = 0;
-            int j = i;
-            while(j >= 0){
-                leftMax = max(leftMax, height[j]);
-                j--;
-            }
-            j = i;
-            while(j < n){
-                rightMax = max(rightMax, height[j]);
-                j++;
-            }
-            water += min(leftMax, rightMax) - height[i];
+        vector<int> leftHigher(n, 0);
+        vector<int> rightHigher(n, 0);
+        
+        leftHigher[0] = arr[0];
+        for(int i=1; i<n; i++){
+            leftHigher[i] = max(leftHigher[i-1], arr[i]);
         }
-        return water;
+        rightHigher[n-1] = arr[n-1];
+        for(int i=n-2; i>=0; i--){
+            rightHigher[i] = max(rightHigher[i+1], arr[i]);
+        }
+        long long ans = 0;
+        for(int i=0; i<n; i++){
+            ans += (min(leftHigher[i], rightHigher[i])-arr[i]);
+        }
+        return ans;
     }
     T.C : O(N)
     S.C : O(N)
