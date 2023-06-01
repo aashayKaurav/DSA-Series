@@ -1,0 +1,64 @@
+//
+Given an m x n matrix, find all common elements present in all rows in O(mn) time and one traversal of matrix.
+
+Example: 
+
+Input:
+mat[4][5] = {{1, 2, 1, 4, 8},
+             {3, 7, 8, 5, 1},
+             {8, 7, 7, 3, 1},
+             {8, 1, 2, 7, 9},
+            };
+
+Output: 
+1 8 or 8 1
+8 and 1 are present in all rows.
+//
+
+    ** Brute Approach : Take every element form 1st row and check whether it is present in all rows.
+    ** Optimal Approach : Take a map and store all the elements of the 1st row without duplicates. Now for the subsequent rows check whether the element is present or not
+    if present increment the count s.t duplicates are avoided and finally for the last row check what elements are present and print the elements.
+    
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    void printCommonElements(int mat[4][5]) {
+        unordered_map<int, int> mp;
+
+        for (int j = 0; j < 5; j++)
+            mp[(mat[0][j])] = 1;
+
+        for(int i=1; i<4; i++) {
+            for(int j=0; j<5; j++) {
+                if(mp.find(mat[i][j]) != mp.end()) {
+                    if(mp[mat[i][j]] == i) {
+                        mp[mat[i][j]] += 1;
+                    }
+
+                    if(i == 3 && mp[mat[i][j]] == 4) {
+                        cout << mat[i][j] << " ";
+                    }
+                }
+            }
+        }
+    }
+
+    int main()
+    {
+        int mat[4][5] =
+        {
+            {1, 2, 1, 4, 8},
+            {3, 7, 8, 5, 1},
+            {8, 7, 7, 3, 1},
+            {8, 1, 2, 7, 9},
+        };
+
+        cout << "Common elements : ";
+
+        printCommonElements(mat);
+
+        return 0;
+    }
+    T.C : O(M*N)
+    S.C : O(N)
