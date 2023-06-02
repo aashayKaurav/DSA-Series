@@ -1,0 +1,55 @@
+//
+Given two strings wild and pattern where wild string may contain wild card characters and pattern string is a normal string. Determine if the two strings match. 
+The following are the allowed wild card characters in first string :-
+
+* --> This character in string wild can be replaced by any sequence of characters, it can also be replaced by an empty string.
+? --> This character in string wild can be replaced by any one character.
+Example 1:
+
+Input: wild = ge*ks
+       pattern = geeks
+Output: Yes
+Explanation: Replace the '*' in wild string 
+with 'e' to obtain pattern "geeks".
+Example 2:
+
+Input: wild = ge?ks*
+       pattern = geeksforgeeks
+Output: Yes
+Explanation: Replace '?' and '*' in wild string with
+'e' and 'forgeeks' respectively to obtain pattern 
+"geeksforgeeks"
+//
+
+    ** Approach : When we encounter * we have 2 cases either to keep empty or fill with the pattern's char. For '?' we have only one option i.i to substitute 
+    the char and move. And analyze the base cases, one base case is that our pattern reaches the end but wild is not then check whether the remaining chars are '*' or 
+    not it not return false.
+    
+    bool solve(string wild, string pattern, int i, int j) {
+        if(i == -1 && j == -1) {
+            return true;
+        }
+        if(i == -1) {
+            return 0;
+        }
+        if(j == -1) {
+            for(int k=0; k<i; k++) {
+                if(wild[k] != '*') return 0;
+            }
+            return 1;
+        }
+        if(wild[i] == pattern[j] || wild[i] == '?') {
+            return solve(wild, pattern, i-1, j-1);
+        }
+        if(wild[i] == '*')
+            return solve(wild, pattern, i-1, j) || 
+            solve(wild, pattern, i, j-1);
+    
+    }
+    
+    bool match(string wild, string pattern)
+    {
+        return solve(wild, pattern, wild.size()-1, pattern.size()-1);
+    }
+    T.C : O(M * N)
+    S.C : O(1)
