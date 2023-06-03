@@ -1,0 +1,84 @@
+//
+Given a string of lowercase alphabets, count all possible substrings (not necessarily distinct) that have exactly k distinct characters. 
+
+Example 1:
+
+Input:
+S = "aba", K = 2
+Output:
+3
+Explanation:
+The substrings are:
+"ab", "ba" and "aba".
+Example 2:
+
+Input: 
+S = "abaaca", K = 1
+Output:
+7
+Explanation:
+The substrings are:
+"a", "b", "a", "aa", "a", "c", "a".
+//
+
+    ** Brute Approach : We will consider all the substrings and check whether it contains exactly k distinct characters or not. If it does then increment the ans
+    else if countDistinctCharacters > k then break.
+    
+    long long int ans = 0;
+        
+        for(int i=0; i<s.size(); i++) {
+            int distCount = 0;
+            vector<int> fre(256, 0);
+            for(int j=i; j<s.size(); j++) {
+                if(fre[s[j]-'a'] == 0) {
+                    distCount++;
+                }
+                
+                fre[s[j]-'a']++;
+                
+                if(distCount == k) {
+                    ans++;
+                }
+                if(distCount > k){
+                    break;
+                }
+            }
+        }
+        return ans;
+        T.C : O(N^2)
+        S.C : O(1)
+ -----------------------------------------------------------
+ 
+ ** Optimal Approach : (Number of substring having atmost k distinct chars) - (Number of substring having atmost k-1 distinct chars)
+ We will use SLIDING WINDOW technique to find the above ans and finally return the ans.
+ 
+ long long int solve(string s, int n, int k) {
+        long long int ans = 0;
+        long long int distCount = 0;
+        int i=0, j=0;
+        vector<int> freq(256, 0);
+        while(j < n) {
+            if(freq[s[j]-'a'] == 0) {
+                distCount++;
+            }
+            freq[s[j]-'a']++;
+            while(distCount > k) {
+                freq[s[i]-'a']--;
+                if(freq[s[i]-'a'] == 0) {
+                    distCount--;
+                }
+                i++;
+            }
+            ans += (j-i+1);     // Number of substring having atmost k distinct chars.
+            j++;
+        }
+        return ans;
+    }
+  
+  
+    long long int substrCount (string s, int k) {        
+        int n = s.size();
+        return solve(s, n, k) - solve(s, n, k-1);     // Number of substrings having exactly k distinct chars.
+    }
+    T.C : O(|S|)
+    S.C : O(1)
