@@ -1,0 +1,54 @@
+//
+Given a string 's'. The task is to find the smallest window length that contains all the characters of the given string at least one time.
+For eg. A = aabcbcdbca, then the result would be 4 as of the smallest window will be dbca.
+
+Example 1:
+
+Input : "AABBBCBBAC"
+Output : 3
+Explanation : Sub-string -> "BAC"
+Example 2:
+Input : "aaab"
+Output : 2
+Explanation : Sub-string -> "ab"
+ 
+Example 3:
+Input : "GEEKSGEEKSFOR"
+Output : 8
+Explanation : Sub-string -> "GEEKSFOR"
+//
+
+    ** Approach : First count the size of window i.e the number of unique chars afterthat use SW technique and try to find best possible ans.
+    
+    int findSubString(string str)
+    {
+        vector<int> vec1(256, 0);
+        int distinct = 0, minLen = INT_MAX, n = str.size();
+        for(int i=0; i<n; i++) {
+            vec1[str[i]]++;
+            if(vec1[str[i]] == 1) {
+                distinct++;
+            }
+        }
+        int i = 0, j = 0, uniChars = 0;
+        vector<int> vec2(256, 0);
+        while(j < n) {
+            vec2[str[j]]++;
+            if(vec2[str[j]] == 1) {
+                uniChars++;
+            }
+            
+            if(uniChars == distinct) {
+                while(vec2[str[i]] > 1) {
+                    vec2[str[i]]--;
+                    i++;
+                }
+                minLen = min(minLen, j-i+1);
+            }
+            j++;
+        }
+        return minLen;
+    }
+    T.C : O(N)
+    S.C : O(256)
+    
