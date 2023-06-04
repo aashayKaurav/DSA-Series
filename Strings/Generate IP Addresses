@@ -1,0 +1,69 @@
+//
+Given a string S containing only digits, Your task is to complete the function genIp() which returns a vector containing all possible combinations of valid 
+IPv4 IP addresses and takes only a string S as its only argument.
+Note: Order doesn't matter. A valid IP address must be in the form of A.B.C.D, where A, B, C, and D are numbers from 0-255. 
+The numbers cannot be 0 prefixed unless they are 0.
+
+For string 11211 the IP address possible are 
+1.1.2.11
+1.1.21.1
+1.12.1.1
+11.2.1.1
+
+Example 1:
+Input:
+S = 1111
+Output: 1.1.1.1
+
+Example 2:
+Input:
+S = 55
+Output: -1
+//
+
+    ** Approach : Check all the possibilities whether we are getting a valid ans or not it valid include in ans else don't.
+    
+    bool check(string s) {
+        if(s.size() <= 0 || s.size() > 3) 
+            return false;
+        if(stoi(s) < 0 || stoi(s) > 255)
+            return false;
+        if(s[0] == '0' && s.size() > 1)
+            return false;
+        return true;
+    }
+  
+    string generateIP(string &s, int i, int j, int k) {
+        string s1, s2, s3, s4;
+        int n = s.size();
+        s1 = s.substr(0, i+1);
+        s2 = s.substr(i+1, j-i);
+        s3 = s.substr(j+1, k-j);
+        s4 = s.substr(k+1, n-1-k);
+        
+        if(check(s1) && check(s2) && check(s3) && check(s4)) {
+            return s1 + "." + s2 + "." + s3 + "." + s4;
+        }
+        return "";
+    }
+  
+    vector<string> genIp(string &s) {
+        int n = s.size();
+        if(n < 4) {
+            return {"-1"};
+        }
+        vector<string> ans;
+        for(int i=0; i<n; i++) {
+            for(int j=i+1; j<n; j++) {
+                for(int k=j+1; k<n; k++) {
+                    string str = generateIP(s, i, j, k);
+                    if(str.size() > 0) {
+                        ans.push_back(str);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+    T.C : O(N^3)
+    S.C : O(N)
