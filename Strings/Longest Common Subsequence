@@ -1,0 +1,47 @@
+//
+Given two sequences, find the length of longest subsequence present in both of them. Both the strings are of uppercase.
+
+Example 1:
+Input:
+A = 6, B = 6
+str1 = ABCDGH
+str2 = AEDFHR
+Output: 3
+Explanation: LCS for input Sequences
+“ABCDGH” and “AEDFHR” is “ADH” of
+length 3.
+
+Example 2:
+Input:
+A = 3, B = 2
+str1 = ABC
+str2 = AC
+Output: 2
+Explanation: LCS of "ABC" and "AC" is
+"AC" of length 2.
+//
+
+    ** Approach : Check if the last character matches both the string if does then decrement both the pointers, else check out both the possiblities by once decreasing
+    i and once j.
+    
+    int solve(string &s1, string &s2, int i, int j, vector<vector<int>> &dp) {
+        if(i < 0 || j < 0) {
+            return 0;
+        }
+        if(dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        if(s1[i] == s2[j]) {
+            return dp[i][j] = 1 + solve(s1, s2, i-1, j-1, dp);
+        }
+        return dp[i][j] = max(solve(s1, s2, i-1, j, dp), solve(s1, s2, i, j-1, dp));
+    }
+    
+    //Function to find the length of longest common subsequence in two strings.
+    int lcs(int x, int y, string s1, string s2)
+    {
+        vector<vector<int>> dp(x, vector<int>(y, -1));
+        return solve(s1, s2, x-1, y-1, dp);
+    }
+    T.C : O(N*M)
+    S.C : O(N*M)
