@@ -1,0 +1,50 @@
+//
+Given an array of strings, return all groups of strings that are anagrams. The groups must be created in order of their appearance in the original array. 
+Look at the sample case for clarification.
+
+Note: The final output will be in lexicographic order.
+
+Example 1:
+
+Input:
+N = 5
+words[] = {act,god,cat,dog,tac}
+Output:
+act cat tac 
+god dog
+Explanation:
+There are 2 groups of
+anagrams "god", "dog" make group 1.
+"act", "cat", "tac" make group 2.
+Example 2:
+
+Input:
+N = 3
+words[] = {no,on,is}
+Output: 
+is
+no on
+Explanation:
+There are 2 groups of
+anagrams "is" makes group 1.
+"no", "on" make group 2.
+//
+
+    ** Approach : We will use hash map. We will sort each string and push the current string into its sorted key of the map.
+    
+    vector<vector<string> > Anagrams(vector<string>& string_list) {
+        int n = string_list.size();
+        vector<vector<string>> ans;
+        unordered_map<string, vector<string>> mp;
+        for(int i=0; i<n; i++) {
+            string temp = string_list[i];
+            sort(temp.begin(), temp.end());
+            mp[temp].push_back(string_list[i]);
+        }
+        for(auto it : mp) {
+            ans.push_back(it.second);
+        }
+        return ans;
+    }
+    T.C : O(N*|S|*log|S|), where |S| is the length of the strings.
+    S.C : O(N*|S|)
