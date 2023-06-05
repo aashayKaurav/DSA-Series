@@ -1,0 +1,93 @@
+//
+Given a string S, find the longest palindromic substring in S. Substring of string S: S[ i . . . . j ] where 0 ≤ i ≤ j < len(S). 
+Palindrome string: A string that reads the same backward. More formally, S is a palindrome if reverse(S) = S. 
+In case of conflict, return the substring which occurs first ( with the least starting index).
+
+Example 1:
+
+Input:
+S = "aaaabbaa"
+Output: aabbaa
+Explanation: The longest Palindromic
+substring is "aabbaa".
+Example 2:
+
+Input: 
+S = "abc"
+Output: a
+Explanation: "a", "b" and "c" are the 
+longest palindromes with same length.
+The result is the one with the least
+starting index.
+//
+
+    ** Brute Approach : Try to find longest palindromin substring by considering all the possible substrings.
+    
+    bool isPalindrome(string &str) {
+        int n = str.size();
+        int i=0, j=n-1;
+        while(i <= j) {
+            if(str[i] != str[j]) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+  
+    string longestPalin (string S) {
+        int maxLen = 0;
+        int n = S.size();
+        string ans = "";
+        for(int i=0; i<n; i++) {
+            string str = "";
+            for(int j=i; j<n; j++) {
+                str = S.substr(i, j-i+1);
+                if(isPalindrome(str)) {
+                    if(maxLen < str.size()) {
+                        maxLen = str.size();
+                        ans = str;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+    T.C : O(N^3)
+    S.C : O(1)
+ --------------------------------------------------------------------------------------------------------------------------
+    ** Optimal approach : Take a particular letter from the string and go left and right to find whether we get a palindromic string. Finally store the max one
+    and return ans.
+    string longestPalin (string S) {
+        int maxLen = 0;
+        string ans = "";
+        int n = S.size();
+        for(int i=0; i<n; i++) {
+            
+            // For ODD Palindrome
+            int l = i, r = i;
+            while(l >= 0 && r < n && S[l] == S[r]) {
+                if(maxLen < r-l+1) {
+                    maxLen = r-l+1;
+                    ans = S.substr(l, maxLen);
+                }
+                l--;
+                r++;
+            }
+            
+            // For EVEN Palindrome
+            l = i, r = i+1;
+            while(l >= 0 && r < n && S[l] == S[r]) {
+                if(maxLen < r-l+1) {
+                    maxLen = r-l+1;
+                    ans = S.substr(l, maxLen);
+                }
+                l--;
+                r++;
+            }
+        }
+        return ans;
+    }
+    T.C : O(N^2)
+    S.C : O(1)
