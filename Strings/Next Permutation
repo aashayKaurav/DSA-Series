@@ -1,0 +1,47 @@
+//
+Implement the next permutation, which rearranges the list of numbers into Lexicographically next greater permutation of list of numbers. 
+If such arrangement is not possible, it must be rearranged to the lowest possible order i.e. sorted in an ascending order. 
+You are given an list of numbers arr[ ] of size N.
+
+Example 1:
+
+Input: N = 6
+arr = {1, 2, 3, 6, 5, 4}
+Output: {1, 2, 4, 3, 5, 6}
+Explaination: The next permutation of the 
+given array is {1, 2, 4, 3, 5, 6}.
+Example 2:
+
+Input: N = 3
+arr = {3, 2, 1}
+Output: {1, 2, 3}
+Explaination: As arr[] is the last 
+permutation. So, the next permutation 
+is the lowest one.
+//
+
+    ** Approach : Simply traverse from right to left and check till where the order is increasing if we found an element arr[i] < arr[i+1] then stop. Now check whether
+    the i < 0 or not it true then that means we simply have to reverse the whole string and return. Otherwise from right till i check which element is just greater than
+    our pointing element. and swap both. After this we will have the correct element placed at ith position. Now simply reverse string from (i+1) to end and
+    return the ans.
+    
+    vector<int> nextPermutation(int N, vector<int> arr){
+        int i;
+        for(i=N-2; i>=0; i--) {
+            if(arr[i] < arr[i+1]) break;
+        }
+        if(i < 0) {
+            reverse(arr.begin(), arr.end());
+            return arr;
+        }
+        for(int j=N-1; j>=0; j--) {
+            if(arr[i] < arr[j]) {
+                swap(arr[i], arr[j]);
+                break;
+            }
+        }
+        reverse(arr.begin()+i+1, arr.end());
+        return arr;
+    }
+    T.C : O(N)
+    S.c : O(1)
