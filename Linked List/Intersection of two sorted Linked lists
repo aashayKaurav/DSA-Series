@@ -1,0 +1,55 @@
+//
+Given two linked lists sorted in increasing order, create a new linked list representing the intersection of the two linked lists. 
+The new linked list should be made with its own memory the original lists should not be changed.
+Note: The linked list elements are not necessarily distinct.
+
+Example 1:
+
+Input:
+L1 = 1->2->3->4->6
+L2 = 2->4->6->8
+Output: 2 4 6
+Explanation: For the given first two
+linked list, 2, 4 and 6 are the elements
+in the intersection.
+Example 2:
+
+Input:
+L1 = 10->20->40->50
+L2 = 15->40
+Output: 40
+//
+
+    ** Approach : As simple as that!
+    Node* findIntersection(Node* head1, Node* head2)
+    {
+        Node* t1 = head1;
+        Node* t2 = head2;
+        Node* ansHead = NULL;
+        Node* tail = NULL;
+
+        while(t1 && t2) {
+            if(t1->data < t2->data) {
+                t1 = t1->next;
+            }
+            else if(t2->data < t1->data){
+                t2 = t2->next;
+            }
+            else{
+                Node* newNode = new Node(t1->data);
+                if(ansHead == NULL) {
+                    ansHead = newNode;
+                    tail = newNode;
+                }
+                else{
+                    tail->next = newNode;
+                    tail = tail->next;
+                }
+                t1 = t1->next;
+                t2 = t2->next;
+            }
+        }
+        return ansHead;
+    }
+    T.C : O(N + M)
+    S.C : O(N + M)
