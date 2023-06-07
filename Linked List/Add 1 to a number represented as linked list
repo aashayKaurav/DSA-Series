@@ -1,0 +1,47 @@
+//
+A number N is represented in Linked List such that each digit corresponds to a node in linked list. You need to add 1 to it.
+
+Example 1:
+
+Input:
+LinkedList: 4->5->6
+Output: 457 
+Example 2:
+
+Input:
+LinkedList: 1->2->3
+Output: 124 
+//
+
+    ** Approach : Recursively go till end of the linked list add 1 to the last node. WKeep updating each node by adding the carry over. At last if carry remains then simply
+    add a new node and add it to front of the linked list.
+    
+    int addCarry(Node* head){
+        if(head == NULL){
+            return 1;
+        }
+        int res = head->data + addCarry(head->next);
+        head->data = res%10;
+        
+        return res/10;
+        
+    }
+    
+    Node* addOne(Node *head) 
+    {
+        // Your Code here
+        // return head of list after adding one
+        if(head == NULL){
+            return head;
+        }
+        int carry = addCarry(head);
+        
+        if(carry){
+            Node* newNode = new Node(carry);
+            newNode->next = head;
+            return newNode;
+        }
+        return head;
+    }
+    T.C : O(N)
+    S.C : O(1)
