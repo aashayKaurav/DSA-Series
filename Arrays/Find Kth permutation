@@ -1,0 +1,51 @@
+//
+Given two integers N (1<=N<=9) and K. Find the kth permutation sequence of first N natural numbers. Return the answer in string format.
+
+Example 1:
+
+Input: N = 4, K = 3
+Output: 1324
+Explanation: 
+Permutations of first 4 natural numbers:
+1234,1243,1324,1342,1423,1432.....
+So the 3rd permutation is 1324. 
+Example 2:
+
+Input: N = 3, K = 5
+Output: 312
+Explanation: 
+Permutations of first 3 natural numbers:
+123,132,213,231,312,321.
+So the 5th permutation is 312. 
+//
+
+    ** Brute Approach : Generate all possible permutations then return the (k-1)th permutation.
+    
+    ** Optimal Approach : The first digit = k/(factorial of n-1) then remove the that digit from the vector. Update the k value k = k % vec.size(). 
+    
+    string kthPermutation(int n, int k)
+    {
+        int fact = 1;
+        string ans = "";
+        vector<int> vec;
+        
+        for(int i=1; i<n; i++) {
+            fact = fact * i;
+            vec.push_back(i);
+        }
+        vec.push_back(n);
+        k = k-1;
+        
+        while(true) {
+            ans += to_string(vec[k/fact]);
+            vec.erase(vec.begin() + k/fact);
+            if(vec.size() == 0)
+                break;
+            
+            k = k % fact;
+            fact = fact/vec.size();
+        }
+        return ans;
+    }
+    T.C : O(N^2) vec.erase takes O(N) time and wile loop runs for N time
+    S.C : O(N) 
