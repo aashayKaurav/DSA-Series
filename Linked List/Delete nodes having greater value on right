@@ -1,0 +1,63 @@
+//
+Given a singly linked list, remove all the nodes which have a greater value on their right side.
+
+Example 1:
+
+Input:
+LinkedList = 12->15->10->11->5->6->2->3
+Output: 15 11 6 3
+Explanation: Since, 12, 10, 5 and 2 are
+the elements which have greater elements
+on the following nodes. So, after deleting
+them, the linked list would like be 15,
+11, 6, 3.
+Example 2:
+
+Input:
+LinkedList = 10->20->30->40->50->60
+Output: 60
+//
+
+    ** Optimal Approach : First Reverse the linked list Take maxValue and keep updating the maxValue as soon as we get a greater node from maxValue. 
+    keep changing the curr->next if the next node is smaller than the maxNode. Finally again reverse the list to get the ans.
+    
+    Node* reverse(Node* head) {
+        if(head == NULL || head->next == NULL) {
+            return head;
+        }
+        
+        Node* rev = reverse(head->next);
+        
+        head->next->next = head;
+        head->next = NULL;
+        
+        return rev;
+    }
+    
+    Node* compute(Node* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }        
+        head = reverse(head);
+        int maxValue = head->data;
+        Node* prev = head;
+        Node* curr = head->next;
+        
+        while(curr) {
+            
+            if(curr->data < maxValue) {
+                prev->next = curr->next;
+                curr = curr->next;
+            }
+            else{
+                maxValue = curr->data;
+                prev = curr;
+                curr = curr->next;
+            }
+            
+        }
+        head = reverse(head);
+        return head;
+    }
+    T.C : O(N)
+    S.C : O(1)
