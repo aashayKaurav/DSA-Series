@@ -59,7 +59,7 @@ Given a doubly linked list containing n nodes. The problem is to reverse every g
             count++;
         }
 
-        if (count >= k) {
+        if (temp != NULL) {
             Node* rest = revListInGroupOfGivenSize(curr, k);
             head->next = rest;
             if (rest != NULL)
