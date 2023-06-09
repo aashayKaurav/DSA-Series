@@ -1,0 +1,99 @@
+//
+Given a doubly linked list containing n nodes. The problem is to reverse every group of k nodes in the list.
+//
+
+
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    struct Node {
+        int data;
+        struct Node* next, *prev;
+    };
+
+
+    void insert(struct Node** head, int data)
+    {
+        // allocate node
+        struct Node* temp = new Node();
+
+        // put in the data
+        temp->data = data;
+        temp->next = temp->prev = NULL;
+
+        if ((*head) == NULL)
+            (*head) = temp;
+        else {
+            temp->next = *head;
+            (*head)->prev = temp;
+            (*head) = temp;
+        }
+    }
+
+
+    void printList(struct Node* head)
+    {
+        // if list is empty
+        if (head == NULL)
+            cout << "Doubly Linked list empty";
+
+        while (head != NULL) {
+            cout << head->data << " ";
+            head = head->next;
+        }
+    }
+
+    Node* revListInGroupOfGivenSize(Node *head, int k) {
+        if (!head)
+            return NULL;
+        head->prev = NULL;
+        Node *temp, *curr = head, *newHead;
+        int count = 0;
+        while (curr != NULL && count < k) {
+            newHead = curr;
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+            curr = curr->prev;
+            count++;
+        }
+
+        if (count >= k) {
+            Node* rest = revListInGroupOfGivenSize(curr, k);
+            head->next = rest;
+            if (rest != NULL)
+                // it is required for prev link otherwise u wont
+                // be backtrack list due to broken links
+                rest->prev = head;
+        }
+        return newHead;
+    }
+
+
+    int main()
+    {
+        struct Node* head = NULL;
+
+        // insert values in sorted order
+        insert(&head, 8);
+        insert(&head, 56);
+        insert(&head, 12);
+        insert(&head, 2);
+        insert(&head, 6);
+        insert(&head, 3);
+
+        int k = 2;
+
+        cout << "Original list: ";
+        printList(head);
+
+        // Reverse doubly linked list in groups of
+        // size 'k'
+        head = revListInGroupOfGivenSize(head, k);
+
+        cout << "\nModified list: ";
+        printList(head);
+
+        return 0;
+    }
