@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+ 
+// Data structure to store a binary tree node
+struct Node
+{
+    int data;
+    Node *left, *right;
+ 
+    Node(int data)
+    {
+        this->data = data;
+        this->left = this->right = nullptr;
+    }
+};
+ 
+// recursive function
+void postOrderTraversal(Node* root) {
+    if(root == NULL) {
+        return;
+    }
+    
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    
+    cout << root->data << " ";
+}
+
+// iterative function
+void postorderIterative(Node* root) {
+    if(root== NULL)
+        return;
+    
+    stack<Node*> stk;
+    stk.push(root);
+    
+    stack<int> output;
+    
+    while(!stk.empty()) {
+        Node* curr = stk.top();
+        stk.pop();
+        
+        output.push(curr->data);
+        
+        if(curr->left) {
+            stk.push(curr->left);
+        }
+        if(curr->right) {
+            stk.push(curr->right);
+        }
+    }
+    
+    while(!output.empty()) {
+        cout << output.top() << " ";
+        output.pop();
+    }
+}
+ 
+int main()
+{
+    /* Construct the following tree
+               1
+             /   \
+            /     \
+           2       3
+          /      /   \
+         /      /     \
+        4      5       6
+              / \
+             /   \
+            7     8
+    */
+ 
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->right->left = new Node(5);
+    root->right->right = new Node(6);
+    root->right->left->left = new Node(7);
+    root->right->left->right = new Node(8);
+ 
+    //postOrderTraversal(root);
+    postorderIterative(root);
+ 
+    return 0;
+}
+
+T.C : O(N)
+S.C : O(N)
