@@ -42,8 +42,7 @@ Explanation:
 As you can see we have not taken the right subtree.
 //
 
-    ** Approach : First get the left view of the tree except for the leaf nodes, then get the bottom view(leaf nodes) of the tree and finally get the right view of the
-    tree.
+    ** Approach : First get the left view of the tree except for the leaf nodes, then get the leaf nodes of the tree and finally get the right view of the tree.
     
     void leftTraversal(Node* root, vector<int> &ans) {
         if(root == NULL || (root->left == NULL && root->right == NULL)) {
