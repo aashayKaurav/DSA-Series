@@ -1,0 +1,52 @@
+//
+Given a Binary Tree, print the diagonal traversal of the binary tree.
+
+Consider lines of slope -1 passing between nodes. Given a Binary Tree, print all diagonal elements in a binary tree belonging to same line.
+If the diagonal element are present in two different subtress then left subtree diagonal element should be taken first and then right subtree. 
+
+Example 1:
+
+Input :
+            8
+         /     \
+        3      10
+      /   \      \
+     1     6     14
+         /   \   /
+        4     7 13
+Output : 8 10 14 3 6 7 13 1 4
+Explanation:
+unnamed
+Diagonal Traversal of binary tree : 
+ 8 10 14 3 6 7 13 1 4
+//
+
+    ** Approach : Take a queue data structure then push the top node of each diagonal. Traverse to the end and if between we get next diagonal element then again push into
+    queue so that we will have track of elements of each diagonal.
+    
+    vector<int> diagonal(Node *root)
+    {
+        if(root == NULL){
+           return {};
+        }
+        vector<int> ans;
+        queue<Node*> q;
+        q.push(root);
+
+        while(!q.empty()){
+
+           //vector<int> v;
+           Node* curr = q.front();
+           q.pop();
+           while(curr){
+               ans.push_back(curr->data);
+               if(curr->left){
+                   q.push(curr->left);
+               }
+               curr = curr->right;
+           }
+        }
+        return ans;
+    }
+    T.C : O(N)
+    S.C : O(N)
