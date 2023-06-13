@@ -1,0 +1,73 @@
+//
+Given a binary tree, find out whether it contains a duplicate sub-tree of size two or more, or not.
+
+Note: Two same leaf nodes are not considered as subtree as size of a leaf node is one.
+
+Example 1 :
+
+Input : 
+               1
+             /   \ 
+           2       3
+         /   \       \    
+        4     5       2     
+                     /  \    
+                    4    5
+Output : 1
+Explanation : 
+    2     
+  /   \    
+ 4     5
+is the duplicate sub-tree.
+Example 2 :
+
+Input : 
+               1
+             /   \ 
+           2       3
+Output: 0
+Explanation: There is no duplicate sub-tree 
+in the given binary tree.
+//
+
+    ** Approach : We will simply take a map to store each subtree as string. To avoid any collision due to structure of subtree we will return a delimeter and 
+    add it to the string.
+    
+    unordered_map<string, int> mp;
+    
+    string solve(Node* root) {
+        if(root == NULL) {
+            return "$";
+        }
+        
+        if(root->left == NULL && root->right == NULL) {
+            return "$" + to_string(root->data); 
+        }
+        
+        string str = "";
+        str += to_string(root->data);
+        str += solve(root->left);
+        str += solve(root->right);
+        
+        mp[str]++;
+        
+        return str;
+    }
+    
+    
+    int dupSub(Node *root) {
+        if(root == NULL) {
+            return true;
+        }
+        
+        solve(root);
+        
+        for(auto it : mp) {
+            if(it.second >= 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+    T.C : O(N)
+    S.C : O(N)
