@@ -1,0 +1,93 @@
+//
+Given a Binary Tree, check if all leaves are at same level or not.
+
+Example 1:
+
+Input: 
+            1
+          /   \
+         2     3
+
+Output: 1
+
+Explanation: 
+Leaves 2 and 3 are at same level.
+
+Example 2:
+
+Input:
+            10
+          /    \
+        20      30
+       /  \        
+     10    15
+
+Output: 0
+
+Explanation:
+Leaves 10, 15 and 30 are not at same level.
+//
+
+    ** Approach : We can get ans by level order or DFS traversal. For DFS approach we will miantain two variables and update both at leaf nodes, finally check whether 
+    they are same or not if not return false else return true. For level order approach maintain queue and store node and level count. For leaf node if leaflevel and
+    node level not same then return false else return true.
+    
+    void solve(Node* root, int &mini, int &maxi, int level) {
+        if(!root) return;
+        
+        if(!root -> left and !root -> right) {
+            mini = min(level, mini);
+            maxi = max(maxi, level);
+        }
+        
+        solve(root->left, mini, maxi, level+1);
+        solve(root->right, mini, maxi, level+1);
+        
+    }
+    bool check(Node *root)
+    {
+        int mini = INT_MAX;
+        int maxi = INT_MIN;
+        
+        solve(root, mini, maxi, 0);
+        
+        return mini == maxi ? 1 : 0;
+    }
+    --------------------------------------------------------------------------------------------------------
+    bool check(Node *root)
+    {
+        if(root == NULL || (root->left == NULL && root->right == NULL)) {
+            return true;
+        }
+        
+        queue<pair<Node*, int>> q;
+        
+        q.push({root, 1});
+        int leafLevel = -1;
+        
+        while(!q.empty()) {
+            Node* curr = q.front().first;
+            int level = q.front().second;
+            q.pop();
+            
+            if(curr->left == NULL && curr->right == NULL) {
+                if(leafLevel == -1) {
+                    leafLevel = level;
+                }
+                else if(leafLevel != level){
+                    return false;
+                }
+            }
+            
+            if(curr->left) {
+                q.push({curr->left, level+1});
+            }
+            
+            if(curr->right) {
+                q.push({curr->right, level+1});
+            }            
+        }        
+        return true;
+    }
+    T.C : O(N)
+    S.C : O(N)
