@@ -1,0 +1,60 @@
+//
+Given a binary tree with a value associated with each node, we need to choose a subset of these nodes such that sum of chosen nodes is maximum under a constraint 
+that no two chosen node in subset should be directly connected that is, if we have taken a node in our sum then we can’t take its any children or parents in 
+consideration and vice versa.                                               
+
+Example 1:
+
+Input:
+     11
+    /  \
+   1    2
+Output: 11
+Explanation: The maximum sum is sum of
+node 11.
+Example 2:
+
+Input:
+        1
+      /   \
+     2     3
+    /     /  \
+   4     5    6
+Output: 16
+Explanation: The maximum sum is sum of
+nodes 1 4 5 6 , i.e 16. These nodes are
+non adjacent.
+//
+
+    ** Approach : We will use same concep as used in DP i.e to pick or notPick, then return the max one. To store maxSum values we will use map instead of dp array.
+    
+    int solve(Node *root,unordered_map<Node*,int> &dp){
+        if(root == NULL){
+            return 0;
+        }
+        
+        if(dp[root] != 0) return dp[root];
+        
+        int pick = root->data;
+        
+        if(root->left){
+            pick += solve(root->left->left,dp);
+            pick +=  solve(root->left->right,dp);
+        } 
+        if(root->right){
+            pick+= solve(root->right->left,dp);
+            pick += solve(root->right->right,dp);
+        }
+        
+        int notPick = solve(root->left,dp) + solve(root->right,dp);
+        
+        return dp[root] = max(pick,notPick);
+    }
+    
+    int getMaxSum(Node *root) 
+    {
+        unordered_map<Node*,int> dp;
+        return solve(root,dp);
+    }
+    T.C : O(N)
+    S.C : O(N)
