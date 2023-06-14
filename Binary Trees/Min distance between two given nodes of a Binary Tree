@@ -1,0 +1,69 @@
+//
+Given a binary tree and two node values your task is to find the minimum distance between them.
+The given two nodes are guaranteed to be in the binary tree and nodes are numbered from 1 to N.
+Please Note that a and b are not always leaf node.
+
+Example 1:
+
+Input:
+        1
+      /  \
+     2    3
+a = 2, b = 3
+Output: 2
+Explanation: The tree formed is:
+       1
+     /   \ 
+    2     3
+We need the distance between 2 and 3.
+Being at node 2, we need to take two
+steps ahead in order to reach node 3.
+The path followed will be:
+2 -> 1 -> 3. Hence, the result is 2.
+//
+
+    ** Approach : The Idea is :
+                  a) First find the lowest common ancestor of both the nodes.
+                  b) Then traverse for nodes individually and find the distance
+                  c) add both distances return the ans.
+       int solve(Node* root, int k, int level){
+        if(root == NULL){
+            return -1;
+        }
+        if(root->data == k){
+            return level;
+        }
+        int lt = solve(root->left, k, level+1);
+        if(lt == -1)
+            return solve(root->right, k, level+1);
+        
+        return lt;
+    }
+    
+    Node* lca(Node* root, int a, int b){
+        if(root == NULL){
+            return NULL;
+        }
+        if(root->data == a || root->data == b){
+            return root;
+        }
+        
+        Node* lt = lca(root->left, a, b);
+        Node* rt = lca(root->right, a, b);
+        
+        if(lt != NULL && rt != NULL){
+            return root;
+        }
+        return (lt) ? lt : rt; 
+        
+    }
+    
+    int findDist(Node* root, int a, int b) {
+        // Your code here
+        Node* node = lca(root, a, b);
+        int d1 = solve(node, a, 0);
+        int d2 = solve(node, b, 0);
+        return d1+d2;
+    }
+    T.C : O(N)
+    S.C : O(1)
