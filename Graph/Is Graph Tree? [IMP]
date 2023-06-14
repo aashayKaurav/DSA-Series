@@ -1,0 +1,46 @@
+//
+Write a function that returns true if a given undirected graph is a tree and false otherwise. For example, the following graph is a tree.
+//
+
+    ** Approach : We will simply find the cycle in a undirected graph using DFS/BFS. The main idea here will be if a adjacent node of current node is visited and it is not
+    current node's parent then there exists cycle else not.
+    
+    #include <bits/stdc++.h>
+
+    bool isCyclic(vector<int> adj[], vector<int> &vis, int i, int parent) {
+        vis[i] = 1;
+
+        for(auto it : adj[i]) {
+            if(vis[it] == 0) {
+                if(isCyclic(adj, vis, it, i)) {
+                    return true;
+                }
+            }
+            else if(it != parent) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool isGraphTree(int n, vector<vector<int>> &edgeList)
+    {
+        vector<int> adj[n];
+
+        for(auto it : edgeList) {
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+
+        vector<int> vis(n, 0);
+
+        for(int i=0; i<n; i++) {
+            if(!vis[i] && isCyclic(adj, vis, i, -1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    T.C : O(N)
+    S.C : O(N)
