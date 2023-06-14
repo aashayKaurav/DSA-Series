@@ -1,0 +1,45 @@
+//
+Given a binary tree of size N, your task is to that find all duplicate subtrees from the given binary tree.
+//
+
+    ** Approach : Use map to store all the subtrees count. To store the subtrees we will store them as string and for root == null we will use delimeter to differentiate
+    node and null to preserve tree structure.
+    
+    string solve(Node* root, unordered_map<string, pair<Node *, int>> &mp) {
+    if(root == NULL) {
+        return "$";
+    }
+    
+        
+    string s = "";
+    s += to_string(root->data);
+    s += "$" + solve(root->left, mp);
+    s += "$" + solve(root->right, mp);
+    
+    if (mp.find(s) != mp.end())
+    {
+        mp[s].second++;
+    }
+    else
+    {
+        mp[s].first = root;
+        mp[s].second = 1;
+    }
+    
+    return s;
+}
+
+vector<Node*> printAllDups(Node* root)
+{
+    unordered_map<string, pair<Node *, int>> mp;
+    vector<Node*> ans;
+    solve(root, mp);
+    for(auto it : mp) {
+        if(it.second.second >= 2) {
+            ans.push_back(it.second.first);
+        }
+    }
+    return ans;
+}
+T.C : O(N)
+S.C : O(N)
