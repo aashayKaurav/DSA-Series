@@ -53,3 +53,48 @@ Output: 10
     }
     T.C : O(N)
     S.C : O(N)
+--------------------------------------------------------------------------------------------------------
+    ** Optimal Approach : Use the reverse Morris traversal technique.
+    int morrisTraversal(Node* root, int &i, int K, int &ans){
+        if(root == NULL){
+            return -1;
+        }
+        Node* cur, *suc;
+        cur = root;
+        while(cur != NULL){
+            if(cur->right == NULL){
+                i++;
+                if(i == K){
+                    ans = cur->data;
+                }
+                cur = cur->left;
+            }
+            else{
+                suc = cur->right;
+                while(suc->left != NULL && suc->left != cur){
+                    suc = suc->left;
+                }
+                if(suc->left == NULL){
+                    suc->left = cur;
+                    cur = cur->right;
+                }
+                else{
+                    i++;
+                    if(i == K){
+                        ans = cur->data;
+                    }
+                    suc->left = NULL;
+                    cur = cur->left;
+                }
+            }
+        }
+        return ans;
+    }    
+    int kthLargest(Node *root, int K)
+    {
+        int i = 0;
+        int ans = INT_MIN;
+        return morrisTraversal(root, i, K, ans);
+    }
+    T.C : O(N)
+    S.C : O(1)
