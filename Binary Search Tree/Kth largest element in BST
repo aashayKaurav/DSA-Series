@@ -1,0 +1,55 @@
+//
+Given a Binary search tree. Your task is to complete the function which will return the Kth largest element without doing any modification in Binary Search Tree.
+
+Example 1:
+
+Input:
+      4
+    /   \
+   2     9
+k = 2 
+Output: 4
+
+Example 2:
+
+Input:
+       9
+        \ 
+          10
+K = 1
+Output: 10
+//
+
+    ** Approach : Keep going into right subtree then while coming back increase temp and check if temp == k then return data, else go to left subtree.
+    
+    int solve(Node* root, int &temp, int k) {
+        
+        if(root == NULL || temp > k) {
+            return -1;
+        }
+        
+        int rTree = solve(root->right, temp, k);
+        
+        if(rTree != -1) {
+            return rTree;
+        }
+        
+        temp++;
+        if(temp == k) {
+            return root->data;
+        }
+        
+        return solve(root->left, temp, k);
+        
+    }
+    
+    int kthLargest(Node *root, int K)
+    {
+        if(root == NULL) {
+            return 0;
+        }
+        int temp = 0;
+        return solve(root, temp, K);
+    }
+    T.C : O(N)
+    S.C : O(N)
