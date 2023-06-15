@@ -1,0 +1,64 @@
+//
+There is BST given with the root node with the key part as an integer only. You need to find the in-order successor and predecessor of a given key. 
+If either predecessor or successor is not found, then set it to NULL.
+
+Note:- In an inorder traversal the number just smaller than the target is the predecessor and the number just greater than the target is the successor. 
+
+Example 1:
+
+Input:
+        10
+      /   \
+     2    11
+   /  \ 
+  1    5
+      /  \
+     3    6
+      \
+       4
+key = 8
+Output: 
+6 10
+Explanation: 
+In the given BST the inorder predecessor of 8 is 6 and inorder successor of 8 is 10.
+Example 2:
+
+Input:
+      8
+    /   \
+   1     9
+    \     \
+     4    10
+    /
+   3
+key = 11
+Output: 
+10 -1
+Explanation: 
+In given BST, the inorder predecessor of 11 is 10 whereas it does not have any inorder successor.
+//
+
+    ** Approach : Keep traversing the BST and keep updating pre and suc at each step.
+    
+    void findPreSuc(Node* root, Node*& pre, Node*& suc, int key)
+    {
+        if(root==NULL) 
+            return;
+        if(root->key==key)
+        {
+            findPreSuc(root->left,pre,suc,key);
+            findPreSuc(root->right,pre,suc,key);
+        }
+        else if(root->key>key)
+        {
+            suc=root;
+            findPreSuc(root->left,pre,suc,key);
+        }
+        else if(root->key<key)
+        {
+            pre=root;
+            findPreSuc(root->right,pre,suc,key);
+        }        
+    }
+    T.C : O(N)
+    S.C : O(N)
