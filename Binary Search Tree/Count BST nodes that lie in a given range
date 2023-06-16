@@ -1,0 +1,93 @@
+//
+Given a Binary Search Tree (BST) and a range l-h(inclusive), count the number of nodes in the BST that lie in the given range.
+
+The values smaller than root go to the left side
+The values greater and equal to the root go to the right side
+Example 1:
+
+Input:
+      10
+     /  \
+    5    50
+   /    /  \
+  1    40  100
+l = 5, h = 45
+Output: 3
+Explanation: 5 10 40 are the node in the
+range
+Example 2:
+
+Input:
+     5
+    /  \
+   4    6
+  /      \
+ 3        7
+l = 2, h = 8
+Output: 5
+Explanation: All the nodes are in the
+given range.
+//
+
+    ** Brute Approach : Use inorder traversal and keep checking whether a node is in the given range or not.
+    void inorder(Node* root, int &ans, int l, int h) {
+        if(root == NULL) {
+            return;
+        }
+        inorder(root->left, ans, l, h);
+        if(root->data>=l && root->data <= h) {
+            ans++;
+        }
+        inorder(root->right, ans, l, h);
+    }
+    
+    int getCount(Node *root, int l, int h)
+    {
+        if(root == NULL) {
+            return 0;
+        }
+        int ans = 0;
+        inorder(root, ans, l, h);
+        
+        return ans;
+    }
+    T.C : O(N)
+    S.C : O(N)
+---------------------------------------------------------------------------------------------------------------
+** Optimal Approach : Use Morris Traversal
+    int getCount(Node *root, int l, int h)
+    {
+        if(root == NULL) {
+            return 0;
+        }
+        int ans = 0;
+        Node* curr = root;
+        
+        while(curr) {
+            
+            if(curr->left == NULL) {
+                if(curr->data >= l && curr->data <= h) ans++;
+                curr = curr->right;
+            }
+            else {
+                
+                Node* pred = curr->left;
+                while(pred->right != NULL && pred->right != curr) {
+                    pred = pred->right;
+                }
+                
+                if(pred->right == NULL) {
+                    pred->right = curr;
+                    curr = curr->left;
+                }
+                else{
+                    if(curr->data >= l && curr->data <= h) ans++;
+                    pred->right = NULL;
+                    curr = curr->right;
+                }
+            }
+        }
+        return ans;
+    }
+    T.C : O(N)
+    S.C : O(1)
