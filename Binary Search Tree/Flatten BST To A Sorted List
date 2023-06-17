@@ -1,0 +1,33 @@
+//
+Given a binary search tree, the task is to flatten it to a sorted list. Precisely, the value of each node must be lesser than the values of all the nodes at its right, 
+and its left node must be NULL after flattening. 
+We must do it in O(H) extra space where ‘H’ is the height of BST.
+//
+
+    ** Approach : Inorder traversal and update prev pointer.
+    void inorder(TreeNode<int>* curr, TreeNode<int>* &prev) {
+    if(curr == NULL) {
+        return;
+    }
+    inorder(curr->left, prev);
+    prev->left = NULL;
+    prev->right = curr;
+    prev = curr;
+    inorder(curr->right, prev);
+}
+
+TreeNode<int>* flatten(TreeNode<int>* root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    TreeNode<int>* dummy = new TreeNode<int>(-1);
+    TreeNode<int>* prev = dummy;
+
+    inorder(root, prev);
+    // last node
+    prev->left = NULL;
+    prev->right = NULL;
+    return dummy->right;
+}
+    T.C : O(N)
+    S.C : O(H)
