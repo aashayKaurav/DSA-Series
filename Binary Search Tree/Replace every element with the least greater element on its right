@@ -73,6 +73,28 @@ exist and so on.
           return ans;
       }
   };
-  T.C : Theta(N * LogN)
   T.C : O(N^2)
   S.C : O(H)
+----------------------------------------------------------------------------------------------------
+      ** Approach : Use set to store elements from right to left keep using upper_bound for every element and if valid element found then push_back to ans.
+      
+      vector<int> findLeastGreater(vector<int>& arr, int n) {
+        
+        set<int>st;
+        vector<int>vec;
+        for(int i=n-1;i>=0;i--){
+            
+            auto itr=st.upper_bound(arr[i]);
+            if(itr==st.end())
+                vec.push_back(-1);
+            else
+                vec.push_back(*itr);
+                
+                
+            st.insert(arr[i]);
+        }
+        reverse(vec.begin(),vec.end());
+        return vec;
+    }
+      T.C : Theta(N * LogN)
+      S.C : O(N)
