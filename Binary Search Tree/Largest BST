@@ -1,1 +1,123 @@
+Given a binary tree. Find the size of its largest subtree that is a Binary Search Tree.
+Note: Here Size is equal to the number of nodes in the subtree.
 
+Example 1:
+
+Input:
+        1
+      /   \
+     4     4
+   /   \
+  6     8
+Output: 1
+Explanation: There's no sub-tree with size
+greater than 1 which forms a BST. All the
+leaf Nodes are the BSTs with size equal
+to 1.
+Example 2:
+
+Input: 6 6 3 N 2 9 3 N 8 8 2
+            6
+        /       \
+       6         3
+        \      /   \
+         2    9     3
+          \  /  \
+          8 8    2 
+Output: 2
+Explanation: The following sub-tree is a
+BST of size 2: 
+       2
+    /    \ 
+   N      8
+   
+      ** Brute Approach : For each node we can check whether it is valid BST or not. If valid then find the count of nodes else check for left and right subtrees.
+      bool isValidBST(Node* root, int min, int max) {
+        if(root == NULL) {
+            return true;
+        }
+        if(min >= root->data || root->data >= max) {
+            return false;
+        }
+        return isValidBST(root->left, min, root->data) && 
+        isValidBST(root->right, root->data, max);
+    }
+    
+    int countNodes(Node* root) {
+        if(root == NULL) {
+            return 0;
+        }
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+    
+    
+    int largestBst(Node *root)
+    {
+        if(root == NULL) {
+            return 0;
+        }
+        
+        if(isValidBST(root, INT_MIN, INT_MAX)) {
+            return countNodes(root);
+        }
+        
+        int leftSize = largestBst(root->left);
+        int rightSize = largestBst(root->right);
+        
+        return max(leftSize, rightSize);
+    }
+    T.C : O(N^2)
+    S.C : O(H)
+ ----------------------------------------------------------------------------------------------
+    ** Optimal Approach : For each node we only have to check whether it is a BST or not and also the size of the tree, so we define our class which contains {maxi, mini
+    , isBST and size} for the tree. maxi, mini are used to check isBST property and if the property satisfies then update ans.
+    
+    class Solution{
+    public:
+    
+    class info{
+        public:
+            int maxi;
+            int mini;
+            bool isBST;
+            int size;
+    };
+    
+    info solve(Node* root, int &maxSize){
+        if(root == NULL){
+            return {INT_MIN, INT_MAX, true, 0};
+        }
+        
+        info left = solve(root->left, maxSize);
+        info right = solve(root->right, maxSize);
+        
+        info currNode;
+        currNode.size = left.size + right.size + 1;
+        currNode.maxi = max(root->data, right.maxi);
+        currNode.mini = min(root->data, left.mini);
+        
+        if(left.isBST && right.isBST && (root->data > left.maxi && root->data < right.mini)){
+            currNode.isBST = true;
+        }
+        else{
+            currNode.isBST = false;
+        }
+        
+        if(currNode.isBST){
+            maxSize = max(currNode.size, maxSize);
+        }
+        return currNode;
+        
+    }
+    
+    int largestBst(Node *root)
+    {
+    	  
+    	int maxSize = 0;
+        info temp =	solve(root, maxSize);
+        return maxSize;
+        
+    }
+};
+    T.C : O(N)
+    S.C : O(H)
