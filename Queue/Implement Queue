@@ -1,0 +1,168 @@
+//
+Implement Queue DS.
+//
+    ** Array Implementation...
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    #define MAX 101
+
+    class Queue {
+        public :
+            int arr[MAX];
+            int front;
+            int rear;
+
+            Queue() {
+                front = -1;
+                rear = -1;
+            }
+
+            void Enqueue(int x) {
+
+                if(rear >= MAX-1){
+                    cout << "Queue Overflow!" << endl;
+                    return;
+                }
+                cout << "Element pushed : " << x << endl;
+
+                if(rear == -1) {
+                    rear++;
+                    front++;
+                    arr[rear] = x;
+                    return;
+                }
+                arr[++rear] = x;
+            }
+
+            int Dequeue() {
+                if(front == -1) {
+                    cout << "Queue is Empty!" << endl;
+                    return -1;
+                }
+                if(front == rear) {
+                    int num = arr[front];
+                    front = rear = -1;
+                    return num;
+                }
+                int num = arr[front];
+                front++;
+                return num;  
+            }
+
+            bool isEmpty() {
+                if(front == -1) {
+                    return true;
+                }
+                return false; 
+            }
+
+            int Front() {
+                if(front == -1) {
+                    cout << "Queue is Empty!" << endl;
+                    return -1;
+                }
+                return arr[front];
+            }
+    };
+
+    int main() {
+        class Queue q;
+
+        q.Enqueue(1);
+        q.Enqueue(3);
+        q.Enqueue(5);
+        q.Enqueue(6);
+        cout << "Queue front element : " << q.Front() << endl;
+        cout << "Element Dequeued : " << q.Dequeue() << endl;
+        cout << "Queue is empty : " << q.isEmpty() << endl;
+        q.Enqueue(8);
+    }
+    T.C : O(1)
+    S.C : O(N)
+----------------------------------------------------------------------------------------------------------------
+    ** Linked List Implementation
+    
+    #include <bits/stdc++.h>
+
+    using namespace std;
+
+    struct Node {
+        int data;
+        Node* next;
+
+        Node(int data) {
+            this->data = data;
+            this->next = NULL;
+        }
+    };
+
+    class Queue {
+        public:
+            Node* front;
+            Node* rear;
+
+            Queue() {
+                front = NULL;
+                rear = NULL;
+            }
+
+            void enQueue(int data) {
+                Node* newNode = new Node(data);
+                cout << "Queue enqueue : " << data << endl;
+                if(rear == NULL) {
+                    rear = newNode;
+                    front = newNode;
+                    return;
+                }
+                rear->next = newNode;
+                rear = rear->next;
+                return;
+            }
+
+            int deQueue() {
+                if(front == NULL) {
+                    cout << "Queue is underflow" << endl;
+                    return -1;
+                }
+                if(front == rear) {
+                    int x = front->data;
+                    front = NULL;
+                    rear = NULL;
+                    return x;
+                }
+                int x = front->data;
+                front = front->next;
+                return x;
+            }
+
+            int queueFront() {
+                if(front == NULL) {
+                    cout << "Queue is underflow" << endl;
+                    return -1;
+                }
+                return front->data;
+            }
+
+            bool isEmpty() {
+                if(front == NULL) {
+                    return true;
+                }
+                return false;
+            }
+    };
+
+
+    int main() {
+
+        class Queue q;
+        q.enQueue(3);
+        q.enQueue(5);
+        q.enQueue(8);
+        cout << "Queue dequeue : " << q.deQueue() << endl;;
+        cout << "Queue front : " << q.queueFront() << endl;;
+        cout << "Queue is empty : " << q.isEmpty();
+    }
+    T.C : O(1)
+    S.C : O(1)
