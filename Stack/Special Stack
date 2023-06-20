@@ -59,8 +59,8 @@ The minimum element of the stack is 15.
     	    return x;
     	}
     	else{
-    	    x = mini;
-    	    mini = 2*mini - s.top();
+    	    x = mini;    // if val < mini then simply return the mini value but also update, as this won't be the min value now.
+    	    mini = 2*mini - s.top();    // prev minimum value becomes minimum value now.
     	    s.pop();
     	    return x;
     	}
