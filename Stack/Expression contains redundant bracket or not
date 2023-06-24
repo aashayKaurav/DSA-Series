@@ -1,0 +1,47 @@
+//
+Given a string of balanced expression, find if it contains a redundant parenthesis or not. A set of parenthesis are redundant if the same sub-expression is 
+surrounded by unnecessary or multiple brackets. Print Yes if redundant, else No.
+Note: Expression may contain + , - , *, and / operators. Given expression is valid and there are no white spaces present.
+
+Example 1:
+
+Input:
+exp = ((a+b))
+Output:
+Yes
+Explanation:
+((a+b)) can reduced to (a+b).
+Example 2:
+
+Input:
+exp = (a+b+(c+d))
+Output:
+No
+Explanation:
+(a+b+(c+d)) doesn't have any redundant or multiple
+brackets.
+//
+
+    ** Approach : For every valid brakets there should be one or more than one operators. If for a ')' operator the top of stack is '(' then this will be unwanted 
+    bracket, so return true else after traversing the string return false.
+
+    int checkRedundancy(string s) {
+        stack<char> st;
+        for(int i=0; i<s.size(); i++) {
+            if(s[i] == '(' || s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/') {
+                st.push(s[i]);
+            }
+            else if(s[i] == ')'){
+                if(st.top() == '(') {
+                    return true;
+                }
+                while(!st.empty() && (st.top() == '+' || st.top() == '-' || st.top() == '*' || st.top() == '/')) {
+                    st.pop();
+                }
+                st.pop();
+            }
+        }
+        return false;
+    }
+    T.C : O(N)
+    S.C : O(N)
