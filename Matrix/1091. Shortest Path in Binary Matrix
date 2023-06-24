@@ -1,0 +1,90 @@
+//
+Given an n x n binary matrix grid, return the length of the shortest clear path in the matrix. If there is no clear path, return -1.
+
+A clear path in a binary matrix is a path from the top-left cell (i.e., (0, 0)) to the bottom-right cell (i.e., (n - 1, n - 1)) such that:
+
+All the visited cells of the path are 0.
+All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner).
+The length of a clear path is the number of visited cells of this path.
+
+Example 1:
+
+Input: grid = [[0,1],[1,0]]
+Output: 2
+
+Example 2:
+
+Input: grid = [[0,0,0],[1,1,0],[1,1,0]]
+Output: 4
+//
+
+    ** Approach : We can use either DFS or BFS traversals to traverse all possibilities and then return min steps.
+    int dRow[8] = {-1, -1, -1, 0, 0, +1, +1, +1};
+    int dCol[8] = {-1, 0, +1, -1, +1, -1, 0, +1};
+    int dfs(vector<vector<int>> &grid, int i, int j ,int n) {
+        if(i < 0 || i >= n || j < 0 || j >= n) {
+            return 1001;
+        }
+        if(i == n-1 && j == n-1) {
+            return 1;
+        }
+        int ans = 1001;
+        for(int k=0; k<8; k++) {
+            int dr = i + dRow[k];
+            int dc = j + dCol[k];
+            if(dr >= 0 && dr < n && dc >= 0 && dc < n && grid[dr][dc] == 0) {
+                grid[i][j] = 1;
+                ans = min(ans, 1 + dfs(grid, dr, dc, n));
+                grid[i][j] = 0;
+            }
+        }
+        return ans;
+    }
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        if(grid[0][0] == 1) {
+            return -1;
+        }
+
+        int ans = dfs(grid, 0, 0, grid.size());
+        if(ans == 1001) {
+            return -1;
+        }
+        return ans;
+    }
+------------------------------------------------------------------------------------------
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+        if(grid[0][0] == 1 || grid[n-1][n-1] == 1) {
+            return -1;
+        }
+        queue<pair<int, int>> q;
+        q.push({0, 0});
+        int minSteps = 0;
+        
+        while(!q.empty()) {
+            
+            int size = q.size();
+            minSteps++;
+            for(int i=0; i<size; i++) {
+                int r = q.front().first;
+                int c = q.front().second;
+                q.pop();
+                if(r == n-1 && c == n-1) {
+                    return minSteps;
+                }
+
+                for(int k=0; k<8; k++) {
+                    int dr = r + dRow[k];
+                    int dc = c + dCol[k];
+                    if(dr >= 0 && dr < n && dc >= 0 && dc < n && grid[dr][dc] == 0) {
+                        grid[dr][dc] = 1;
+                        q.push({dr, dc});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+    T.C : O(N^2)
+    S.C : O(1)
