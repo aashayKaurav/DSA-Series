@@ -1,0 +1,75 @@
+//
+Given an infix expression in the form of string str. Convert this infix expression to postfix expression.
+
+Infix expression: The expression of the form a op b. When an operator is in-between every pair of operands.
+Postfix expression: The expression of the form a b op. When an operator is followed for every pair of operands.
+Note: The order of precedence is: ^ greater than * equals to / greater than + equals to -. 
+Example 1:
+
+Input: str = "a+b*(c^d-e)^(f+g*h)-i"
+Output: abcd^e-fgh*+^*+i-
+Explanation:
+After converting the infix expression 
+into postfix expression, the resultant 
+expression will be abcd^e-fgh*+^*+i-
+Example 2:
+
+Input: str = "A*(B+C)/D"
+Output: ABC+*D/
+Explanation:
+After converting the infix expression 
+into postfix expression, the resultant 
+expression will be ABC+*D/
+//
+
+    ** Approach : Simple algo is keep pushing operators into stack if precedence is higher than previous else keep poping. Also if '(' comes then push and if ')' comes
+    then keep poping the elements until '(' comes. At the end pop all the elements from the stack and include in ans.
+
+    int precedence(char c) {
+        if(c == '^') {
+            return 3;
+        }
+        else if(c == '*' || c == '/') {
+            return 2;
+        }
+        else if(c == '+' || c == '-')
+            return 1;
+        else
+            return -1;
+    }
+    
+    // Function to convert an infix expression to a postfix expression.
+    string infixToPostfix(string s) {
+        stack<char> st;
+        string ans;
+        
+        for(int i=0; i<s.size(); i++) {
+            if(s[i]-'a'>= 0 && s[i]-'a' <= 25) {
+                ans += s[i]; 
+            }
+            else if(s[i] == '(') {
+                st.push('(');
+            }
+            else if(s[i] == ')') {
+                while(!st.empty() && st.top() != '(') {
+                    ans += st.top();
+                    st.pop();
+                }
+                st.pop();
+            }
+            else {
+                while(!st.empty() && precedence(s[i]) <= precedence(st.top())) {
+                    ans += st.top();
+                    st.pop();
+                }
+                st.push(s[i]);
+            }
+        }
+        while( !st.empty()) {
+            ans += st.top();
+            st.pop();
+        }
+        return ans;
+    }
+    T.C : O(N)
+    S.C : O(N)
