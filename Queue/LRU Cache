@@ -1,0 +1,164 @@
+//
+Design a data structure that works like a LRU Cache. Here cap denotes the capacity of the cache and Q denotes the number of queries. Query can be of two types:
+
+SET x y: sets the value of the key x with value y
+GET x: gets the key of x if present else returns -1.
+
+The LRUCache class has two methods get() and set() which are defined as follows.
+
+get(key): returns the value of the key if it already exists in the cache otherwise returns -1.
+set(key, value): if the key is already present, update its value. If not present, add the key-value pair to the cache. If the cache reaches its capacity it 
+should invalidate the least recently used item before inserting the new item.
+In the constructor of the class the capacity of the cache should be initialized.
+
+Example 1:
+
+Input:
+cap = 2
+Q = 2
+Queries = SET 1 2 GET 1
+Output: 2
+Explanation: 
+Cache Size = 2
+
+SET 1 2 GET 1
+SET 1 2 : 1 -> 2
+
+GET 1 : Print the value corresponding
+to Key 1, ie 2.
+
+Example 2:
+
+Input:
+cap = 2
+Q = 8
+Queries = SET 1 2 SET 2 3 SET 1 5
+SET 4 5 SET 6 7 GET 4 SET 1 2 GET 3
+Output: 5 -1
+Explanation: 
+Cache Size = 2
+SET 1 2 : 1 -> 2
+
+SET 2 3 : 1 -> 2, 2 -> 3 (the most recently 
+used one is kept at the rightmost position) 
+
+SET 1 5 : 2 -> 3, 1 -> 5
+
+SET 4 5 : 1 -> 5, 4 -> 5 (Cache size is 2, hence 
+we delete the least recently used key-value pair)
+
+SET 6 7 : 4 -> 5, 6 -> 7 
+
+GET 4 : Prints 5 (The cache now looks like
+6 -> 7, 4->5)
+
+SET 1 2 : 4 -> 5, 1 -> 2 
+(Cache size is 2, hence we delete the least 
+recently used key-value pair)
+
+GET 3 : No key value pair having 
+key = 3. Hence, -1 is printed.
+//
+
+    ** Approach : We will use doubly linked list to track the recently used value (for each node we will have {key:value} pair and the head->next node will always be the
+    most recent node and tail->prev will always be the LRU node). We will also use map<int, Node*> to store key : node address into map so that we can find a key in O(1)
+    time and address because we can then delete this node and insert new node just after head node.
+
+    class Node{
+    public:
+        int key;
+        int value;
+        Node *next; 
+        Node *prev;
+    
+        Node(int _key, int _value)
+        {
+            key = _key;
+            value = _value;
+            this->next = NULL;
+            this->prev = NULL;
+        }
+    };
+    //using DLL and map
+    class LRUCache
+    {
+        private:
+        int capacity = -1;
+        map<int, Node*> mp;
+        Node *head=new Node(-1,-1);
+        Node *tail=new Node(-1,-1);
+        public:
+        //Constructor for initializing the cache capacity with the given value.
+        void addNewNode(Node *curr)
+        {
+            Node *rest=head->next;
+            head->next=curr;
+            curr->prev=head;
+            curr->next=rest;
+            rest->prev=curr;
+        }
+        void deleteNode(Node *del)
+        {
+            Node *delPrev = del->prev ; 
+            Node *delNext = del->next ; 
+            delPrev->next = delNext ; 
+            delNext->prev = delPrev ;
+        }
+        void changeAtRecent(Node *curr)
+        {
+            deleteNode(curr);
+            addNewNode(curr);
+        }
+        LRUCache(int cap)
+        {
+            capacity = cap;
+            head->next = tail;
+            tail->prev = head;
+        }
+        
+        //Function to return value corresponding to the key.
+        int GET(int key)
+        {
+            if(mp.find(key)==mp.end())
+            {
+                return -1;
+            }
+            else
+            {
+                Node *temp=mp[key];
+                changeAtRecent(temp);
+                mp[key]=head->next;
+                return temp->value;
+            }
+        }
+        
+        //Function for storing key-value pair.
+        void SET(int key, int val)
+        {
+            if(mp.find(key) != mp.end())//found already
+            {
+                //change to recently used
+                Node* temp = mp[key];
+                //change value;
+                temp->value = val;
+                changeAtRecent(temp);
+            }
+            else if(mp.size() < capacity)//not found in map and map has space left
+            {
+                //add new node
+                Node* temp = new Node(key,val);
+                addNewNode(temp);
+                //add in map
+                mp[key] = temp;
+            }
+            else//map full
+            {
+                //DELETE LEAST RECENTLY USED WHICH EXIST BEFORE TAIL
+                mp.erase(tail->prev->key);
+                deleteNode(tail->prev);
+                Node* temp = new Node(key,val);
+                addNewNode(temp);
+                mp[key] = temp;
+            }
+        }
+    };
