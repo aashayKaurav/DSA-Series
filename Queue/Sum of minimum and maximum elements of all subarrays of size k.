@@ -1,0 +1,68 @@
+//
+Given an array of both positive and negative integers, the task is to compute sum of minimum and maximum elements of all sub-array of size k.
+
+Examples: 
+
+Input : arr[] = {2, 5, -1, 7, -3, -1, -2}  
+        K = 4
+Output : 18
+Explanation : Subarrays of size 4 are : 
+     {2, 5, -1, 7},   min + max = -1 + 7 = 6
+     {5, -1, 7, -3},  min + max = -3 + 7 = 4      
+     {-1, 7, -3, -1}, min + max = -3 + 7 = 4
+     {7, -3, -1, -2}, min + max = -3 + 7 = 4 
+//
+
+    ** Brute : From every index check for window of size k and add minVal + maxVal to ans.
+    T.c : O(N*k)
+
+    ** Optimal Approach : We will use 2 deques to store indexes of elements in decreasing order and increasing order, so that we will have max and min element at front always.
+    And the reson we are storing indices is bcz to claculate the window size easily i.e to check whether we are in window or not else we have to remove elements from the 
+    deques. 
+    #include <bits/stdc++.h> 
+
+    long long sumOfMaxAndMin(vector<int> &nums, int n, int k) {
+    	long long ans = 0;
+    	deque<int> minVal;
+    	deque<int> maxVal;
+    	int i;
+      // Process first window of size K
+    	for(i=0; i<k; i++) {
+        // Remove all previous greater elements
+        // that are useless.
+    		while((!minVal.empty()) && nums[minVal.back()] > nums[i]) {
+    			minVal.pop_back();
+    		}
+        // Remove all previous smaller that are elements
+        // are useless.
+    		while((!maxVal.empty()) && nums[maxVal.back()] < nums[i]) {
+    			maxVal.pop_back();
+    		}
+    		minVal.push_back(i);
+    		maxVal.push_back(i);
+    	}
+      // remaining windows
+    	for( ; i<n; i++) {
+    		ans += nums[minVal.front()] + nums[maxVal.front()];
+        // if deque contains indices out of window then remove.
+    		while((!minVal.empty()) && minVal.front() <= i-k){
+    			minVal.pop_front();
+    		}
+    		while((!maxVal.empty()) && maxVal.front() <= i-k){
+    			maxVal.pop_front();
+    		}
+    
+    		while((!minVal.empty()) && nums[minVal.back()] > nums[i]) {
+    			minVal.pop_back();
+    		}
+    		while((!maxVal.empty()) && nums[maxVal.back()] < nums[i]) {
+    			maxVal.pop_back();
+    		}
+    		minVal.push_back(i);
+    		maxVal.push_back(i);
+    	}
+    	ans += nums[minVal.front()] + nums[maxVal.front()];
+    	return ans;
+    }
+    T.C : O(N)
+    S.C : O(K)
