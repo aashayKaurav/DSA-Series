@@ -1,0 +1,107 @@
+//
+Given two binary trees with same number of nodes, the task is to check if each of their levels are anagrams of each other or not. 
+
+Example 1:
+
+Input:
+
+Output: 1
+Explanation: 
+Tree 1:
+Level 0 : 1
+Level 1 : 3, 2
+Level 2 : 5, 4
+
+Tree 2:
+Level 0 : 1
+Level 1 : 2, 3
+Level 2 : 4, 5
+
+As we can clearly see all the levels of above two binary trees 
+are anagrams of each other, hence return true.
+Example 2:
+
+Input:
+
+Output: 0
+Explanation: 
+Tree 1:
+Level 0 : 1
+Level 1 : 2, 3 
+Level 2 : 5, 4 
+
+Tree 2: 
+Level 0 : 1 
+Level 1 : 2, 4 
+Level 2 : 5, 3 
+
+As we can clearly see that level 1 and leve 2 are not anagrams of each other, hence return false.
+Your Task:  
+You don't need to read input or print anything. Your task is to complete the function areAnagrams() which takes the root of two trees as input and returns an 1 
+if all the levels are anagrams, else returns 0 as output.
+
+Expected Time Complexity: O(NlogN)
+Expected Auxiliary Space: O(N)
+//
+
+    ** Approach : We will do level order traversal of both the tree and for the first tree we will store all the elements into a map and while traversing the second tree
+    we will keep popping out the elemnets from map. If elements is not present or the map is not empty at last then return false. Otherwise finally if both the
+    queues are empty then return true else false.
+    bool areAnagrams(Node *root1, Node *root2)
+    {
+        if(root1 == NULL && root2 == NULL){
+            return true;
+        }
+        if(root1 == NULL || root2 == NULL){
+            return false;
+        }
+        queue<Node *> q1, q2;
+        q1.push(root1);
+        q2.push(root2);
+        
+        unordered_map<int, int> hm;
+        while(!q1.empty() && !q2.empty()){
+            int n1 = q1.size();
+            int n2 = q2.size();
+            
+            if(n1 != n2)
+                return false;
+            
+            while(n1--){
+                Node* temp = q1.front();
+                q1.pop();
+                hm[temp->data]++;
+                if(temp->left != NULL){
+                    q1.push(temp->left);
+                }
+                if(temp->right != NULL){
+                    q1.push(temp->right);
+                }
+            }
+            while(n2--){
+                Node* temp = q2.front();
+                q2.pop();
+                if(hm.find(temp->data) == hm.end())
+                    return false;
+                    
+                hm[temp->data]--;
+                if(hm[temp->data] == 0){
+                    hm.erase(temp->data);
+                }
+                if(temp->left != NULL){
+                    q2.push(temp->left);
+                }
+                if(temp->right != NULL){
+                    q2.push(temp->right);
+                }
+            }
+            if(hm.size() >0)
+                return false;
+        }
+        if(q1.empty() && q2.empty())
+            return true;
+        else
+            return false;
+    }
+    T.C : O(N)
+    S.C : O(N)
