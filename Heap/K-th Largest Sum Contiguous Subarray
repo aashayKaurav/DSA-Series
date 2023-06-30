@@ -1,0 +1,60 @@
+//
+You are given an array Arr of size N. You have to find the K-th largest sum of contiguous subarray within the array elements. 
+
+Example 1:
+
+Input:
+N = 3
+K = 2
+Arr = {3,2,1}
+Output:
+5
+Explanation:
+The different subarray sums we can get from the array
+are = {6,5,3,2,1}. Where 5 is the 2nd largest.
+//
+
+    ** Approach : Store all the possible subarrays sum into pq. Then pop elements from pq until k = 1 and finally return the top of pq.
+    int kthLargest(vector<int> &Arr,int N,int K){
+                
+        priority_queue<int> pq;
+        for(int i=0; i<N; i++) {
+            int sum = 0;
+            for(int j=i; j<N; j++) {
+                sum += Arr[j];
+                pq.push(sum);
+            }
+        }
+        while(K > 1) {
+            pq.pop();
+            K-=1;
+        }
+        
+        return pq.top();
+    }
+    T.C : O(N^2*LogN)
+    S.C : O(N^2)
+---------------------------------------------------------------------------------
+    ** Optimized Approach : Use min-heap to store top K largest elements so that at last we will simply return top element and size of heap K will be maintained.
+    int kthLargest(vector<int> &Arr,int N,int K){
+  
+        priority_queue<int, vector<int>, greater<int> > mh;
+        
+        for(int i=0; i<N; i++) {
+            int sum = 0;
+            for(int j=i; j<N; j++) {
+                sum += Arr[j];
+                if(mh.size() < K) {
+                    mh.push(sum);
+                }
+                else if(mh.top() < sum){
+                    mh.pop();
+                    mh.push(sum);
+                }
+            }
+        }
+        
+        return mh.top();
+    }
+    T.C : O(N^2*LogK)
+    S.C : O(K)
