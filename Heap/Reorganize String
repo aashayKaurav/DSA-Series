@@ -1,0 +1,67 @@
+
+//
+Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
+
+Return any possible rearrangement of s or return "" if not possible.
+
+Example 1:
+
+Input: s = "aab"
+Output: "aba"
+Example 2:
+
+Input: s = "aaab"
+Output: ""
+
+//
+
+    ** Approach : We can use max-Heap to store frequency and char of the string, then untill the heap.size() > 1 we keep popping two elements and adding into ans string.
+    And push back the char by decrementing the frequency, but only insert back iff the freq is greater than 0. Finally we will have only one character left in the heap so
+    check whether the freq of this char is 1 or not if not then return empty  string else ans.
+
+    string reorganizeString(string s) {
+        int n = s.size();
+        string ans = "";
+        
+        unordered_map<char, int> mp;
+        
+        for(int i=0; i<n; i++) {
+            mp[s[i]]++;
+        }
+        
+        priority_queue< pair<int ,char> > q;
+        
+        // push all element in Max heap 
+        for(auto it: mp) {
+              q.push({it.second, it.first});
+        }
+        
+        // Here pop element from heap make answer string
+        while(q.size() > 1) {
+           
+            auto top1 =  q.top();
+            q.pop();
+                      
+            auto top2 =  q.top();
+            q.pop();
+            
+            ans.push_back(top1.second);
+            ans.push_back(top2.second);
+            
+            if(--top1.first > 0) q.push(top1);
+            if(--top2.first > 0) q.push(top2);
+            
+        }
+        
+        if(q.size()) {
+            if(q.top().first == 1) {
+                  ans.push_back(q.top().second);
+            }
+            else {
+                  return "";
+            }
+        }
+        return ans;
+    }
+    T.C : O(N*LogN)
+    S.C : O(|S|)
