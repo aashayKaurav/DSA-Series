@@ -115,3 +115,42 @@ The merged list will be
        }
       T.C : O(N*K)
       S.C : O(1)
+
+      Iterative :
+      Node* merge(Node* head1, Node* head2) {
+        Node* dummy = new Node(0); // Dummy node to keep track of merged list
+        Node* curr = dummy; // Pointer to the current node in the merged list
+
+        while (head1 != NULL && head2 != NULL) {
+            if (head1->data < head2->data) {
+                curr->next = head1;
+                head1 = head1->next;
+            } else {
+                curr->next = head2;
+                head2 = head2->next;
+            }
+            curr = curr->next;
+        }
+
+        // Attach the remaining nodes of head1 or head2 (if any) to the merged list
+        if (head1 != NULL) {
+            curr->next = head1;
+        } else {
+            curr->next = head2;
+        }
+    
+        return dummy->next; // Return the merged list (excluding the dummy node)
+    }
+
+    Node* mergeKLists(Node* arr[], int k) {
+        if (k == 0) {
+            return NULL;
+        }
+    
+        Node* ans = new Node(INT_MIN);
+        for(int i = 0 ; i < k ; i++){
+           ans->next = merge(ans->next,arr[i]);
+        }
+        return ans->next;
+    }
+---------------------------------------------------------------------------------------------------------
