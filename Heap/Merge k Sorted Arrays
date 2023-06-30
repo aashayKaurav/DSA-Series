@@ -1,0 +1,50 @@
+//
+Given K sorted arrays arranged in the form of a matrix of size K*K. The task is to merge them into one sorted array.
+Example 1:
+
+Input:
+K = 3
+arr[][] = {{1,2,3},{4,5,6},{7,8,9}}
+Output: 1 2 3 4 5 6 7 8 9
+Explanation:Above test case has 3 sorted
+arrays of size 3, 3, 3
+arr[][] = [[1, 2, 3],[4, 5, 6], 
+[7, 8, 9]]
+The merged list will be 
+[1, 2, 3, 4, 5, 6, 7, 8, 9].
+Example 2:
+
+Input:
+K = 4
+arr[][]={{1,2,3,4},{2,2,3,4},
+         {5,5,6,6},{7,8,9,9}}
+Output:
+1 2 2 2 3 3 4 4 5 5 6 6 7 8 9 9 
+Explanation: Above test case has 4 sorted
+arrays of size 4, 4, 4, 4
+arr[][] = [[1, 2, 2, 2], [3, 3, 4, 4],
+[5, 5, 6, 6], [7, 8, 9, 9 ]]
+The merged list will be 
+[1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 
+6, 6, 7, 8, 9, 9].
+//
+
+    ** Approach : Store all the elements into a minHeap. Then store all the elements from minHeap to array and return.
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
+    {
+        vector<int> ans;
+        priority_queue<int, vector<int>, greater<int>> pq;
+        
+        for(int i=0; i<K; i++) {
+            for(int j=0; j<K; j++) {
+                pq.push(arr[i][j]);
+            }
+        }
+        while(!pq.empty()) {
+            ans.push_back(pq.top());
+            pq.pop();
+        }
+        return ans;
+    }
+    T.C : O(K*K*LogK)
+    S.C : O(K*K)
