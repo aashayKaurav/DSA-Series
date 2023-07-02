@@ -1,0 +1,85 @@
+//
+Given K sorted lists of integers, KSortedArray[] of size N each. The task is to find the smallest range that includes at least one element from each of the K lists. 
+If more than one such range's are found, return the first such range found.
+
+Example 1:
+
+Input:
+N = 5, K = 3
+KSortedArray[][] = {{1 3 5 7 9},
+                    {0 2 4 6 8},
+                    {2 3 5 7 11}}
+Output: 1 2
+Explanation: K = 3
+A:[1 3 5 7 9]
+B:[0 2 4 6 8]
+C:[2 3 5 7 11]
+Smallest range is formed by number 1
+present in first list and 2 is present
+in both 2nd and 3rd list.
+Example 2:
+
+Input:
+N = 4, K = 3
+KSortedArray[][] = {{1 2 3 4},
+                    {5 6 7 8},
+                    {9 10 11 12}}
+Output: 4 9
+//
+
+    ** Optimized Approach : Take a min-Heap and store the min values of K lists along with their row and col (bcz we need to get next element). Then take two variables mini
+    , maxi, start and end then until the heap is empty pop the top element, compare the range and store the next element of the list. If heap is empty or any list is 
+    completely exhaused then break.
+    class Node{
+        public:
+        int data;
+        int row; 
+        int col;
+        
+        Node(int data, int row, int col){
+            this->data = data;
+            this->row = row;
+            this->col = col;
+        }
+    };
+    
+    class compare{
+        public:
+            bool operator()(Node* a, Node* b){
+                return (a->data > b->data);
+            }
+    };
+    pair<int,int> findSmallestRange(int KSortedArray[][N], int n, int k)
+    {
+        priority_queue<Node*, vector<Node*>, compare> minHeap;
+        int mini = INT_MAX, maxi = INT_MIN;
+        
+        for(int i=0; i<k; i++){
+            int ele = KSortedArray[i][0];
+            mini = min(mini, ele);
+            maxi = max(maxi, ele);
+            minHeap.push(new Node(ele, i, 0));
+        }
+        
+        int start = mini, end = maxi;
+        while(minHeap.size() > 0){
+            Node* temp = minHeap.top();
+            minHeap.pop();
+            
+            mini = temp->data;
+            if(maxi-mini < end-start){
+                start = mini;
+                end = maxi;
+            }
+            if(temp->col < n-1){
+                maxi = max(maxi, KSortedArray[temp->row][temp->col+1]);
+                minHeap.push(new Node(KSortedArray[temp->row][temp->col+1], temp->row, temp->col+1));
+            }
+            else{
+                break;
+            }
+        }
+        return {start, end};
+    }
+    T.C : O(N*K*LogK)
+    S.C : O(K)
