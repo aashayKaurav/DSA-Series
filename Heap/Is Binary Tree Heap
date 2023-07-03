@@ -1,0 +1,55 @@
+//
+Given a binary tree. The task is to check whether the given tree follows the max heap property or not.
+Note: Properties of a tree to be a max heap - Completeness and Value of node greater than or equal to its child.
+
+Example 1:
+
+Input:
+      5
+    /  \
+   2    3
+Output: 1
+Explanation: The given tree follows max-heap property since 5,
+is root and it is greater than both its children.
+
+Example 2:
+
+Input:
+       10
+     /   \
+    20   30 
+  /   \
+ 40   60
+Output: 0
+//
+
+    ** Approach : Do level order traversal and keep a flag that becomes true as soon as a child is NULL, so that we can check whether after that child no other child of 
+    above level is present so as to maintain the heap property. Finally return true if we traversed the tree.
+    bool isHeap(struct Node* tree) {
+        queue<Node*> q;
+        bool flag = false;
+        q.push(tree);
+        while(!q.empty()){
+            struct Node* temp = q.front();
+            q.pop();
+            if(temp->left){
+                if(flag || temp->left->data > temp->data)
+                    return false;
+                q.push(temp->left);
+            }
+            else{
+                flag = true;
+            }
+            if(temp->right){
+                if(flag || temp->right->data > temp->data)
+                    return false;
+                q.push(temp->right);
+            }
+            else{
+                flag = true;
+            }
+        }
+        return true;
+    }
+    T.C : O(N)
+    S.C : O(N) 
