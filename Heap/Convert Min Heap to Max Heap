@@ -1,0 +1,56 @@
+//
+You are given an array arr of N integers representing a min Heap. The task is to convert it to max Heap.
+
+A max-heap is a complete binary tree in which the value in each internal node is greater than or equal to the values in the children of that node. 
+
+Example 1:
+
+Input:
+N = 4
+arr = [1, 2, 3, 4]
+Output:
+[4, 2, 3, 1]
+Explanation:
+
+The given min Heap:
+
+          1
+        /   \
+      2       3
+     /
+   4
+
+Max Heap after conversion:
+
+         4
+       /   \
+      3     2
+    /
+   1
+//
+
+    ** Approach : Apply heapify from intermediate nodes to root node. Therefore we will get a max heap.
+    void heapify(vector<int> &arr, int ind, int n) {
+        int largest = ind;
+        int left = 2*ind + 1;
+        int right = 2*ind + 2;
+        if(left < n && arr[largest] < arr[left]) {
+            largest = left;
+        }
+        if(right < n && arr[largest] < arr[right]) {
+            largest = right;
+        }
+        
+        if(largest != ind) {
+            swap(arr[ind], arr[largest]);
+            heapify(arr, largest, n);
+        }
+    }
+
+    void convertMinToMaxHeap(vector<int> &arr, int N){
+        for(int i=(N/2)-1; i>=0; i--) {
+            heapify(arr, i, N);
+        }
+    }
+    T.C : O(N)
+    S.C : O(1)
