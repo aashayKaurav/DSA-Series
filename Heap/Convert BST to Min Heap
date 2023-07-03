@@ -1,0 +1,58 @@
+//
+You are given a 'ROOT' of a binary search tree of integers. The given BST is also a complete binary tree.
+
+Your task is to convert the given binary search tree into a Min Heap and print the preorder traversal of the updated binary search tree.
+//
+
+    /*************************************************************
+    
+        Following is the Binary Tree node structure:
+    
+    	class BinaryTreeNode {
+    		
+    	public :
+    		int data;
+    		BinaryTreeNode* left;
+    		BinaryTreeNode* right;
+    
+    		BinaryTreeNode(int data) {
+    		this -> left = NULL;
+    		this -> right = NULL;
+    		this -> data = data;
+    		}
+    	};
+    
+    *************************************************************/
+    void inOrder(BinaryTreeNode* root, vector<int> &ans){
+        // base case
+        if(root == NULL) return;
+        
+        inOrder(root->left, ans);
+        ans.push_back(root->data);
+        inOrder(root->right, ans);
+        
+    }
+    
+    void preOrder(BinaryTreeNode* root, vector<int> &ans, int &index){
+        // base case
+        if(root == NULL) return;
+        
+        // update the root value
+        root->data = ans[index++];
+        preOrder(root->left, ans, index);
+        preOrder(root->right, ans, index);
+        
+    }
+    
+    BinaryTreeNode* convertBST(BinaryTreeNode* root)
+    {
+    	// Write your code here.
+        if(root == NULL) return NULL;
+        vector<int> ans;
+        inOrder(root, ans);
+        int index = 0;
+        preOrder(root, ans, index);
+        return root;
+    }
+    T.C : O(N)
+    S.C : O(N)
