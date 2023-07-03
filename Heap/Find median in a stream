@@ -1,0 +1,88 @@
+//
+Given an input stream of N integers. The task is to insert these numbers into a new stream and find the median of the stream formed by each insertion of X to the new stream.
+
+Example 1:
+
+Input:
+N = 4
+X[] = 5,15,1,3
+Output:
+5
+10
+5
+4
+Explanation:Flow in stream : 5, 15, 1, 3 
+5 goes to stream --> median 5 (5) 
+15 goes to stream --> median 10 (5,15) 
+1 goes to stream --> median 5 (5,15,1) 
+3 goes to stream --> median 4 (5,15,1 3) 
+ 
+Example 2:
+
+Input:
+N = 3
+X[] = 5,10,15
+Output:
+5
+7.5
+10
+Explanation:Flow in stream : 5, 10, 15
+5 goes to stream --> median 5 (5) 
+10 goes to stream --> median 7.5 (5,10) 
+15 goes to stream --> median 10 (5,10,15) 
+//
+
+    ** Brute Approach : From first element itself try to use insertion sort logic and maintain the elements in sorted order. We will need the large size array to store 
+    these elements, also keep a counter to track the size of the array at any instance. Now any time we can find the median of the array and if any new number comes
+    then we will use binary search to find the location, shift all right side elements by one and place this new number at its correct position.
+    T.C : O(N^2)
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+    ** Optimized Approach : At any time we are just needed the middle 2 elements (for even case) and middle (for odd case). Take two heaps (left and right) where left heap
+    is maxHeap and right heap is minHeap. The Idea --
+      1) We will try to insert min elements on left heap and greater elements on right heap.
+      2) For odd length array keep an extra element of left heap.
+      3) Else we will maintain both heap.size equal.
+    Finally if both heap sizez equal then return top elements sum / 2. Otherwise return top element of left heap.
+
+    priority_queue<int> left_MaxHeap;
+    priority_queue<int, vector<int>, greater<int> > right_MinHeap;
+    //Function to insert heap.
+    void insertHeap(int &x)
+    {
+        if(left_MaxHeap.empty() || x < left_MaxHeap.top()) {
+            left_MaxHeap.push(x);
+        }
+        else {
+            right_MinHeap.push(x);
+        }
+        balanceHeaps();
+    }
+    
+    //Function to balance heaps.
+    void balanceHeaps()
+    {
+        if(left_MaxHeap.size() > 1 + right_MinHeap.size()) {
+            right_MinHeap.push(left_MaxHeap.top());
+            left_MaxHeap.pop();
+        }
+        else if(right_MinHeap.size() > left_MaxHeap.size()) {
+            left_MaxHeap.push(right_MinHeap.top());
+            right_MinHeap.pop();
+        }
+    }
+    
+    //Function to return Median.
+    double getMedian()
+    {
+        if(left_MaxHeap.size() == right_MinHeap.size()) {
+            double n1 = left_MaxHeap.top();
+            double n2 = right_MinHeap.top();
+            return (n1+n2)/2.0;
+        }
+        else {
+            return left_MaxHeap.top();
+        }
+    }
+    T.C : O(NLogN)
+    S.C : O(N)
