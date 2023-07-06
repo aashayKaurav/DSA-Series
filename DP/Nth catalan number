@@ -1,0 +1,58 @@
+//
+Given a number N. The task is to find the Nth catalan number.
+The first few Catalan numbers for N = 0, 1, 2, 3, … are 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, …
+
+Catalan Number for N is equal to the number of expressions containing N pairs of paranthesis that are correct matched, i.e., for each of the N '(' there exist N ')' 
+on there right and vice versa.
+
+Note: Positions start from 0 as shown above.
+
+Example 1:
+
+Input:
+N = 5
+Output: 42
+Example 2:
+
+Input:
+N = 4
+Output: 14
+//
+
+    cpp_int solve(int n, vector<cpp_int>&dp)
+    {
+        if(n==0||n==1) return 1;
+
+        if(dp[n]!=-1) return dp[n];
+
+        cpp_int ans = 0;
+        for(int i = 0 ; i<n ; i++)
+        {
+            ans+=solve(i, dp)*solve(n-i-1, dp);
+        }
+
+        return dp[n] = ans;
+    }
+
+    cpp_int findCatalan(int n) 
+    {
+       vector<cpp_int>dp(n+1,-1);
+       return solve(n, dp);
+    }
+----------------------------------------------------
+    cpp_int findCatalan(int n) 
+    {
+        if(n == 0){
+            return 1;
+        }
+        cpp_int dp[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        // nth Catalan = [C(i)*C(n-i-1)] 0-n
+        for(int i=2; i<=n; i++){
+            for(int j=0; j<i; j++){
+                dp[i] += dp[j] * dp[i-j-1]; 
+            }
+        }
+        return dp[n];
+    }
