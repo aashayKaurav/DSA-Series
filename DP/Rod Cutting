@@ -28,25 +28,44 @@ The maximum obtainable value is
 of length 3, i.e, 8*3=24.
 //
 
-    int solve(int price[], int ind, int len, vector<vector<int>> &dp) {
-        if(ind > len) {
-            return 0;
+    int solve(int ind, int price[], int n, vector<vector<int>>&dp){
+        if(ind == 0){
+            return price[0]*n;        // n rods of 1 size
         }
-        if(dp[ind][len] != -1) {
-            return dp[ind][len];
+        if(dp[ind][n]!=-1) 
+            return dp[ind][n];
+        int dont = solve(ind-1, price, n, dp);
+        int take = 0;
+        if(n >= (ind+1)){
+            take = price[ind] + solve(ind, price, n-(ind+1), dp);
         }
-        // cut ot don't cut.
-        int cut = price[ind-1] + solve(price, ind, len-ind, dp);
         
-        int notCut = solve(price, ind+1, len, dp);
-        
-        return dp[ind][len] = max(cut, notCut);
+        return dp[ind][n]= max(dont,take);
     }
     
-  
-    int cutRod(int price[], int n) {
-        // vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
-        // return solve(price, 1, n, dp);
+    int solveTab(int price[], int n) {
+        vector<vector<int>> dp(n,vector<int>(n+1,0));
+        for(int j=0;j<=n;j++){
+            dp[0][j]=price[0]*j;
+        }
         
+        for(int i=1;i<n;i++){
+            for(int j=0;j<=n;j++){
+                  int dont=dp[i-1][j];
+                  int take=0;
+                  if(j>=(i+1)){
+                      take=price[i]+dp[i][j-i-1];
+                  }
+                  
+                dp[i][j]= max(dont,take);
+            }
+        }
+        return dp[n-1][n];
+    }
+    
+    int cutRod(int price[], int n) {
+        //code herec
+        // vector<vector<int>> dp(n,vector<int>(n+1,-1));
+        // return func(n-1, price, n, dp);
         return solveTab(price, n);
     }
