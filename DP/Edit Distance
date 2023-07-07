@@ -1,0 +1,106 @@
+//
+Given two strings s and t. Return the minimum number of operations required to convert s to t.
+The possible operations are permitted:
+
+Insert a character at any position of the string.
+Remove any character from the string.
+Replace any character from the string with any other character.
+
+Example 1:
+
+Input: 
+s = "geek", t = "gesek"
+Output: 1
+Explanation: One operation is required 
+inserting 's' between two 'e's of s.
+Example 2:
+
+Input : 
+s = "gfg", t = "gfg"
+Output: 
+0
+Explanation: Both strings are same.
+//
+
+    int solve(int i, int j, string &s, string &t, vector<vector<int>> &dp) {
+        
+        if(i == 0) return j;
+        
+        if(j == 0) return i;
+        
+        if(dp[i][j] != 0) {
+            return dp[i][j];
+        }
+        
+        if(s[i-1] == t[j-1]) {
+            return dp[i][j] = solve(i-1, j-1, s, t, dp);
+        }
+        
+        int insert = 1 + solve(i, j-1, s, t, dp);
+        int rmv = 1 + solve(i-1, j, s, t, dp);
+        int replace = 1 + solve(i-1, j-1, s, t, dp);
+        
+        return dp[i][j] = min(insert, min(rmv, replace));
+        
+    }
+    
+    int solveTab(string &s, string &t, int x, int y) {
+        vector<vector<int>> dp(101, vector<int>(101, 0));
+        for(int i=0; i<=x; i++) {
+            dp[i][0] = i;
+        }
+        
+        for(int i=0; i<=y; i++) {
+            dp[0][i] = i;
+        }
+        for(int i=1; i<=x; i++) {
+            for(int j=1; j<=y; j++) {
+                if(s[i-1] == t[j-1]) {
+                    dp[i][j] = dp[i-1][j-1];
+                }
+                else {
+                    int insert = 1 + dp[i][j-1];
+                    int rmv = 1 + dp[i-1][j];
+                    int replace = 1 + dp[i-1][j-1];
+                    
+                    dp[i][j] = min(insert, min(rmv, replace));
+                }
+            }
+        }
+        return dp[x][y];
+    }
+    
+    int optimized(string &s, string &t, int x, int y) {
+        vector<int> prev(101, 0);
+        vector<int> curr(101, 0);
+        
+        for(int i=0; i<=y; i++) {
+            prev[i] = i;
+        }
+        for(int i=0; i<=x; i++) {
+            curr[0] = i; // Base case: t is an empty string, so the number of operations is equal to the length of s
+            for (int j = 1; j <= y; j++) {
+                if (s[i - 1] == t[j - 1]) {
+                    curr[j] = prev[j - 1];
+                } else {
+                    int insert = 1 + curr[j - 1];
+                    int rmv = 1 + prev[j];
+                    int replace = 1 + prev[j - 1];
+                    curr[j] = min(insert, min(rmv, replace));
+                }
+            }
+            prev = curr;
+        }
+        return prev[y];
+    }
+  
+    int editDistance(string s, string t) {
+        
+        vector<vector<int>> dp(101, vector<int>(101, 0));
+        
+        return solve(s.size(), t.size(), s, t, dp);
+        
+        //return solveTab(s, t, s.size(), t.size());
+        
+        // return optimized(s, t, s.size(), t.size());
+    }
