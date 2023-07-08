@@ -1,0 +1,87 @@
+//
+Given a Singly Linked List which has data members sorted in ascending order. Construct a Balanced Binary Search Tree which has same data members as the given Linked List.
+Note: There might be nodes with the same value.
+
+Example 1:
+
+Input:
+Linked List: 1->2->3->4->5->6->7
+Output:
+4 2 1 3 6 5 7
+Explanation :
+The BST formed using elements of the 
+linked list is,
+        4
+      /   \
+     2     6
+   /  \   / \
+  1   3  5   7  
+Hence, preorder traversal of this 
+tree is 4 2 1 3 6 5 7
+Example 2:
+
+Input:
+Linked List : 1->2->3->4
+Ouput:
+3 2 1 4
+Explanation:
+The BST formed using elements of the 
+linked list is,
+      3   
+    /  \  
+   2    4 
+ / 
+1
+Hence, the preorder traversal of this 
+tree is 3 2 1 4
+//
+
+    ** Approach : Divide and Conquer !!
+    LNode* getMid(LNode* head, LNode** prev) {
+        LNode* s = head;
+        LNode* f = head;
+
+        while(f->next && f->next->next) {
+            *prev = s;
+            s = s->next;
+            f = f->next->next;
+        }
+        if (f->next) {
+            *prev = s;
+            s = s->next;
+        }
+        return s;
+    }
+  
+    TNode* solve(LNode* head) {
+        
+        if (!head) {
+            return NULL;
+        }
+        
+        if (!head->next) {
+            TNode* root = new TNode(head->data);
+            return root;
+        }
+        
+        LNode* prev = NULL;
+        LNode* mid = getMid(head, &prev);
+        
+        TNode* root = new TNode(mid->data);
+        
+        if (prev) {
+            prev->next = NULL;
+        }
+        
+        root->left = solve(head);
+        root->right = solve(mid->next);
+        
+        return root;
+    }
+  
+    TNode* sortedListToBST(LNode *head) {
+        
+        return solve(head);
+    }
+    T.C : O(NLogN)
+    S.C : O(1)
