@@ -1,0 +1,57 @@
+//
+A car factory has two assembly lines, and also given an  2D array a[2][] of size N which represent the time taken by each station. Each station is dedicated to some sort 
+of work like engine fitting, body fitting, painting, and so on. So, a car chassis must pass through each of the n stations in order before exiting the factory. 
+The two parallel assemble line perform same task.
+From any line one can switch another line diagonally. A 2D array T[2][] of size N is also given, which represent  exit time to switch line 1 to line 2 diagonally.
+Also each assembly line takes an entry time ei and exit time xi which may be different for the two lines.
+
+For more clarity, refer the following diagram
+
+
+The task is to computing the minimum time it will take to build a car chassis.
+One can minimize the total time taken by performing following steps:
+
+ A car chassis must pass through all stations from 1 to N in order(in any of the two assembly lines). i.e. it cannot jump from station i to station j if they are 
+not at one move distance.
+The car chassis can move one station forward in the same line, or one station diagonally in the other line. It incurs an extra cost Ti,j to move to station j from line i.
+No cost is incurred for movement in same line.
+The time taken in station j on line i is ai, j.
+Example 1:
+
+Input: N = 4
+a[2][] = {{4, 5, 3, 2}, 
+      {2, 10, 1, 4}}
+T[2][] = {{0,7, 4, 5},
+           {0,9, 2, 8}}
+e[2] = {10,12}, x[2] = {18,7}
+
+Output: 35
+Explanation: 
+According to the TC, this would 
+be the following diagram
+
+The bold line shows the path covered by the 
+car chassis for given input values. So the minimum 
+time taken by the car is 35.
+//
+    ** Idea :  
+    int carAssembly(vector<vector<int>>& a, vector<vector<int>>& T, 
+    vector<int>& e, vector<int>& x){
+      
+      int n = a[0].size();
+      vector<int> A1(n, 0);
+      vector<int> A2(n, 0);
+      
+      A1[0] = e[0] + a[0][0];  // Adding start time for both the assembly
+      A2[0] = e[1] + a[1][0];
+      
+      for(int i=1; i<n; i++) {
+          // We have two choices either to reach ith station from same assembly or other assembly. And then take minimum abong both. 
+          A1[i] = min(A1[i-1]+a[0][i], A2[i-1]+T[1][i]+a[0][i]);
+          A2[i] = min(A2[i-1]+a[1][i], A1[i-1]+T[0][i]+a[1][i]);
+      }
+      // We have to add exit time for both the assembly, and return minimum as ans.
+      return min(x[0]+A1[n-1], x[1]+A2[n-1]);
+  }
+  T.C : O(N)
+  S.C : O(N)
