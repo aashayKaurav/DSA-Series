@@ -1,0 +1,62 @@
+//
+Given 3 strings A, B and C, the task is to find the longest common sub-sequence in all three given sequences.
+
+Example 1:
+
+Input:
+A = "geeks", B = "geeksfor", 
+C = "geeksforgeeks"
+Output: 5
+Explanation: "geeks"is the longest common
+subsequence with length 5.
+â€‹Example 2:
+
+Input: 
+A = "abcd", B = "efgh", C = "ijkl"
+Output: 0
+Explanation: There's no common subsequence
+in all the strings.
+//
+
+    // int solveMem(string A, string B, string C, int i, int j, int k, vector<vector<vector<int>>> &dp){
+    //     if(i >= A.size() || j >= B.size() || k >= C.size())
+    //         return 0;
+        
+    //     if(dp[i][j][k] != -1)
+    //         return dp[i][j][k];
+        
+    //     int ans = 0;
+    //     if(A[i] == B[j] && B[j] == C[k]){
+    //         ans = 1 + solve(A, B, C, i+1, j+1, k+1, dp);
+    //     }
+    //     else{
+    //         ans = 0 + max(solve(A, B, C, i+1, j, k, dp), max(solve(A, B, C, i, j+1, k, dp), solve(A, B, C, i, j, k+1, dp)));
+    //     }
+    //     return dp[i][j][k] = ans;
+    // }
+    
+    int solveTab(string A, string B, string C, int n1, int n2, int n3){
+        vector<vector<vector<int>>> dp(n1+1, vector<vector<int>>(n2+1, vector<int>(n3+1, 0)));
+        for(int i=n1-1; i>=0; i--){
+            for(int j=n2-1; j>=0; j--){
+                for(int k=n3-1; k>=0; k--){
+                    if(A[i] == B[j] && B[j] == C[k]){
+                        dp[i][j][k] = 1 + dp[i+1][j+1][k+1];
+                    }
+                    else{
+                        dp[i][j][k] = 0 + max(dp[i+1][j][k], max(dp[i][j+1][k], dp[i][j][k+1]));
+                    }
+                }
+            }
+        }
+        return dp[0][0][0];
+    }
+    
+    int LCSof3 (string A, string B, string C, int n1, int n2, int n3)
+    {
+        // vector<vector<vector<int>>> dp(n1+1,vector<vector<int>>(n2+1,vector<int>(n3+1,-1)));
+        // return solveMem(A, B, C, 0, 0, 0, dp);
+        return solveTab(A, B, C, n1, n2, n3);
+    }
+    T.C : O(n1*n2*n3)
+    S.C : O(n1*n2*n3)
