@@ -1,0 +1,134 @@
+//
+Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+
+Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
+
+Example 1:
+
+Input: s = "()())()"
+Output: ["(())()","()()()"]
+Example 2:
+
+Input: s = "(a)())()"
+Output: ["(a())()","(a)()()"]
+Example 3:
+
+Input: s = ")("
+Output: [""]
+//
+
+    ** Approach-1 : We will check all the possibilities that whether removal or not removal of a char in the input string will lead to a valid string or not. To do this
+    we will first need the count of invalid paranthesis in the input string so that after removal of any char we will keep decrementing that count and when we will
+    reach count == 0 then check whether string has valid para. Finally return the ans.
+
+    int checkPara(string s){
+        stack<char> st;
+        for(int i=0; i<s.size(); i++){
+            if(s[i] == '('){
+                st.push('(');
+            }
+            else if(s[i] == ')'){
+                if(st.empty()){
+                    st.push(')');
+                }
+                else if(st.top() == '('){
+                    st.pop();
+                }
+                else if(st.top() == ')'){
+                    st.push(')');
+                }
+            }
+        }
+        return st.size();
+    }
+
+    void solve(string s, int para, set<string> &ans){
+        if(para == 0){
+            if(checkPara(s) == 0)
+                ans.insert(s);
+            return;
+        }
+        for(int i=0; i<s.size(); i++){
+            string left = s.substr(0, i);
+            string right = s.substr(i+1);
+            solve(left+right, para-1, ans);
+        }
+    }
+
+    vector<string> removeInvalidParentheses(string s) {
+        set<string> ans;
+        solve(s, checkPara(s), ans);
+        vector<string> res(ans.begin(), ans.end());
+        return res;
+    }
+    T.C : O(2^|S|) |S| : length of the string.
+    S.C : O(2^S)
+------------------------------------------------------------------------------------------------------------------
+    ** Approach-2 : We can avoid the unneccessary recursive calls by doing BFS traversal. The idea here will be to have a queue and a set with initial input string 
+    and maintain a bool varialbe found which will track if the string has valid para or not if yes then continue for next string else generate possible strings.
+
+    int checkPara(string s){
+        stack<char> st;
+        for(int i=0; i<s.size(); i++){
+            if(s[i] == '('){
+                st.push('(');
+            }
+            else if(s[i] == ')'){
+                if(st.empty()){
+                    st.push(')');
+                }
+                else if(st.top() == '('){
+                    st.pop();
+                }
+                else if(st.top() == ')'){
+                    st.push(')');
+                }
+            }
+        }
+        return st.size();
+    }
+
+    vector<string> removeInvalidParentheses(string s) {
+        vector<string> result;
+        if (s.empty()) {
+            result.push_back("");
+            return result;
+        }
+        
+        queue<string> q;
+        unordered_set<string> visited;
+        bool found = false;
+        
+        q.push(s);
+        visited.insert(s);
+        
+        while (!q.empty()) {
+            string current = q.front();
+            q.pop();
+            
+            if (checkPara(current) == 0) {
+                result.push_back(current);
+                found = true;
+            }
+            
+            if (found) {
+                continue;
+            }
+            
+            for (int i = 0; i < current.length(); i++) {
+                if (current[i] != '(' && current[i] != ')') {
+                    continue;
+                }
+                
+                string next = current.substr(0, i) + current.substr(i + 1);
+                if (visited.find(next) == visited.end()) {
+                    q.push(next);
+                    visited.insert(next);
+                }
+            }
+        }
+        
+        return result;
+    }
+    T.C : O(2^|S| * |S|) S : length of the input string. But we will have less recursive calls using this method.
+    S.C : O(2^S)
