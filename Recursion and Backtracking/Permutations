@@ -15,29 +15,59 @@ Output: [[0,1],[1,0]]
     **Approach 1 : Take a ds and freq map to mark which element has been taken. Start from i = 0 to n-1 and keep adding elements and mark it.
     By using backtracking keep poping the elements and unmark the elements. Keep doing this to cover all possibilites.
     
-    void solve(vector<int> &nums, vector<int> &temp, vector<int> &freq, vector<vector<int>> &ans){
-        if(temp.size() == nums.size()){
-            ans.push_back(temp);
-            return;
-        }
-        for(int i=0; i<nums.size(); i++){
-            if(freq[i] == 0){
-                temp.push_back(nums[i]);
-                freq[i] = 1;
-                solve(nums, temp, freq, ans);
-                freq[i] = 0;
-                temp.pop_back();
-            }
-        }
-    }
+    #include <bits/stdc++.h>
 
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> ans;
-        vector<int> temp;
-        vector<int> freq(nums.size(), 0);
-        solve(nums, temp, freq, ans); 
-        return ans;
-    }
+   using namespace std;
+   
+   void permute(vector<int> &nums, vector<bool> &used, vector<int> &curr, vector<vector<int>> &ans) {
+       if(curr.size() == nums.size()) {
+           ans.push_back(curr);
+           
+           return;
+       }
+       
+       for(int i=0; i<nums.size(); i++) {
+           if(!used[i]) {
+               used[i] = true;
+               curr.push_back(nums[i]);
+               permute(nums, used, curr, ans);
+               // backtrack
+               curr.pop_back();
+               used[i] = false;
+           }
+       }
+   }
+   
+   vector<vector<int>> generatePermutations(int n) {
+       vector<vector<int>> ans;
+       vector<int> nums(n);
+       
+       for(int i=0; i<n; i++) {
+           nums[i] = i+1;
+       }
+       vector<int> curr;
+       vector<bool> used(n, false);
+       
+       permute(nums, used, curr, ans);
+       
+       return ans;
+   }
+   
+   int main() {
+       cout << "Enter the number : ";
+       int n;
+       cin >> n;
+       
+       vector<vector<int>> permutations = generatePermutations(n);
+       cout << endl;
+       for(auto permutation : permutations) {
+           for(auto num : permutation) {
+               cout << num << " ";
+           }
+           cout << endl;
+       }
+       return 0;
+   }
     T.C : O(N! * N)
     S.C : O(N)
 -----------------------------------------------------------------------------------------------------------------------------------------------------
