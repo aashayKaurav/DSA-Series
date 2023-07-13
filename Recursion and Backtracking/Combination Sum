@@ -42,7 +42,6 @@ These are the only two combinations.
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
         vector<vector<int>> ans;
         vector<int> temp;
-        sort(candidates.begin(), candidates.end());
         solve(0, candidates, target, temp, ans);
         return ans;
     }
