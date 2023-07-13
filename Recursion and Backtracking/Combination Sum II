@@ -50,5 +50,5 @@ Output:
         solve(0, candidates.size(), candidates, target, temp, ans);
         return ans;
     }
-    T.C : O(2^N * K) where k = avg length of combination to add every time we find target.
+    T.C : O(2^(n*k)). where k = avg length of combination to add every time we find target.
     S.C : O(K * x) where x = #of combinations.
