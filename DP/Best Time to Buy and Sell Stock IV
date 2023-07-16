@@ -1,0 +1,104 @@
+//
+You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
+
+Find the maximum profit you can achieve. You may complete at most k transactions: i.e. you may buy at most k times and sell at most k times.
+
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+
+Example 1:
+
+Input: k = 2, prices = [2,4,1]
+Output: 2
+Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.
+Example 2:
+
+Input: k = 2, prices = [3,2,6,5,0,3]
+Output: 7
+Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+//
+
+    ** Aproach : Same as before "Best Time to Buy and Sell Stock III"
+    int solve(int ind, bool buy, int transactions, vector<int>& prices, vector<vector<vector<int>>>& dp) {
+        if(ind >= prices.size() || transactions == 0) {
+            return 0;
+        }
+
+        if (dp[ind][transactions][buy] != -1) {
+        return dp[ind][transactions][buy];
+    }
+
+        if(buy) {
+            int buying = -prices[ind] + solve(ind+1, false, transactions, prices, dp);
+            int notBuying = 0 + solve(ind+1, true, transactions, prices, dp);
+
+            return dp[ind][transactions][buy] = max(buying, notBuying);
+        }
+        else {
+            int selling = prices[ind] + solve(ind+1, true, transactions-1, prices, dp);
+            int notSelling = 0 + solve(ind+1, false, transactions, prices, dp);
+
+            return dp[ind][transactions][buy] = max(selling, notSelling);
+        }
+    }
+
+    int solveTab(vector<int> &prices, int k) {
+        int n = prices.size(), buy = 2, transactions = k;
+        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(buy, vector<int>(transactions + 1, 0)));
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = 0; j < buy; j++) {
+                for (int k = 1; k <= transactions; k++) {
+                    if (j) {
+                        int buying = -prices[i] + dp[i + 1][false][k];
+                        int notBuying = 0 + dp[i + 1][true][k];
+
+                        dp[i][j][k] = max(buying, notBuying);
+                    } else {
+                        int selling = prices[i] + dp[i + 1][true][k - 1];
+                        int notSelling = 0 + dp[i + 1][false][k];
+
+                        dp[i][j][k] = max(selling, notSelling);
+                    }
+                }
+            }
+        }
+        return dp[0][1][transactions];
+    }
+
+    int solveSO(vector<int> &prices, int k) {
+        int n = prices.size(), buy = 2, transactions = k;
+        vector<vector<int>> after(buy, vector<int>(transactions + 1, 0));
+        vector<vector<int>> curr(buy, vector<int>(transactions + 1, 0));
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = 0; j < buy; j++) {
+                for (int k = 1; k <= transactions; k++) {
+                    if (j) {
+                        int buying = -prices[i] + after[false][k];
+                        int notBuying = 0 + after[true][k];
+
+                        curr[j][k] = max(buying, notBuying);
+                    } else {
+                        int selling = prices[i] + after[true][k - 1];
+                        int notSelling = 0 + after[false][k];
+
+                        curr[j][k] = max(selling, notSelling);
+                    }
+                }
+            }
+            after = curr;
+        }
+        return after[1][transactions];
+    }
+
+    int maxProfit(int k, vector<int>& prices) {
+        // int transactions = k;
+        // vector<vector<vector<int>>> dp(prices.size(), vector<vector<int>>(transactions + 1, vector<int>(2, -1)));
+        // return solve(0, true, transactions, prices, dp);
+
+        // return solveTab(prices, k);
+
+        return solveSO(prices, k);
+    }
+    T.C : O(N * Transactions)
+    S.C : O(2 * Transactions)
