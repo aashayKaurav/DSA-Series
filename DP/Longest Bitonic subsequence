@@ -1,0 +1,50 @@
+//
+Given an array of positive integers. Find the maximum length of Bitonic subsequence. 
+A subsequence of array is called Bitonic if it is first strictly increasing, then strictly decreasing.
+
+Example 1:
+
+Input: nums = [1, 2, 5, 3, 2]
+Output: 5
+Explanation: The sequence {1, 2, 5} is
+increasing and the sequence {3, 2} is 
+decreasing so merging both we will get 
+length 5.
+Example 2:
+
+Input: nums = [1, 11, 2, 10, 4, 5, 2, 1]
+Output: 6
+Explanation: The bitonic sequence 
+{1, 2, 10, 4, 2, 1} has length 6.
+//
+
+    ** Approach : Exact same concept of LIS. The idea is we will store LIS from left side and from right side. Then run a loop and for every i dp1[i]+dp2[i]-1 will give us
+    bitonic for that index. Finally keep track of max value and return as ans.
+    int LongestBitonicSequence(vector<int>nums)
+	{
+	    int n = nums.size();
+	    vector<int> dp1(n, 1), dp2(n, 1);
+	    vector<int> bitonic(n, 0);
+	    
+	    for(int i=0; i<n; i++) {
+	        for(int prev=0; prev<i; prev++) {
+	            if(nums[prev] < nums[i] && 1 + dp1[prev] > dp1[i]) {
+	                dp1[i] = 1 + dp1[prev];
+	            }
+	        }
+	    }
+	    for(int i=n-1; i>=0; i--) {
+	        for(int before=n-1; before>i; before--) {
+	            if(nums[before] < nums[i] && 1 + dp2[before] > dp2[i]) {
+	                dp2[i] = 1 + dp2[before];
+	            }
+	        }
+	    }
+	    int result = 0;
+	    for(int i=0; i<n; i++) {
+	        result = max(result, dp1[i]+dp2[i]-1);
+	    }
+	    return result;
+	}
+    T.C : O(N^2)
+    S.C : O(N)
