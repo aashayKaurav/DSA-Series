@@ -1,0 +1,48 @@
+//
+Given an integer array nums, return the number of longest increasing subsequences.
+
+Notice that the sequence has to be strictly increasing.
+
+Example 1:
+
+Input: nums = [1,3,5,4,7]
+Output: 2
+Explanation: The two longest increasing subsequences are [1, 3, 4, 7] and [1, 3, 5, 7].
+Example 2:
+
+Input: nums = [2,2,2,2,2]
+Output: 5
+Explanation: The length of the longest increasing subsequence is 1, and there are 5 increasing subsequences of length 1, so output 5.
+//
+
+    ** Approach : Same logic of LIS but we will also maintain a count array to store the count of #number LIS till that point. We will simply copy the count if we found
+    better LIS otherwise if 1+dp[prev] == dp[curr] that means we have found another same LIS so increment count.
+
+    int findNumberOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        int maxLen = 1;
+        vector<int> dp(n, 1), count(n, 1);
+
+        for(int idx=0; idx<n; idx++) {
+            for(int prev=0; prev<idx; prev++) {
+                if(nums[prev] < nums[idx] && 1+dp[prev] > dp[idx]) {
+                    dp[idx] = 1 + dp[prev];
+                    count[idx] = count[prev];
+                }
+                else if(nums[prev] < nums[idx] && 1 + dp[prev] == dp[idx]) {
+                    count[idx] = count[idx] + count[prev]; 
+                }
+            }
+            maxLen = max(maxLen, dp[idx]);
+        }
+        // Now traverse the dp and check if LIS then add the count to result.
+        int result = 0;
+        for(int i=0; i<n; i++) {
+            if(dp[i] == maxLen) {
+                result += count[i];
+            }
+        }
+        return result;
+    }
+    T.C : O(N^2)
+    S.C : O(N)
