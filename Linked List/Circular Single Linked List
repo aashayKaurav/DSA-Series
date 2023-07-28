@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} node;
+
+void insertAtBegin(node **headRef, int data) {
+    node* newNode = (node *)malloc(sizeof(node));
+    if(newNode == NULL) {
+        printf("Memory overflow!");
+        return;
+    }
+    newNode->data = data;
+    if(*headRef == NULL) {
+        *headRef = newNode;
+        (*headRef)->next = *headRef;
+        return;
+    }
+    node *curr = *headRef;
+    while(curr->next != *headRef) {
+        curr = curr->next;
+    }
+    
+    newNode->next = *headRef;
+    curr->next = newNode;
+    *headRef = newNode;
+}
+
+void insertAtEnd(node **headRef, int data) {
+    node *newNode = (node *)malloc(sizeof(node));
+    if(newNode == NULL) {
+        printf("Memory overflow!");
+        return;
+    }
+    if(*headRef == NULL) {
+        *headRef = newNode;
+        return;
+    }
+    newNode->data = data;
+    newNode->next = *headRef;
+    node* curr = *headRef;
+    while(curr->next != *headRef) {
+        curr = curr->next;
+    }
+    curr->next = newNode;
+}
+
+int findLength(node *head) {
+    if(head == NULL) {
+        return 0;
+    }
+    int count = 1;
+    node* curr = head;
+    while(curr->next != head) {
+        count++;
+        curr = curr->next;
+    }
+    return count;
+}
+
+void insertAtK(node** headRef, int k, int data) {
+    int llLength = findLength(*headRef);
+    if(k <=0 || k > llLength+1) {
+        printf("Invalid position!");
+        return;
+    }
+    if(k == 1) {
+        insertAtBegin(headRef, data);
+        return;
+    }
+    if(k == llLength+1) {
+        insertAtEnd(headRef, data);
+        return;
+    }
+    node* curr = *headRef;
+    int count = 1;
+    while(count < k-1) {
+        count++;
+        curr = curr->next;
+    }
+    node *newNode = (node*)malloc(sizeof(node));
+    if(newNode == NULL) {
+        printf("Memory overflow!");
+        return;
+    }
+    newNode->data = data;
+    newNode->next = curr->next;
+    curr->next = newNode;
+}
+
+void printLL(node *head) {
+    if(head == NULL) {
+        printf("Linked list is empty!");
+        return;
+    }
+    node* curr = head;
+    if(curr->next == curr) {
+        printf("%d", curr->data);
+        return;
+    }
+    
+    while(curr->next != head) {
+        printf("%d ", curr->data);
+        curr = curr->next;
+    }
+    printf("%d", curr->data);
+    printf("\n");
+}
+
+
+int main()
+{
+    node* head = NULL;
+    insertAtBegin(&head, 1);
+    insertAtBegin(&head, 3);
+    insertAtBegin(&head, 5);
+    insertAtBegin(&head, 4);
+    
+    insertAtEnd(&head, 8);
+    insertAtEnd(&head, 9);
+    insertAtEnd(&head, 10);
+    
+    insertAtK(&head, 5, 100);
+    
+    printLL(head);
+    
+}
