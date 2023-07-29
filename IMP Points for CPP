@@ -58,7 +58,166 @@
      }
      return ans;
  
-5. 
+5. Searching/Sorting in C
+   #include <stdio.h>
+
+   void swap(int* a, int* b) {
+       int temp = *a;
+       *a = *b;
+       *b = temp;
+   }
+   
+   void selectionSort(int arr[], int n) {
+       for(int i=0; i<n-1; i++) {
+           int minIndex = i;
+           for(int j=i+1; j<n; j++) {
+               if(arr[j] < arr[minIndex]) {
+                   minIndex = j;
+               }
+           }
+           if(minIndex != i) {
+               int temp = arr[i];
+               arr[i] = arr[minIndex];
+               arr[minIndex] = temp;
+           }
+       }
+   }
+   
+   void bubbleSort(int arr[], int n) {
+   
+       for(int i=0; i<n-1; i++) {
+           int swapped = 0;
+           for(int j=0; j<n-i-1; j++) {
+               if(arr[j] > arr[j+1]) {
+                   int temp = arr[j];
+                   arr[j] = arr[j+1];
+                   arr[j+1] = temp;
+                   swapped = 1;
+               }
+           }
+           if(swapped == 0) {
+               break;
+           }
+       }
+   }
+   void merge(int arr[], int l, int mid, int r) {
+       int n1 = mid-l+1;
+       int n2 = r-mid;
+       
+       int left[n1], right[n2];
+       
+       for(int i=0; i<n1; i++) {
+           left[i] = arr[l+i];
+       }
+       for(int i=0; i<n2; i++) {
+           right[i] = arr[mid+1+i]; 
+       }
+       int i=0, j=0, k=l;
+       while(i < n1 && j < n2) {
+           if(left[i] <= right[j]) {
+               arr[k] = left[i];
+               i++;
+               k++;
+           }
+           else {
+               arr[k] = right[j];
+               j++;
+               k++;
+           }
+       }
+       while(i < n1) {
+           arr[k] = left[i];
+           i++;
+           k++;
+       }
+       while(j < n2) {
+           arr[k] = right[j];
+           j++;
+           k++;
+       }
+   }
+   
+   void mergeSort(int arr[], int l, int r) {
+       if(l < r) {
+           int mid = l + (r-l)/2;
+           mergeSort(arr, l, mid);
+           mergeSort(arr, mid+1, r);
+           
+           merge(arr, l, mid, r);
+       }
+   }
+   
+   int partition(int arr[], int l, int r) {
+       int pivot = arr[l];
+       int j = l+1;
+       for(int i=l+1; i<=r; i++) {
+           if(arr[i] < pivot) {
+               swap(&arr[i], &arr[j]);
+               j++;
+           }
+       }
+       swap(&arr[l], &arr[j-1]);
+       return j-1;
+   }
+   
+   void quickSort(int arr[], int l, int r) {
+       if(l < r) {
+           
+           int index = partition(arr, l, r);
+           
+           quickSort(arr, l, index-1);
+           quickSort(arr, index+1, r);
+       }
+   }
+   
+   void heapify(int arr[], int n, int i) {
+       int largest = i;
+       
+       int left = i*2+1, right = i*2+2;
+       
+       if(left < n && arr[largest] < arr[left]) {
+           largest = left;
+       }
+       if(right < n && arr[largest] < arr[right]) {
+           largest = right;
+       }
+       
+       if(largest != i) {
+           swap(&arr[largest], &arr[i]);
+           heapify(arr, n, largest);
+       }
+   }
+   
+   void buildHeap(int arr[], int n) {
+       for(int i=(n/2)-1; i>=0; i--) {
+           heapify(arr, n, i);
+       }
+   }
+   
+   void heapSort(int arr[], int n) {
+       
+       buildHeap(arr, n);
+       int i = n-1;
+       while(i >= 0) {
+           swap(&arr[i], &arr[0]);
+           heapify(arr, i, 0);
+           i--;
+       }
+   }
+   
+   int main() {
+       int arr[] = {4, 6, 1, 3, 9, 8, 5};
+       //selectionSort(arr, 7);
+       //bubbleSort(arr, 7);
+       //mergeSort(arr, 0, 6);
+       //quickSort(arr, 0, 6);
+       heapSort(arr, 7);
+       
+       for(int i=0; i<7; i++) {
+           printf("%d ", arr[i]);
+       }
+   }
+----------------------------------------------------------------------------------------------------------------------
 
 
 
