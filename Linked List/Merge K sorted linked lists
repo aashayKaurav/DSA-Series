@@ -32,6 +32,35 @@ The merged list will be
 1->3->4->5->6->8.
 //
 
+    ** Merge 2 at a time Approach : Run a loop and each time merge two linked list.
+      Node* merge(Node* head1,Node* head2){
+        if(head1 == NULL){
+            return head2;
+        }
+        else if(head2 == NULL){
+            return head1;
+        }
+        if(head1->data < head2->data){
+            head1->next = merge(head1->next,head2);
+            return head1;
+        }
+        else{
+            head2->next = merge(head2->next,head1);
+            return head2;
+        }
+    }
+    
+    Node * mergeKLists(Node *arr[], int k)
+    {
+        Node* ans = new Node(INT_MIN);
+        for(int i = 0 ; i < k ; i++){
+            ans->next = merge(ans->next,arr[i]);
+        }
+        return ans->next;
+    }
+      T.C : O(N*K)
+      S.C : O(1)
+-----------------------------------------------------------------------------------------------------------------------------------
     ** Approach : We can Use MIN Heap to get the sorted linked list. First put all the starting nodes of each sublist, then take a curr pointer and start traversing.
     If curr->next is present push it into LL. Keep doing untill all the elements from the min heap is done.
     
