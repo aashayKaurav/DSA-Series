@@ -8,3 +8,98 @@
 **
 //
 
+    #include <bits/stdc++.h>
+
+    using namespace std;
+    
+    class TrieNode {
+        public : 
+            TrieNode *children[26];
+            int wordCount;
+            int prefixCount;
+            
+            TrieNode() {
+                for(int i=0; i<26; i++) {
+                    children[i] = NULL;
+                }
+                wordCount = 0;
+                prefixCount = 0;
+            }
+    };
+    
+    class Trie {
+        public :
+            TrieNode *root;
+            
+            Trie() {
+                root = new TrieNode();
+            }
+            
+            void insert(string word) {
+                TrieNode *current = root;
+                
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index] == NULL) {
+                        current->children[index] = new TrieNode();
+                    }
+                    current = current->children[index];
+                    current->prefixCount += 1;
+                }
+                current->wordCount+= 1;
+            }
+            
+            int countWordsEqualTo(string word) {
+                TrieNode *current = root;
+        
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index] == NULL) {
+                        return 0;
+                    }
+                    current = current->children[index];
+                }
+                return current->wordCount;
+            }
+            
+            int countPrefix(string word) {
+                TrieNode *current = root;
+                
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index] == NULL) {
+                        return 0; 
+                    }
+                    current = current->children[index];
+                }
+                return current->prefixCount;
+            }
+            
+            void erase(string word) {
+                TrieNode *current = root;
+                
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index] == NULL) {
+                        current->wordCount -= 1;
+                        current->prefixCount -= 1;
+                    }
+                    current = current->children[index];
+                    current->prefixCount -= 1;
+                }
+            }
+    };
+    
+    int main()
+    {
+        Trie trie;
+        trie.insert("apple");
+        trie.insert("banana");
+        trie.insert("apps");
+        trie.insert("apple");
+        
+        
+        cout << "Count prefix 'app' : " << trie.countPrefix("app") << endl;  // output : 3
+        
+        return 0;
+    }
