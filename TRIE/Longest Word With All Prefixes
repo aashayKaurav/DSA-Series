@@ -1,0 +1,92 @@
+//
+You are given an integer 'n' and an array of 'n' strings. 
+Your task is to find the longest string in the array such that every prefix of this string is also present in the given array.
+
+n = 4
+a = {"a", "ab", "abc", "bp"}
+
+Output : "abc"
+//
+    **Approach : Use TRIE to store words. Then check for every word whether its prefixes.isWordEnd is true or not. Update the ans accordingly (max + lexicographical).
+    #include <bits/stdc++.h>
+
+    class TrieNode {
+        public:
+            TrieNode* children[26];
+            bool isWordEnd;
+    
+            TrieNode() {
+                for(int i=0; i<26; i++) {
+                    children[i] = NULL;
+                }
+                isWordEnd = false;
+            }
+    
+    };
+    
+    class Trie {
+        public:
+            TrieNode* root;
+    
+            Trie() {
+                root = new TrieNode();
+            }
+    
+            void insert(string word) {
+                TrieNode* current = root;
+    
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index] == NULL) {
+                        current->children[index] = new TrieNode();
+                    }
+                    current = current->children[index];
+                }
+                current->isWordEnd = true;
+            }
+    
+            bool isCompleteString(string word) {
+                TrieNode* current = root;
+    
+                for(char c : word) {
+                    int index = c - 'a';
+                    if(current->children[index]) {
+                        current = current->children[index];
+                        if(current->isWordEnd == false)
+                            return false;
+                    }
+                    else{
+                        return false;
+                    }                
+                }
+    
+                return true;
+            }
+    
+    };
+    
+    string completeString(int n, vector<string> &a){
+        Trie trie;
+        for(int i=0; i<n; i++) {
+            trie.insert(a[i]);
+        }
+        string ans = "";
+        for(int i=0; i<n; i++) {
+            string str = a[i];
+            if(trie.isCompleteString(str)){
+                if(ans.size() < str.size())
+                    ans = str;
+                else if(ans.size() == str.size() && ans > str) {
+                    ans = str;
+                }
+            }
+        }
+        if(ans == "") {
+            return "None";
+        }
+        return ans;
+    }
+    
+    
+    
+    
