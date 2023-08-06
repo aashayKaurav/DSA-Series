@@ -24,9 +24,48 @@ Output: [1,null,3]
     S.C : O(N)  // vector for inorder and sort it.
     
     Better Approach : same as above but with map
+    TreeNode* solve(vector<int>& preorder, unordered_map<int,int> &mp, int &index, int left, int right) {
+        if(index >= preorder.size()) {
+            return NULL;
+        }
+        if(left > right) {
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(preorder[index]);
+        int inorderIndex = mp[preorder[index]];
+        index++;
+
+        root->left = solve(preorder, mp, index, left, inorderIndex-1);
+        root->right = solve(preorder, mp, index, inorderIndex+1, right);
+
+        return root;
+    }
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        
+        int n = preorder.size();
+        vector<int> inorder(n);
+        
+        for(int i=0; i<n; i++) {
+            inorder[i] = preorder[i];
+        }
+
+        sort(inorder.begin(), inorder.end());
+        
+        unordered_map<int, int> mp;
+
+        for(int i=0; i<n; i++) {
+            mp[inorder[i]] = i;
+        }
+
+        int index = 0;
+        return solve(preorder, mp, index, 0, n-1);
+
+    }
     T.C : O(NlogN)
     S.C : O(N)  // vector for inorder and sort it.
-    
+    ------------------------------------------------------------------------------------------------------
     Optimal Approach : We can you minBound and maxBound concept. But actually we dont need minBound also as from a particular node for left subtree (node->val) is the
     maxBound, and for right subtree (same node's upper bound) is the maxBound.
     
