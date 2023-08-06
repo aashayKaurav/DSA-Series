@@ -27,7 +27,7 @@ void postOrderTraversal(Node* root) {
     cout << root->data << " ";
 }
 
-// iterative function
+// iterative function using 2 stacks.
 void postorderIterative(Node* root) {
     if(root== NULL)
         return;
@@ -55,6 +55,38 @@ void postorderIterative(Node* root) {
         cout << output.top() << " ";
         output.pop();
     }
+}
+// Using 1 stack!
+void iterativePostorderOneStack(Node *root) {
+    if(root == NULL) {
+        return;
+    }
+    stack<Node *> st;
+    TreeNode *curr = root;
+    
+    while(!st.empty() || curr != NULL) {
+        if(curr) {
+            st.push(curr);
+            curr = curr->left;
+        }
+        else {
+            Node *temp = st.top()->right;
+            
+            if(temp == NULL) {
+                temp = st.top();
+                st.pop();
+                cout << temp->data << " ";
+                while(!st.empty() && temp == st.top()->right) {
+                    temp = st.top();
+                    st.pop();
+                    cout << temp->data << " ";
+                }
+            }
+            else {
+                curr = temp;
+            }
+        }
+    }    
 }
  
 int main()
