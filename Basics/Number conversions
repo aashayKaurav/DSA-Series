@@ -1,0 +1,137 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// Convert decimal to binary
+string decimalToBinary(int decimal) {
+    string binary;
+    while (decimal > 0) {
+        binary = to_string(decimal % 2) + binary;
+        decimal /= 2;
+    }
+    return binary;
+}
+
+// Convert decimal to octal
+string decimalToOctal(int decimal) {
+    string octal;
+    while(decimal) {
+        octal = to_string(decimal % 8) + octal;
+        decimal = decimal/8;
+    }
+    return octal;
+}
+
+// Convert decimal to hexadecimal
+string decimalToHexadecimal(int decimal) {
+    string hexadecimal;
+    while(decimal) {
+        int rem = decimal % 16;
+        if(rem >= 10 && rem <= 15) {
+            char ch = (rem-10) + 'A';
+            hexadecimal = ch + hexadecimal;
+        }
+        else {
+            hexadecimal = to_string(rem) + hexadecimal;
+        }
+        decimal /= 16;
+    }
+    return hexadecimal;
+}
+
+// Convert binary to decimal
+int binaryToDecimal(const string& binary) {
+    int decimal = 0;
+    int base = 1;
+    for (int i = binary.size() - 1; i >= 0; --i) {
+        if (binary[i] == '1') {
+            decimal += base;
+        }
+        base *= 2;
+    }
+    return decimal;
+}
+
+// Convert octal to decimal
+int octalToDecimal(const string& octal) {
+    int decimal = 0;
+    int base = 1;
+    
+    for(int i=octal.size()-1; i>=0; i--) {
+        int num = octal[i] - '0';
+        decimal += (num * base);
+        
+        base *= 8;
+    }
+    return decimal;
+}
+
+// Convert hexadecimal to decimal
+int hexadecimalToDecimal(string hexadecimal) {
+    int decimal = 0;
+    int base = 1;
+    
+    for(int i=hexadecimal.size()-1; i>=0; i--) {
+        int num = 0;
+        if (hexadecimal[i] >= '0' && hexadecimal[i] <= '9') {
+            num = hexadecimal[i] - '0';
+        } 
+        else if (hexadecimal[i] >= 'A' && hexadecimal[i] <= 'F') {
+            num = hexadecimal[i] - 'A' + 10;
+        }
+        decimal += (num * base);
+        
+        base *= 16;
+    }
+    return decimal;
+}
+
+// octal to decimal ... decimal to binary
+string octalToBinary(int octal) {
+    int decimal = 0;
+    int base = 1;
+    while(octal) {
+        decimal += (octal % 10)*base;
+        octal /= 10;
+        base *= 8;
+    }
+    string binary = decimalToBinary(decimal);
+    return binary;
+}
+
+// hexadecimal to decimal ... decimal to binary.
+string hexadecimalToBinary(string hexadecimal) {
+    
+    int decimal = hexadecimalToDecimal(hexadecimal);
+    
+    string binary = decimalToBinary(decimal);
+    
+    return binary;
+}
+
+int main() {
+    // int decimal = 15;
+    // string binary = decimalToBinary(decimal);
+    // string octal = decimalToOctal(decimal);
+    // string hexadecimal = decimalToHexadecimal(decimal);
+
+    // cout << "Decimal: " << decimal << endl;
+    // cout << "Binary: " << binary << endl;
+    // cout << "Octal: " << octal << endl;
+    // cout << "Hexadecimal: " << hexadecimal << endl;
+
+    // int convertedDecimal = binaryToDecimal(binary);
+    // int convertedOctal = octalToDecimal(octal);
+    // int convertedHexadecimal = hexadecimalToDecimal(hexadecimal);
+
+    // cout << "Converted Binary to Decimal: " << convertedDecimal << endl;
+    // cout << "Converted Octal to Decimal: " << convertedOctal << endl;
+    // cout << "Converted Hexadecimal to Decimal: " << convertedHexadecimal << endl;
+    
+    // int octal = 124;
+    // cout << "Converted octal to binary : " << octalToBinary(octal);
+    
+    string hexadecimal = "FAB3";
+    cout << "Converted hexadecimal to binary : " << hexadecimalToBinary(hexadecimal);
+    return 0;
+}
