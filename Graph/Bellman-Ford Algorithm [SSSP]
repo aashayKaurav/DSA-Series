@@ -1,0 +1,95 @@
+//
+Given a weighted, directed and connected graph of V vertices and E edges, Find the shortest distance of all the vertex's from the source vertex S.
+Note: If the Graph contains a negative cycle then return an array consisting of only -1.
+
+Example 1:
+
+Input:
+
+E = [[0,1,9]]
+S = 0
+Output:
+0 9
+Explanation:
+Shortest distance of all nodes from
+source is printed.
+//
+
+    ** Approach : Relax all the edges N-1 times so that we will get single source shortest path. 
+                  Then again relax all the edges Nth time to detect -ve edge cycle in the graph.
+
+    class Solution {
+      public:
+        /*  Function to implement Bellman Ford
+        *   edges: vector of vectors which represents the graph
+        *   S: source vertex to start traversing graph with
+        *   V: number of vertices
+        */
+        vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+            // 1. N-1 times relaxation of the edges.
+            
+            vector<int> dist(V, 1e8);
+            dist[S] = 0;
+            
+            for(int i=0; i<V-1; i++) {
+                for(auto it : edges) {
+                    int u = it[0];
+                    int v = it[1];
+                    int wt = it[2];
+                    
+                    if(dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+                        dist[v] = dist[u] + wt;
+                    }        
+                }
+            }
+            // checking negative cycle in the graph by relaxing Nth time.
+            for(auto it : edges) {
+                int u = it[0];
+                int v = it[1];
+                int wt = it[2];
+                
+                if(dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+                    return {-1};
+                }        
+            }
+            
+            return dist;
+        }
+    };
+    
+    
+    //{ Driver Code Starts.
+    
+    int main() {
+        int t;
+        cin >> t;
+        while (t--) {
+            int N, m;
+            cin >> N >> m;
+            vector<vector<int>> edges;
+    
+            for (int i = 0; i < m; ++i) {
+                vector<int> temp;
+                for (int j = 0; j < 3; ++j) {
+                    int x;
+                    cin >> x;
+                    temp.push_back(x);
+                }
+                edges.push_back(temp);
+            }
+    
+            int src;
+            cin >> src;
+    
+            Solution obj;
+            vector<int> res = obj.bellman_ford(N, edges, src);
+    
+            for (auto x : res) {
+                cout << x << " ";
+            }
+            cout << "\n";
+        }
+        return 0;
+    }
+    T.C : O(V * E)
+    S.C : O(N)
