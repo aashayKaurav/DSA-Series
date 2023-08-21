@@ -13,7 +13,7 @@ Explanation: We can reach 2 from 0 as 0->1->2
 and the cost will be 1+6=7 which is less than 
 43.
 //
-
+** Approach : It is a multi-source shortest path algorithm. Also helps in determining negative cycles in a graph.
 void shortest_distance(vector<vector<int>>&matrix){
 	    int n = matrix.size();
       // Initializing with infinity if there is no edges so as to make computation easy.
@@ -48,3 +48,5 @@ void shortest_distance(vector<vector<int>>&matrix){
 	        }
 	    }
 	}
+	T.C : O(N*M)
+	S.C : O(1)
