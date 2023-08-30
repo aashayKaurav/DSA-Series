@@ -34,27 +34,27 @@ countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
         if(n == 1) {
             return "1";
         }
-        if(n == 2) {
-            return "11";
-        }
-        string str = "11";
-        for(int i=3; i<=n; i++) {
-            string temp = "";
-            int count = 1;
-            str += '$';
-            for(int j=1; j<str.size(); j++) {
-                if(str[j] != str[j-1]) {
-                    temp += to_string(count);
-                    temp += str[j-1];
-                    count = 1;
-                }
-                else{
-                    count++;
-                }
+
+        string say = countAndSay(n-1);
+
+        // Now count the digits and return the string!
+        string ans = "";
+        int count = 1;
+        char ch = say[0];
+        for(int i=1; i<say.size(); i++) {
+            if(ch == say[i]) {
+                count++;
+                continue;
             }
-            str = temp;
+            else{
+                ans = ans + to_string(count) + ch;
+                ch = say[i];
+                count = 1;
+            }
         }
-        return str;
+        ans = ans + to_string(count) + ch;
+        
+        return ans;
     }
-    T.C : O(N^2)
+    T.C : O(N^2) , N, N-1 ... 1 calls and each time processing M length string.
     S.C : O(1)
