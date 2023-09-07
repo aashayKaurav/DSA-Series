@@ -1,0 +1,48 @@
+//
+Given the head of a singly linked list and two integers left and right where left <= right, 
+reverse the nodes of the list from position left to position right, and return the reversed list.
+
+Example 1:
+
+Input: head = [1,2,3,4,5], left = 2, right = 4
+Output: [1,4,3,2,5]
+
+Example 2:
+
+Input: head = [5], left = 1, right = 1
+Output: [5]
+//
+
+    ** APPROACH : 
+    1. Since there is a possibility that head can be changed therefore keep a dummy node pointing to the list, so that at
+    last we can simply return dummy->next;
+    2. Reach to the left position and manipulate the links of prev node and curr node. 
+    3. We have to do right - left times to reverse the nodes from left to right.
+
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if(head == NULL || head->next == NULL || left == right) {
+            return head;
+        }
+        ListNode *dummy = new ListNode(-1);
+        dummy->next = head;
+
+        ListNode *prev = dummy, *curr = head;
+        int pos = 1;
+        while(curr && pos < left) {
+            pos++;
+            prev = curr;
+            curr = curr->next;
+        }
+        int count = right - left;
+
+        while(count--) {
+            ListNode *temp = prev->next;
+            prev->next = curr->next;
+            curr->next = prev->next->next;
+            prev->next->next = temp;
+        }
+
+        return dummy->next;
+    }
+    T.C : O(N)
+    S.C : O(1)
