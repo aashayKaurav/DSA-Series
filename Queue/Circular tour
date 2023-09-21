@@ -51,19 +51,19 @@ where truck can make a circular tour is
     will update the start = i+1. And finally we will check whether deficit(requiredAmount) + balance >= 0 or not if so then start is the ans else return -1.
     int tour(petrolPump p[],int n)
     {
-        int deficit = 0;
+        int requiredAmount = 0;
         int balance = 0;
         int start = 0;
         
         for(int i=0; i<n; i++) {
             balance += p[i].petrol - p[i].distance;
             if(balance < 0) {
-                deficit += balance;
+                requiredAmount += balance;
                 balance = 0;
                 start = i+1;
             }
         }
-        if(balance+deficit >= 0) {
+        if(balance+requiredAmount >= 0) {
             return start;
         }
         return -1;
