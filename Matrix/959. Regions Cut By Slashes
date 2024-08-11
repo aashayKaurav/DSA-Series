@@ -1,0 +1,89 @@
+An n x n grid is composed of 1 x 1 squares where each 1 x 1 square consists of a '/', '\', or blank space ' '. These characters divide the square into contiguous regions.
+
+Given the grid grid represented as a string array, return the number of regions.
+
+Note that backslash characters are escaped, so a '\' is represented as '\\'.
+
+Example 1:
+
+Input: grid = [" /","/ "]
+Output: 2
+
+Example 2:
+
+Input: grid = [" /","  "]
+Output: 1
+Example 3:
+
+
+Input: grid = ["/\\","\\/"]
+Output: 5
+Explanation: Recall that because \ characters are escaped, "\\/" refers to \/, and "/\\" refers to /\. 
+
+Constraints:
+
+n == grid.length == grid[i].length
+1 <= n <= 30
+grid[i][j] is either '/', '\', or ' '.
+
+
+---------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    // For problems like this where we encounter symbols ususally try to map them into some representaion
+    // Here '/' --> [[0 0 1] [0 1 0] [1 0 0]]   '\' --> [[1 0 0] [0 1 0] [0 0 1]]   ' ' --> [[0 0 0] [0 0 0] [0 0 0]]
+    // Now The problem reduces to Number of Islands i.e just calculate the regions having zeroes.
+
+    int dir[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+    void dfs(int r, int c, vector<vector<int>> &visited, vector<vector<int>> &matrix) {
+        visited[r][c] = 1;
+
+        for(int i=0; i<4; i++) {
+            int row = r + dir[i][0];
+            int col = c + dir[i][1];
+
+            if(row >= 0 && row < matrix.size() && col >=0 && col < matrix[0].size() && !matrix[row][col] && !visited[row][col]) {
+                dfs(row, col, visited, matrix);
+            }
+
+        }
+    }
+
+    int regionsBySlashes(vector<string>& grid) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+
+        vector<vector<int>> matrix(rows*3, vector<int>(cols*3, 0));
+        // fill the matrix
+        for(int i=0; i<rows; i++) {
+            for(int j=0; j<cols; j++) {
+
+                if(grid[i][j] == '/') {
+                    matrix[i*3][j*3+2] = 1;
+                    matrix[i*3+1][j*3+1] = 1; 
+                    matrix[i*3+2][j*3] = 1;
+                }
+                else if(grid[i][j] == '\\') {
+                    matrix[i*3][j*3] = 1;
+                    matrix[i*3+1][j*3+1] = 1;
+                    matrix[i*3+2][j*3+2] = 1;
+                }
+            }
+        }
+        // Apply DFS to find regions
+        vector<vector<int>> visited(rows*3, vector<int>(cols*3, 0));
+        int count = 0;
+        for(int i=0; i<rows*3; i++) {
+            for(int j=0; j<cols*3; j++) {
+                if(!visited[i][j] && !matrix[i][j]) {
+                    dfs(i, j, visited, matrix);
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+};
